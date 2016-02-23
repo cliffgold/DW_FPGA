@@ -1,27 +1,28 @@
 //Top level module
 
 module top
-  (clk_in,
+  (clk_input,
    rst_in,
    bus_pcie_wr,
    bus_pcie_req,
 
-   pcie_bus_rd,
-   sum_pick
+   clk_output,
+   pcie_bus_rd
    );
    
 `include "params.svh"
 `include "structs.svh"
 
-   input               clk_in;
+   input               clk_input;
    input               rst_in;
    
    input  pcie_wr_s    bus_pcie_wr;
    input  pcie_req_s   bus_pcie_req;
 
-   output pcie_rd_s   pcie_bus_rd;
+   output              clk_output;
+   output pcie_rd_s    pcie_bus_rd;
    
-   output sum_pick_s  sum_pick;
+   sum_pick_s  sum_pick;
    
    pcie_wr_s   pcie_coef_wr;
    pcie_req_s  pcie_coef_req;
@@ -45,19 +46,15 @@ module top
    
    sys_s       sys;
 
-   assign sys.clk = clk;
-   assign sys.reset = rst_in;
    
-   clk_wiz_0 clk_gen_0
+   clk_gen clk_gen_0
      (
-      // Clock in ports
-      .clk_in1(clk_in),      // input clk_in1
-      // Clock out ports
-      .clk_out1(clk),        // output clk_out1
-      // Status and control signals
-      .reset(rst_in),        // input reset
-      .locked(locked)    // output locked
-      );    
+      .clk_input(clk_input),
+      .rst_in(rst_in),
+      .sys(sys)
+      );
+
+   assign clk_output = sys.clk;
    
    pcie pcie_0
      (

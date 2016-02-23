@@ -152,6 +152,13 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/HDL/clk_gen.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="top"/>
@@ -160,18 +167,66 @@
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
       <Filter Type="Constrs"/>
+      <File Path="$PSRCDIR/constrs_1/pins.xdc">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="ConstrsType" Val="XDC"/>
       </Config>
     </FileSet>
     <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1">
       <Filter Type="Srcs"/>
+      <File Path="$PSRCDIR/SIM/sim_top.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/SIM/sim_tasks.svh">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/SIM/testlist.svh">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/SIM/sim_structs.svh">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/WAVES/sim_top_behav.wcfg">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/SIM/tests/test_coef_wrrd_0.svh">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/SIM/tests/test_coef_wr_0.svh">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="sim_top"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="SimMode" Val="post-implementation"/>
         <Option Name="SrcSet" Val="sources_1"/>
+        <Option Name="XSimWcfgFile" Val="$PSRCDIR/WAVES/sim_top_behav.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PSRCDIR/WAVES/sim_top_behav.wcfg"/>
+        <Option Name="xsim.simulate.runtime" Val="2000ns"/>
       </Config>
     </FileSet>
     <FileSet Name="clk_wiz_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/clk_wiz_0">
@@ -181,6 +236,18 @@
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_sim_netlist.v"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="doc/clk_wiz_v5_2_changelog.txt"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.xdc"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_clk_wiz.v"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.veo"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_stub.vhdl"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.v"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_board.xdc"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_stub.v"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_ooc.xdc"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.xml"/>
+        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_sim_netlist.vhdl"/>
       </File>
       <Config>
         <Option Name="TopModule" Val="clk_wiz_0"/>

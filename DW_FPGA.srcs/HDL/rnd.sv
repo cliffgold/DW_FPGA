@@ -24,12 +24,13 @@ module rnd
    output      rnd_coef_s rnd_coef;
 
    wire [NQBITS+256+31:0] rnd_bits;
-   reg  [NQBITS-1:0]  new_xy  [MAX_RUN:0];
-   reg  [NQBITS-1:0]  old_xy  [MAX_RUN:0];
-   reg  [NQBITS-1:0]  now_xy;
+   reg  [NQBITS-1:0]      new_xy  [MAX_RUN:0];
+   reg  [NQBITS-1:0]      old_xy  [MAX_RUN:0];
+   reg  [NQBITS-1:0]      now_xy;
    reg [MAX_FLIP_BITS:0]  flips;
-   reg [MAX_RUN_BITS:0] run;
-   reg [MAX_RUN_BITS:0] was_run;
+   reg [MAX_RUN_BITS:0]   run;
+   reg [MAX_RUN_BITS:0]   was_run;
+   reg 			  picked;
    
    integer     i;
 
@@ -91,28 +92,31 @@ endgenerate
       end
    end // always@ (posedge sys.clk or negedge sys.reset)
    	 
+//Pipe 0 - buffer inputs
    always@(posedge sys.clk or negedge sys.reset) begin
       if (sys.reset) begin
-	 run      <= 'b0;
-	 was_run  <= 'b0;
-	 flips    <= 'b0;
+	 run    <= 'b0;
+	 flips  <= 'b0;
+	 picked <= 'b0;
       end else begin
-	 run <= ctrl_rnd.run;
-	 flips   <= ctrl_rnd.flips;
-	 was_run <= run;
+	 run    <= ctrl_rnd.run;
+	 flips  <= ctrl_rnd.flips;
+	 picked <= pick_rnd.pick[ctrl_rnd.run];
       end
    end // always@ (posedge sys.clk or negedge sys.reset)
    
+//Do stuff
    always@(posedge sys.clk or negedge sys.reset) begin
       if (sys.reset) begin
 	 for (i=0;i<=MAX_RUN;i=i+1) begin
 	    old_xy[i]  <= 'b0;
 	    new_xy[i]  <= 'b0;
-	    rnd_coef.x <= 'b0;
-	    rnd_coef.y <= 'b0;
 	 end
+	 now_xy    <= 'b0;
+	 was_run   <= 'b0;
       end else begin
-	 if (pick_rnd.pick[run] == 1'b1) begin
+	 was_run    <= run;
+	 if (picked == 1'b1) begin
 	    new_xy[run] <= new_xy[run] ^ xor_bits_q[flips];
 	    now_xy      <= new_xy[run] ^ xor_bits_q[flips];
 	    old_xy[run] <= new_xy[run];
@@ -120,6 +124,14 @@ endgenerate
 	    new_xy[run] <= old_xy[run] ^ xor_bits_q[flips];
 	    now_xy      <= old_xy[run] ^ xor_bits_q[flips];
 	 end
+      end // else: !if(sys.reset)
+   end // always@ (posedge sys.clk or negedge sys.reset)
+
+//Now buffer outputs
+   always@(posedge sys.clk or negedge sys.reset) begin
+      if (sys.reset) begin
+	 rnd_coef  <= 'b0;
+      end else begin
 	 rnd_coef.x   <= now_xy[MAXXN:0];
 	 rnd_coef.y   <= now_xy[(MAXXN*2)+1:MAXXN+1];
 	 rnd_coef.run <= was_run;

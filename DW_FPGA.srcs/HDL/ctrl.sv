@@ -43,19 +43,9 @@ module ctrl
 	 pcie_ctrl_data <= 'b0;
 	 
       end else begin
-	 if (pcie_ctrl_wr.vld) begin
+	 if (pcie_ctrl_wr.vld) begin  //.vld must NOT be high two cycles in a row
 	    if (pcie_ctrl_wr.addr[MAX_RUN_BITS+11] == 1'b0) begin
-	       if (MAX_CTRL_WORD_S > 63) begin
-		  if (pcie_ctrl_wr.addr[0] == 1'b1) begin
-		     ram_data[MAX_CTRL_WORD_S:64] 
-			   <= pcie_ctrl_wr.data[MAX_CTRL_WORD_S-64:0];
-		  end else begin
-		     ram_data[63:0] 
-			   <= pcie_ctrl_wr.data[63:0];
-		  end
-	       end else begin
-		  ram_data  <= pcie_ctrl_wr.data[MAX_CTRL_WORD_S:0];
-	       end // else: !if((MAX_CTRL_WORD_S > 63))
+	       ram_data  <= pcie_ctrl_wr.data[MAX_CTRL_WORD_S:0];
 	       ram_addr  <= pcie_ctrl_wr.addr[9:0];
 	       ram_we[pcie_ctrl_wr.addr[MAX_RUN_BITS+10:10]] <= 1'b1;
 	    end else begin

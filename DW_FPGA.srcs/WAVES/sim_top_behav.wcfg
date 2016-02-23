@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="sim_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="sim_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="311470457fs"></ZoomStartTime>
+      <ZoomEndTime time="325467728fs"></ZoomEndTime>
+      <Cursor1Time time="322500000fs"></Cursor1Time>
+   </zoom_setting>
+   <WVObjectSize size="23" />
+   <wvobject db_ref_id="1" fp_name="/sim_top/clk_in" type="logic">
+      <obj_property name="ElementShortName">clk_in</obj_property>
+      <obj_property name="ObjectShortName">clk_in</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/rst_in" type="logic">
+      <obj_property name="ElementShortName">rst_in</obj_property>
+      <obj_property name="ObjectShortName">rst_in</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/ready" type="logic">
+      <obj_property name="ElementShortName">ready</obj_property>
+      <obj_property name="ObjectShortName">ready</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/bus_pcie_wr" type="array">
+      <obj_property name="ElementShortName">bus_pcie_wr</obj_property>
+      <obj_property name="ObjectShortName">bus_pcie_wr</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/bus_pcie_req" type="array">
+      <obj_property name="ElementShortName">bus_pcie_req</obj_property>
+      <obj_property name="ObjectShortName">bus_pcie_req</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/pcie_bus_rd" type="array">
+      <obj_property name="ElementShortName">pcie_bus_rd</obj_property>
+      <obj_property name="ObjectShortName">pcie_bus_rd</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/pcie_cmem" type="array">
+      <obj_property name="ElementShortName">pcie_cmem</obj_property>
+      <obj_property name="ObjectShortName">pcie_cmem</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/pcie_coef_wr" type="array">
+      <obj_property name="ElementShortName">pcie_coef_wr</obj_property>
+      <obj_property name="ObjectShortName">pcie_coef_wr</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/pcie_wr_sel" type="array">
+      <obj_property name="ElementShortName">pcie_wr_sel[8:0]</obj_property>
+      <obj_property name="ObjectShortName">pcie_wr_sel[8:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/pcie_wr_addr" type="array">
+      <obj_property name="ElementShortName">pcie_wr_addr[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pcie_wr_addr[9:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/MEMS[69].coef_mem/wea" type="array">
+      <obj_property name="ElementShortName">wea[0:0]</obj_property>
+      <obj_property name="ObjectShortName">wea[0:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/MEMS[69].coef_mem/addra" type="array">
+      <obj_property name="ElementShortName">addra[9:0]</obj_property>
+      <obj_property name="ObjectShortName">addra[9:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/MEMS[69].coef_mem/dina" type="array">
+      <obj_property name="ElementShortName">dina[11:0]</obj_property>
+      <obj_property name="ObjectShortName">dina[11:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/MEMS[69].coef_mem/douta" type="array">
+      <obj_property name="ElementShortName">douta[11:0]</obj_property>
+      <obj_property name="ObjectShortName">douta[11:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/pcie_0/pcie_coef_wr" type="array">
+      <obj_property name="ElementShortName">pcie_coef_wr</obj_property>
+      <obj_property name="ObjectShortName">pcie_coef_wr</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/pcie_0/pcie_coef_req" type="array">
+      <obj_property name="ElementShortName">pcie_coef_req</obj_property>
+      <obj_property name="ObjectShortName">pcie_coef_req</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/pcie_0/coef_pcie_rd" type="array">
+      <obj_property name="ElementShortName">coef_pcie_rd</obj_property>
+      <obj_property name="ObjectShortName">coef_pcie_rd</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/pcie_0/pcie_req_busy" type="logic">
+      <obj_property name="ElementShortName">pcie_req_busy</obj_property>
+      <obj_property name="ObjectShortName">pcie_req_busy</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/pcie_0/pcie_req_busy_clr" type="logic">
+      <obj_property name="ElementShortName">pcie_req_busy_clr</obj_property>
+      <obj_property name="ObjectShortName">pcie_req_busy_clr</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/coef_read_mux/sel_in" type="array">
+      <obj_property name="ElementShortName">sel_in[8:0]</obj_property>
+      <obj_property name="ObjectShortName">sel_in[8:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/coef_read_mux/pipe_in" type="logic">
+      <obj_property name="ElementShortName">pipe_in</obj_property>
+      <obj_property name="ObjectShortName">pipe_in</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/coef_read_mux/pipe_out" type="logic">
+      <obj_property name="ElementShortName">pipe_out</obj_property>
+      <obj_property name="ObjectShortName">pipe_out</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/coef_read_mux/data_out" type="array">
+      <obj_property name="ElementShortName">data_out[11:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[11:0]</obj_property>
+   </wvobject>
+</wave_config>

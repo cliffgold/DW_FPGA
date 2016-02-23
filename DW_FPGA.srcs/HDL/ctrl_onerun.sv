@@ -111,7 +111,6 @@ module ctrl_onerun
       .addra(addr),
       .dina(ram_data),
       .douta(ram_data_out),
-      .ena(~ram_we),
       .wea(ram_we),
       .clka(sys.clk)
       );

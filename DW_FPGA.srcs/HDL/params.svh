@@ -28,14 +28,14 @@ parameter MAXYN        = MAXXN           ;  //Number of bits in the y plane -1
 
 //TBD - This is not how BARs really work
 
-parameter COEF_BAR_START = 16'h0;
-parameter COEF_BAR_END   = 16'h1FFF;
-parameter CTRL_BAR_START = 16'h2000;
-parameter CTRL_BAR_END   = 16'h20ff;
-parameter RND_BAR_START  = 16'h2100;
-parameter RND_BAR_END    = 16'h22ff;
-parameter PICK_BAR_START = 16'h2300;
-parameter PICK_BAR_END   = 16'h23ff;
+parameter COEF_BAR_START = 32'h0;
+parameter COEF_BAR_END   = 32'h1FFFFF;
+parameter CTRL_BAR_START = 32'h200000;
+parameter CTRL_BAR_END   = 32'h20ffff;
+parameter RND_BAR_START  = 32'h210000;
+parameter RND_BAR_END    = 32'h22ffff;
+parameter PICK_BAR_START = 32'h230000;
+parameter PICK_BAR_END   = 32'h23ffff;
 
 //Bit Widths
 parameter MAX_RD_TAG = 7;

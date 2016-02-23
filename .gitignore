@@ -56,4 +56,5 @@ DW_FPGA.cache/
 DW_FPGA.runs/
 DW_FPGA.hw/
 DW_FPGA.ip_user_files/
+DW_FPGA.sim/
 
