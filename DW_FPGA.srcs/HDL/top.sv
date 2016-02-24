@@ -24,6 +24,9 @@ module top
    
    sum_pick_s  sum_pick;
    
+   pcie_wr_s    bus_pcie_wr_q;
+   pcie_req_s   bus_pcie_req_q;
+
    pcie_wr_s   pcie_coef_wr;
    pcie_req_s  pcie_coef_req;
    pcie_rd_s   coef_pcie_rd;
@@ -51,6 +54,9 @@ module top
      (
       .clk_input(clk_input),
       .rst_in(rst_in),
+      .inflop({bus_pcie_wr,bus_pcie_req}),
+
+      .outflop({bus_pcie_wr_q,bus_pcie_req_q}),
       .sys(sys)
       );
 
@@ -60,8 +66,8 @@ module top
      (
       .sys(sys),	          
 
-      .bus_pcie_wr(bus_pcie_wr),
-      .bus_pcie_req(bus_pcie_req),
+      .bus_pcie_wr(bus_pcie_wr_q),
+      .bus_pcie_req(bus_pcie_req_q),
       .pcie_bus_rd(pcie_bus_rd),
 
       .pcie_coef_wr(pcie_coef_wr),
