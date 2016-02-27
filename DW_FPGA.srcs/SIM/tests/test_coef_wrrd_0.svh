@@ -7,13 +7,13 @@ test_data_wr   = 'h321;
 pcie_write(COEF_BAR_START,
 	   pcie_cmem,
 	   64'h321,
-	   clk_in,
+	   clk_input,
 	   bus_pcie_wr);
 
 pcie_read (COEF_BAR_START,
 	   pcie_cmem,
 	   test_data_rd,
-	   clk_in,
+	   clk_input,
 	   bus_pcie_req,
 	   pcie_bus_rd);
 

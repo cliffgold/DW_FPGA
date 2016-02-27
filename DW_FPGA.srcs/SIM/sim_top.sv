@@ -7,7 +7,7 @@ module sim_top();
 `include "sim_structs.svh"   
 `include "sim_tasks.svh"
 
-   reg clk_in;
+   reg clk_input;
    reg rst_in;
    reg ready;
    
@@ -23,7 +23,7 @@ module sim_top();
         
    top top_0
      (
-      .clk_in(clk_in),
+      .clk_input(clk_input),
       .rst_in(rst_in),
       .bus_pcie_wr(bus_pcie_wr),
       .bus_pcie_req(bus_pcie_req),
@@ -34,7 +34,7 @@ module sim_top();
 
    initial begin
       rst_in       = 1'b1;
-      clk_in       = 1'b0;
+      clk_input    = 1'b0;
       bus_pcie_wr  = 'b0;
       bus_pcie_req = 'b0;
       pcie_cmem    = 'b0;
@@ -43,21 +43,27 @@ module sim_top();
       #10;
       
       repeat(50) begin
-	 #2.5
-	   clk_in = ~clk_in;
+	 #5
+	   clk_input = ~clk_input;
       end
 
       rst_in = 0;
+
+      while (top_0.clk_gen_0.locked == 1'b0) begin
+	 #5
+	   clk_input = ~clk_input;
+      end
+      
       repeat(50) begin
-	 #2.5
-	   clk_in = ~clk_in;
+	 #5
+	   clk_input = ~clk_input;
       end
 
       ready = 1;
       
       forever begin
-	 #2.5
-	   clk_in = ~clk_in;
+	 #5
+	   clk_input = ~clk_input;
       end
    end // initial begin
    

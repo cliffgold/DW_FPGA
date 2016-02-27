@@ -2,11 +2,11 @@
 
 initial begin
    @(posedge ready);
-   @(negedge clk_in);
-   @(negedge clk_in);
+   @(negedge clk_input);
+   @(negedge clk_input);
 `include "tests/test_coef_wrrd_0.svh"
-   @(negedge clk_in);
-   @(negedge clk_in);
+   @(negedge clk_input);
+   @(negedge clk_input);
    $finish();
    
 end
