@@ -3,6 +3,7 @@
 
 module pcie
   (sys,
+   sys_in,
    bus_pcie_wr,
    bus_pcie_req,
    pcie_bus_rd,
@@ -22,6 +23,8 @@ module pcie
 `include "structs.svh"
    
    input  sys_s      sys;
+   input  sys_s      sys_in;
+
    input  pcie_wr_s  bus_pcie_wr;
    input  pcie_req_s bus_pcie_req;
    output pcie_rd_s  pcie_bus_rd;
@@ -42,18 +45,26 @@ module pcie
 
    pcie_wr_s  bus_pcie_wr_q;
    pcie_req_s bus_pcie_req_q;
-
-//buffer the input
-   always@(posedge sys.clk or posedge sys.reset) begin
-      if (sys.reset) begin
-         bus_pcie_wr_q  <= 'b0;
-         bus_pcie_req_q <= 'b0;
-      end else begin // if (sys.reset)
-         bus_pcie_wr_q  <= bus_pcie_wr;
-         bus_pcie_req_q <= bus_pcie_req;
-      end
-   end
+   pcie_rd_s  pcie_bus_rd_q;
    
+//sync 100 MHz IO with 200 MHz system clock
+//Note that these are locked together
+   resync resync_0
+     (
+      .sys(sys),
+      .sys_in(sys_in),
+
+      .bus_pcie_wr(bus_pcie_wr),
+      .bus_pcie_wr_q(bus_pcie_wr_q),
+
+      .bus_pcie_req(bus_pcie_req),
+      .bus_pcie_req_q(bus_pcie_req_q),
+
+      .pcie_bus_rd_q(pcie_bus_rd_q),
+      .pcie_bus_rd(pcie_bus_rd)
+      );
+   
+
 //write interface
    always@(posedge sys.clk or posedge sys.reset) begin
       if (sys.reset) begin
@@ -140,28 +151,28 @@ module pcie
 //Read Response interface
    always@(posedge sys.clk or posedge sys.reset) begin
       if (sys.reset) begin
-         pcie_bus_rd           <= 'b0;
+         pcie_bus_rd_q     <= 'b0;
 	 pcie_req_busy_clr <= 1'b0;
       end else begin
 	 if (pcie_req_busy && !pcie_req_busy_clr) begin
 	    if (coef_pcie_rd.vld) begin
-	       pcie_bus_rd.tag    <= coef_pcie_rd.tag;
-	       pcie_bus_rd.data   <= coef_pcie_rd.data;
-	       pcie_bus_rd.vld    <= 1'b1;
-	       pcie_req_busy_clr <= 1'b1;
+	       pcie_bus_rd_q.tag  <= coef_pcie_rd.tag;
+	       pcie_bus_rd_q.data <= coef_pcie_rd.data;
+	       pcie_bus_rd_q.vld  <= 1'b1;
+	       pcie_req_busy_clr  <= 1'b1;
 	       
 	    end
 	    else if (pick_pcie_rd.vld) begin
-	       pcie_bus_rd.tag    <= pick_pcie_rd.tag;
-	       pcie_bus_rd.data   <= pick_pcie_rd.data;
-	       pcie_bus_rd.vld    <= 1'b1;
+	       pcie_bus_rd_q.tag  <= pick_pcie_rd.tag;
+	       pcie_bus_rd_q.data <= pick_pcie_rd.data;
+	       pcie_bus_rd_q.vld  <= 1'b1;
 	       pcie_req_busy_clr  <= 1'b1;
 	    end else begin
-	       pcie_bus_rd.vld    <= 1'b0;
+	       pcie_bus_rd_q.vld  <= 1'b0;
 	       pcie_req_busy_clr  <= 1'b0;
 	    end
 	 end else begin // if (pcie_req_busy && ~pcie_req_busy_clr)
-	    pcie_bus_rd.vld    <= 1'b0;
+	    pcie_bus_rd_q.vld  <= 1'b0;
 	    pcie_req_busy_clr  <= 1'b0;
 	 end // else: !if(pcie_req_busy && ~pcie_req_busy_clr)
       end // else: !if(sys.reset)
