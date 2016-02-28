@@ -3,11 +3,19 @@
 module top
   (clk_input,
    rst_in,
-   bus_pcie_wr,
-   bus_pcie_req,
-
-   clk_output,
-   pcie_bus_rd
+   bus_pcie_wr_data,
+   bus_pcie_wr_vld, 
+   bus_pcie_wr_addr,
+                    
+   bus_pcie_req_tag,
+   bus_pcie_req_vld,
+   bus_pcie_req_addr,
+                    
+   pcie_bus_rd_data,
+   pcie_bus_rd_vld, 
+   pcie_bus_rd_tag, 
+   
+   clk_output
    );
    
 `include "params.svh"
@@ -16,14 +24,26 @@ module top
    input               clk_input;
    input               rst_in;
    
-   input  pcie_wr_s    bus_pcie_wr;
-   input  pcie_req_s   bus_pcie_req;
+   input [63:0]          bus_pcie_wr_data;
+   input                 bus_pcie_wr_vld;
+   input [31:0]          bus_pcie_wr_addr;
+
+   input [MAX_RD_TAG:0]  bus_pcie_req_tag;
+   input 		 bus_pcie_req_vld;
+   input [31:0] 	 bus_pcie_req_addr;
+
+   output [63:0]         pcie_bus_rd_data;
+   output                pcie_bus_rd_vld;
+   output [MAX_RD_TAG:0] pcie_bus_rd_tag; 
 
    output              clk_output;
-   output pcie_rd_s    pcie_bus_rd;
    
    sum_pick_s  sum_pick;
    
+   pcie_wr_s    bus_pcie_wr;
+   pcie_req_s   bus_pcie_req;
+   pcie_rd_s    pcie_bus_rd;
+
    pcie_wr_s   pcie_coef_wr;
    pcie_req_s  pcie_coef_req;
    pcie_rd_s   coef_pcie_rd;
@@ -47,6 +67,19 @@ module top
    sys_s       sys;
    sys_s       sys_in;
 
+//top level can have no structs :(
+
+   assign bus_pcie_wr.data =  bus_pcie_wr_data; 
+   assign bus_pcie_wr.vld  =  bus_pcie_wr_vld;  
+   assign bus_pcie_wr.addr =  bus_pcie_wr_addr; 
+
+   assign bus_pcie_req.tag  = bus_pcie_req_tag; 
+   assign bus_pcie_req.vld  = bus_pcie_req_vld; 
+   assign bus_pcie_req.addr = bus_pcie_req_addr;
+
+   assign pcie_bus_rd_data =  pcie_bus_rd.data; 
+   assign pcie_bus_rd_vld  =  pcie_bus_rd.vld;  
+   assign pcie_bus_rd_tag  =  pcie_bus_rd.tag; 
    
    clk_gen clk_gen_0
      (

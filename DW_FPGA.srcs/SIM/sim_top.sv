@@ -20,15 +20,24 @@ module sim_top();
    
    reg [63:0] test_data_rd;
    reg [63:0] test_data_wr;
+   
+   reg [31:0]  bad_fail;
         
    top top_0
      (
       .clk_input(clk_input),
       .rst_in(rst_in),
-      .bus_pcie_wr(bus_pcie_wr),
-      .bus_pcie_req(bus_pcie_req),
+      .bus_pcie_wr_data(bus_pcie_wr.data),
+      .bus_pcie_wr_vld(bus_pcie_wr.vld), 
+      .bus_pcie_wr_addr(bus_pcie_wr.addr),
+                       
+      .bus_pcie_req_tag(bus_pcie_req.tag),
+      .bus_pcie_req_vld(bus_pcie_req.vld),
+      .bus_pcie_req_addr(bus_pcie_req.addr),
 
-      .pcie_bus_rd(pcie_bus_rd)
+      .pcie_bus_rd_data(pcie_bus_rd.data),
+      .pcie_bus_rd_vld(pcie_bus_rd.vld),
+      .pcie_bus_rd_tag(pcie_bus_rd.tag), 
       );
    
 
@@ -67,6 +76,16 @@ module sim_top();
       end
    end // initial begin
    
+   initial begin
+    bad_fail = 0;
+      @(posedge ready);
+      @(negedge clk_input);
+      @(negedge clk_input);
 `include "testlist.svh"
+      @(negedge clk_input);
+      @(negedge clk_input);
+      $finish();
+   end
+   
 endmodule // sim_top
 
