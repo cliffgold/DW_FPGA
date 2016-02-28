@@ -63,8 +63,6 @@
 //  in the readme file included with the reference design
 //
 
-`timescale 1 ps / 1ps
-
 module mux16_flop (
  input 	      clk,
  input        reset,
