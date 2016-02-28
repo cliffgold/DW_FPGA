@@ -37,7 +37,7 @@ module sim_top();
 
       .pcie_bus_rd_data(pcie_bus_rd.data),
       .pcie_bus_rd_vld(pcie_bus_rd.vld),
-      .pcie_bus_rd_tag(pcie_bus_rd.tag), 
+      .pcie_bus_rd_tag(pcie_bus_rd.tag) 
       );
    
 

@@ -19,9 +19,7 @@ pcie_read (COEF_BAR_START,
 	   pcie_bus_rd);
 
 if (test_data_rd !== test_data_wr) begin
-   $display("Dis ***:( TEST FAILED :(***\n Read does not match write at addr %0x\n expect %0x got %0x",
-	  pcie_cmem,test_data_wr,test_data_rd);
-   $error("Err ***:( TEST FAILED :(***\n Read does not match write at addr %0x\n expect %0x got %0x",
+   $error("***** :( TEST FAILED :( *****\n Read does not match write at addr %0x\n expect %0x got %0x",
 	  pcie_cmem,test_data_wr,test_data_rd);
 	  bad_fail = bad_fail + 1;
 end else begin
