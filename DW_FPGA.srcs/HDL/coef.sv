@@ -111,7 +111,7 @@ module coef
             addr[mem+1][5] = y[xn+3];
 
             //Bottom "y" connections
-            if (xn >= MAXXN-NXCOLS) begin                       //Trim bottom
+            if (xn+NXCOLS+3 > MAXXN) begin                       //Trim bottom
                addr[mem][6] = 1'b0;
                addr[mem][7] = 1'b0;
                addr[mem+1][6] = 1'b0;
