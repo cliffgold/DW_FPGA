@@ -11,11 +11,11 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="988253968fs"></ZoomStartTime>
-      <ZoomEndTime time="1105238096fs"></ZoomEndTime>
-      <Cursor1Time time="1070000000fs"></Cursor1Time>
+      <ZoomStartTime time="995000000fs"></ZoomStartTime>
+      <ZoomEndTime time="1121000001fs"></ZoomEndTime>
+      <Cursor1Time time="1100000000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="7" />
+   <WVObjectSize size="10" />
    <wvobject db_ref_id="1" fp_name="/sim_top/rst_in" type="logic">
       <obj_property name="ElementShortName">rst_in</obj_property>
       <obj_property name="ObjectShortName">rst_in</obj_property>
@@ -27,10 +27,12 @@
    <wvobject db_ref_id="1" fp_name="/sim_top/top_0/clk_gen_0/sys_in" type="array">
       <obj_property name="ElementShortName">sys_in</obj_property>
       <obj_property name="ObjectShortName">sys_in</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sim_top/top_0/clk_gen_0/sys" type="array">
       <obj_property name="ElementShortName">sys</obj_property>
       <obj_property name="ObjectShortName">sys</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sim_top/bus_pcie_wr" type="array">
       <obj_property name="ElementShortName">bus_pcie_wr</obj_property>
@@ -43,5 +45,18 @@
    <wvobject db_ref_id="1" fp_name="/sim_top/pcie_bus_rd" type="array">
       <obj_property name="ElementShortName">pcie_bus_rd</obj_property>
       <obj_property name="ObjectShortName">pcie_bus_rd</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/test_data_rd" type="array">
+      <obj_property name="ElementShortName">test_data_rd[63:0]</obj_property>
+      <obj_property name="ObjectShortName">test_data_rd[63:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/test_data_wr" type="array">
+      <obj_property name="ElementShortName">test_data_wr[63:0]</obj_property>
+      <obj_property name="ObjectShortName">test_data_wr[63:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/bad_fail" type="logic">
+      <obj_property name="ElementShortName">bad_fail</obj_property>
+      <obj_property name="ObjectShortName">bad_fail</obj_property>
    </wvobject>
 </wave_config>
