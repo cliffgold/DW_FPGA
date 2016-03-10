@@ -81,7 +81,7 @@ $(memTargets): %.xml : %.xci $(tclDir)/mem.tcl
 
 #Not required
 $(elabTouch): $(ipTouch) $(HDLFiles) $(clkTargets) $(memTargets) $(tclDir)/elab.tcl
-	@echo elab.tcl nofile >> $(joblist)  ;\
+	vivado -mode batch -source $(tclDir)/dojob.tcl $(xprFile) -tclargs elab.tcl nofile ;\
 	touch $@
 
 .PHONY: clean
