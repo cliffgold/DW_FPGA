@@ -96,7 +96,7 @@ module ctrl_onerun
 	    endcase // case (state)
 	 end // if (step)
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or posedge sys.reset)
+   end // always@ (posedge sys.clk)
    
    always@(*) begin
       if (ram_we) begin

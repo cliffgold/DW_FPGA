@@ -165,14 +165,14 @@ MUXF8 combiner_muxf8 (
 // Clock Enable (posedge clk).
 // 7 Series
 // Xilinx HDL Libraries Guide, version 2015.4
-   FDCE #
+   FDRE #
      (.INIT(1'b0)) // Initial value of register (1'b0 or 1'b1)
-   FDCE_inst 
+   FDRE_inst 
      (
       .Q(data_out_q), // 1-bit Data output
       .C(clk),        // 1-bit Clock input
       .CE(1'b1),      // 1-bit Clock enable input
-      .CLR(reset),    // 1-bit Asynchronous clear input
+      .R(reset),      // 1-bit synchronous clear input
       .D(data_out)    // 1-bit Data input
       );
 // End of FDCE_inst instantiation

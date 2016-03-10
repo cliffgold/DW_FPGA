@@ -66,7 +66,7 @@ module pcie
    
 
 //write interface
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
          pcie_coef_wr    <= 'b0;
          pcie_ctrl_wr    <= 'b0;
@@ -110,10 +110,10 @@ module pcie
             pcie_rnd_wr.vld  <= 1'b0;
          end
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or posedge sys.reset)
+   end // always@ (posedge sys.clk)
    
 //Read Request interface
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
          pcie_coef_req   <= 'b0;
          pcie_pick_req   <= 'b0;
@@ -145,11 +145,11 @@ module pcie
 	    pcie_req_busy     <= 1'b0;
          end
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or posedge sys.reset)
+   end // always@ (posedge sys.clk)
    
 	 
 //Read Response interface
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
          pcie_bus_rd_q     <= 'b0;
 	 pcie_req_busy_clr <= 1'b0;
@@ -176,7 +176,7 @@ module pcie
 	    pcie_req_busy_clr  <= 1'b0;
 	 end // else: !if(pcie_req_busy && ~pcie_req_busy_clr)
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or posedge sys.reset)
+   end // always@ (posedge sys.clk)
    
 endmodule // pcie
 

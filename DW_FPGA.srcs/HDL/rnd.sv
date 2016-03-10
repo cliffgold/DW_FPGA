@@ -79,7 +79,7 @@ generate
    end // block: XOR_COMB
 endgenerate
    
-   always@(posedge sys.clk or negedge sys.reset) begin
+   always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 for (i=0;i<=MAX_FLIP_BITS;i=i+1) begin	 
 	    xor_bits_q[i] <= 'b0;
@@ -89,10 +89,10 @@ endgenerate
 	    xor_bits_q[i] <= xor_bits[i];
 	 end
       end
-   end // always@ (posedge sys.clk or negedge sys.reset)
+   end // always@ (posedge sys.clk )
    	 
 //Pipe 0 - buffer inputs
-   always@(posedge sys.clk or negedge sys.reset) begin
+   always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 run    <= 'b0;
 	 flips  <= 'b0;
@@ -102,10 +102,10 @@ endgenerate
 	 flips  <= ctrl_rnd.flips;
 	 picked <= pick_rnd.pick[ctrl_rnd.run];
       end
-   end // always@ (posedge sys.clk or negedge sys.reset)
+   end // always@ (posedge sys.clk )
    
 //Do stuff
-   always@(posedge sys.clk or negedge sys.reset) begin
+   always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 for (i=0;i<=MAX_RUN;i=i+1) begin
 	    old_xy[i]  <= 'b0;
@@ -125,10 +125,10 @@ endgenerate
 	    old_xy[i] <= old_xy[i-1];
 	 end
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or negedge sys.reset)
+   end // always@ (posedge sys.clk )
 
 //Now buffer outputs
-   always@(posedge sys.clk or negedge sys.reset) begin
+   always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 rnd_coef  <= 'b0;
       end else begin
@@ -136,7 +136,7 @@ endgenerate
 	 rnd_coef.y   <= new_xy[0][(MAXXN*2)+1:MAXXN+1];
 	 rnd_coef.run <= was_run;
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or negedge sys.reset)
+   end // always@ (posedge sys.clk )
 
 endmodule // rnd
 

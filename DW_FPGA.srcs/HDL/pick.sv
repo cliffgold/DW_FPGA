@@ -77,10 +77,10 @@ module pick
 	 full_sum_q1 <= full_sum_q;
 	 full_sum_q2 <= full_sum_q1;
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or negedge sys.reset)
+   end // always@ (posedge sys.clk )
 
 	 
-   always@(posedge sys.clk or negedge sys.reset) begin
+   always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 pick_rnd.pick[MAX_RUN:0]     <= 'b0;
 	 pick_rnd.run[MAX_RUN_BITS:0] <= 'b0;
@@ -93,9 +93,9 @@ module pick
 	    pick_rnd.pick[run_q2] <= 1'b0;
 	 end
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or negedge sys.reset)
+   end // always@ (posedge sys.clk )
    
-   always@(posedge sys.clk or negedge sys.reset) begin
+   always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 pick_pcie_rd <= 'b0;
       end else begin
@@ -109,7 +109,7 @@ module pick
 	    pick_pcie_rd.vld  <= 1'b0;
 	 end
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or negedge sys.reset)
+   end // always@ (posedge sys.clk )
    
    
 endmodule // pick

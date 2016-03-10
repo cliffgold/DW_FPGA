@@ -63,7 +63,7 @@ module coef
    assign pcie_req_addr = pcie_coef_req.addr[ MAX_CMEM_ADDR              : 0];
    assign pcie_req_sel  = pcie_coef_req.addr[(MAX_CMEM_ADDR+MAX_CMEM_SEL+1):(MAX_CMEM_ADDR+1)];
    
-   always @ (posedge sys.clk or posedge sys.reset) begin
+   always @ (posedge sys.clk) begin
       if (sys.reset) begin
          x <= 'b0;
          y <= 'b0;
@@ -186,7 +186,7 @@ module coef
          
       for (mem=0; mem<=MAX_CMEM; mem=mem+1) begin : MEMS       //All mems
          
-         always @ (posedge sys.clk or posedge sys.reset) begin
+         always @ (posedge sys.clk) begin
             if (sys.reset) begin
                addr_q[mem]      <= 'b0;
                wdata_q[mem]     <= 'b0;
@@ -207,7 +207,7 @@ module coef
                   write_en_q[mem] <= 'b0;
                end // else: !if((pcie_req_sel == mem) && pcie_coef_req.vld)
 	    end // else: !if(sys.reset)
-	 end // always @ (posedge sys.clk or posedge sys.reset)
+	 end // always @ (posedge sys.clk)
 	 
          blk_mem_gen_0 coef_mem
            (
@@ -221,7 +221,7 @@ module coef
       end // block: MEMS
    endgenerate
 
-   always @ (posedge sys.clk or posedge sys.reset) begin
+   always @ (posedge sys.clk) begin
       if (sys.reset) begin
 	 run_q         <= 'b0;
 	 run_q2        <= 'b0;
@@ -237,7 +237,7 @@ module coef
 	    coef_sum.subtotal[ii] <= subtotal[ii];
          end
       end // else: !if(sys.reset)
-   end // always @ (posedge sys.clk or posedge sys.reset)
+   end // always @ (posedge sys.clk)
    
    bigmux
      #(.NBITS(MAX_CMEM_DATA+1),
@@ -256,7 +256,7 @@ module coef
       .data_out(rd_data)
       );
    	      
-   always @ (posedge sys.clk or posedge sys.reset) begin
+   always @ (posedge sys.clk) begin
       if (sys.reset) begin
 	 req_pipe       <= 'b0;
 	 coef_pcie_rd   <= 'b0;
@@ -276,7 +276,7 @@ module coef
 	    coef_pcie_rd <= 'b0;
 	 end
       end // else: !if(sys.reset)
-   end // always @ (posedge sys.clk or posedge sys.reset)
+   end // always @ (posedge sys.clk)
 
 endmodule // coef
 

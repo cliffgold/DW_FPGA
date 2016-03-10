@@ -98,7 +98,7 @@ module bigmux #(
    
    assign data_out = selected_word[NLEVELS-1][0];
    
-   always @ (posedge clk or posedge reset) begin
+   always @ (posedge clk ) begin
       if (reset) begin
          pipe <= 'b0;
          for (ii=0;ii<NLEVELS;ii=ii+1) begin
@@ -111,7 +111,7 @@ module bigmux #(
             sel_pipe[ii] <= sel_pipe[ii-1];
          end
       end // else: !if(reset)
-   end // always @ (posedge clk or posedge reset)
+   end // always @ (posedge clk )
 
    assign pipe_out = pipe[NLEVELS-1];
    

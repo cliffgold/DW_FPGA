@@ -58,9 +58,9 @@ module ctrl
 	    pcie_ctrl_data.stop   <= 'b0;
 	 end // else: !if(pcie_ctrl_wr.vld)
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or posedge sys.reset)
+   end // always@ (posedge sys.clk)
       
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
 	 run   <= 'b0;
 	 step <= 'b0;
@@ -73,7 +73,7 @@ module ctrl
 	    step <= step << 1'b1;
 	 end
       end
-   end // always@ (posedge sys.clk or posedge sys.reset)
+   end // always@ (posedge sys.clk)
 
 generate
    for (gi=0;gi<=MAX_RUN;gi=gi+1) begin : CTRL_RAM
@@ -94,7 +94,7 @@ generate
    end
 endgenerate
 
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
 	 ctrl_rnd  <= 'b0;
 	 ctrl_pick <= 'b0;
@@ -114,7 +114,7 @@ endgenerate
 					(|ctrl_busy));
 	 
       end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk or posedge sys.reset)
+   end // always@ (posedge sys.clk)
    	 
 endmodule // ctrl
 

@@ -25,7 +25,7 @@ module sum
    
 //TBD Double-check the number of j's
 
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
 	 for (j=0;j<MAX_CMEM_SEL;j=j+1) begin
 	    run[j]    <= 'b0;
@@ -63,7 +63,7 @@ module sum
       end // else: !if(sys.rst)
    end // always@ (posedge sys.clk or posedge sys.rst)
 
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
 	 sum_pick.full_sum <= 'b0;
 	 sum_pick.run      <= 'b0;
