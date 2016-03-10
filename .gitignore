@@ -60,4 +60,8 @@ DW_FPGA.sim/
 .Xil
 .init*
 .opt*
+vivado*.jou
+vivado*.log
+hs_err*.dmp
+hs_err*.log
 
