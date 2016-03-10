@@ -20,5 +20,7 @@ set plusDir $rootDir/[lindex [file split $rootDir] end]
 set myTop   [lindex [find_top] 0]
 
 foreach {tclfile block} $argv {
-    source $plusDir.srcs/tcl/$tclfile
+    if { [catch {source $plusDir.srcs/tcl/$tclfile}] } {
+	break
+    }
 }

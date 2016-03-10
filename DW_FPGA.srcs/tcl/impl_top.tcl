@@ -5,10 +5,7 @@
 
 puts "Implement (and time) Design"
 
-if [file exists $plusDir.runs/impl_1/${myTop}_routed.dcp] {
-    reset_run synth_1
-}
-
+reset_run   impl_1
 launch_runs impl_1
 wait_on_run impl_1
 

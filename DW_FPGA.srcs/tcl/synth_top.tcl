@@ -5,10 +5,7 @@
 
 puts "Synthesize Design"
 
-if [file exists $plusDir.runs/synth_1/$myTop.dcp] {
-    reset_run synth_1
-}
-
+reset_run   synth_1
 launch_runs synth_1
 wait_on_run synth_1
 
