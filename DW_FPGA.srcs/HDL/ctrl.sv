@@ -35,7 +35,7 @@ module ctrl
    integer              i;
    genvar 		gi;
    
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
 	 ram_we         <= 'b0;
 	 ram_addr       <= 'b0;

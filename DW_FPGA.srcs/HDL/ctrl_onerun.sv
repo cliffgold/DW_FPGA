@@ -38,7 +38,7 @@ module ctrl_onerun
 
    reg [1:0] 	      state;
          
-   always@(posedge sys.clk or posedge sys.reset) begin
+   always@(posedge sys.clk) begin
       if (sys.reset) begin
 	 state     <= IDLE;
 	 ctrl_addr <= 'h0;
