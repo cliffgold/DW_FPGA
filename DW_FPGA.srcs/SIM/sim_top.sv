@@ -4,7 +4,6 @@ module sim_top();
 
 `include "params.svh"
 `include "structs.svh"
-`include "sim_structs.svh"   
 `include "sim_tasks.svh"
 
    reg clk_input;
@@ -16,10 +15,15 @@ module sim_top();
 
    pcie_rd_s   pcie_bus_rd;
 
-   pcie_cmem_s pcie_cmem;
+   pcie_coef_addr_s pcie_coef_addr;
+   
+   ctrl_addr_s      ctrl_addr;
+   ctrl_cmd_s       ctrl_cmd;
+   ctrl_word_s      ctrl_word;
    
    reg [63:0] test_data_rd;
    reg [63:0] test_data_wr;
+   reg [31:0] test_addr;
    
    reg [31:0]  bad_fail;
         
@@ -46,7 +50,6 @@ module sim_top();
       clk_input    = 1'b0;
       bus_pcie_wr  = 'b0;
       bus_pcie_req = 'b0;
-      pcie_cmem    = 'b0;
       ready        = 1'b0;
       
       #10;

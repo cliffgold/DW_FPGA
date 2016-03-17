@@ -1,18 +1,19 @@
 //Test a single coef memory write/read
 
-pcie_cmem.sel  = 'h45;
-pcie_cmem.addr = 'h123;
-test_data_wr   = 64'h321;
+pcie_coef_addr      = 'h0;
+pcie_coef_addr.sel  = 'h45;
+pcie_coef_addr.addr = 'h123;
+test_data_wr        = 64'h321;
 
 
 pcie_write(COEF_BAR_START,
-	   pcie_cmem,
+	   pcie_coef_addr,
 	   test_data_wr,
 	   clk_input,
 	   bus_pcie_wr);
 
 pcie_read (COEF_BAR_START,
-	   pcie_cmem,
+	   pcie_coef_addr,
 	   test_data_rd,
 	   clk_input,
 	   bus_pcie_req,

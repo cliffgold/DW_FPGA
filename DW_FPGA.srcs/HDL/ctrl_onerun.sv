@@ -62,10 +62,10 @@ module ctrl_onerun
 		 end // else: !if(start)
 	      end // case: state...
 	      LOADING: begin
-		 ctrl_busy   <= 1'b0;
+		 ctrl_busy   <= 1'b1;
 		 ctrl_word   <= ram_data_out;
-		 if (ram_data_out.count == 'b0) begin
-		    if (ram_data_out.done) begin
+		 if (ram_data_out.ctrl0.count == 'b0) begin
+		    if (ram_data_out.ctrl1.done) begin
 		       state     <= IDLE;
 		       ctrl_addr <= 'b0;
 		    end else begin
@@ -77,15 +77,15 @@ module ctrl_onerun
 		 end // else: !if(ctrl_word.count == 'b0)
 	      end // case: LOADING
 	      RUNNING: begin
-		 if (ctrl_word.count == 'b1) begin
-		    if (ram_data_out.done) begin
+		 if (ctrl_word.ctrl0.count == 'b1) begin
+		    if (ram_data_out.ctrl1.done) begin
 		       state     <= IDLE;
 		    end else begin
 		       state     <= LOADING;
 		       ctrl_addr <= ctrl_addr + 'b1;
 		    end
 		 end else begin // if (count == 'b1)
-		    ctrl_word.count <= ctrl_word.count - 'b1;
+		    ctrl_word.ctrl0.count <= ctrl_word.ctrl0.count - 'b1;
 		 end // else: !if(count == 'b1)
 	      end // case: RUNNING
 	      default: begin
@@ -108,6 +108,7 @@ module ctrl_onerun
    
    blk_mem_gen_1 ctrl_mem_0
      (
+      .ena(sys.reset),
       .addra(addr),
       .dina(ram_data),
       .douta(ram_data_out),

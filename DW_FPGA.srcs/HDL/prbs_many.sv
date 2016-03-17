@@ -106,7 +106,7 @@
 //      Author     : Daniele Riccardi
 //      Description: First release
 //      Modified by: Cliff Gold       Added programmable seed.
-//                                    Made reset async
+
 //-------------------------------------------------------------------------------------------------
 // no timescale needed
 
@@ -143,8 +143,8 @@ module prbs_many(RST, CLK, DATA_IN, EN, SEED_WRITE_EN, SEED, DATA_OUT);
    wire [NBITS - 1:0] prbs_xor_a;
    wire [NBITS - 1:0] prbs_xor_b;
    wire [NBITS:1] prbs_msb;
-   reg  [1:POLY_LENGTH]prbs_reg = {(POLY_LENGTH){1'b1}};
-
+   reg  [1:POLY_LENGTH]prbs_reg;
+   reg 		       en_q;
   //--------------------------------------------		
   // Implementation
   //--------------------------------------------		
@@ -163,19 +163,19 @@ module prbs_many(RST, CLK, DATA_IN, EN, SEED_WRITE_EN, SEED, DATA_OUT);
    end
    endgenerate
 
-   always @(posedge CLK or posedge RST) begin
-      if(RST == 1'b 1) begin
-         prbs_reg <= {POLY_LENGTH{1'b1}};
-         DATA_OUT <= {NBITS{1'b1}};
-      end
-      else if(SEED_WRITE_EN == 1'b 1) begin
-         DATA_OUT <= prbs_xor_b;
+   always @(posedge CLK ) begin
+      if(RST == 1'b1) begin
          prbs_reg <= SEED;
-      end
-      else if(EN == 1'b 1) begin
-         DATA_OUT <= prbs_xor_b;
-         prbs_reg <= prbs[NBITS];
-      end
-  end
+	 DATA_OUT <= {NBITS{1'b1}};
+      end else begin
+	 DATA_OUT <= prbs_xor_b;
+	 if(SEED_WRITE_EN == 1'b 1) begin
+            prbs_reg <= SEED;
+	 end
+	 else if(EN == 1'b 1) begin
+            prbs_reg <= prbs[NBITS];
+	 end
+      end // else: !if(RST == 1'b1)
+   end // always @ (posedge CLK )
 
 endmodule
