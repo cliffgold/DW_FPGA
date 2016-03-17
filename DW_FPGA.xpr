@@ -176,7 +176,6 @@
       <Filter Type="Constrs"/>
       <File Path="$PSRCDIR/constrs_1/pins.xdc">
         <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
         </FileInfo>
       </File>
@@ -204,12 +203,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/SIM/sim_structs.svh">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/WAVES/sim_top_behav.wcfg">
         <FileInfo>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -225,11 +218,10 @@
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="sim_top"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="SimMode" Val="post-implementation"/>
         <Option Name="SrcSet" Val="sources_1"/>
         <Option Name="XSimWcfgFile" Val="$PSRCDIR/WAVES/sim_top_behav.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PSRCDIR/WAVES/sim_top_behav.wcfg"/>
-        <Option Name="xsim.simulate.runtime" Val="2000ns"/>
+        <Option Name="xsim.simulate.runtime" Val="200000ns"/>
       </Config>
     </FileSet>
     <FileSet Name="clk_wiz_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/clk_wiz_0">

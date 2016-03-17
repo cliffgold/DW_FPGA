@@ -1,10 +1,10 @@
 #Rules to use the Makefile:
 #  1) directory structure:
-#        Verilog files: chipname/chipname.srcs/HDL/*.v .sv .vh .svh  (and subdirs below that)
+#        Verilog files: chipname/chipname.srcs/HDL/*.v .sv .vh .svh  (and subdirs below)
 #        Clock IP:      chipname/chipname.srcs/IP/*clk*/*clk*.xci
 #        Memory IP:     chipname/chipname.srcs/IP/*mem*/*mem*.xci
 #        tcl files:     chipname/chipname.srcs/tcl/*.tcl
-#        sim files:     chipname/chipname.srcs/sim/*.v .sv .vh .svh (and subdirs below at) (TBD)
+#        sim files:     chipname/chipname.srcs/sim/*.v .sv .vh .svh (and subdirs below) (TBD)
 #
 #  2) All files within this structure will be acted upon.
 #        Change extensions for temporary files (testcode.sv.temp)
@@ -59,7 +59,7 @@ $(implTouch): $(implTargets)
 
 $(implTargets): $(synTouch)  $(synTargets) $(tclDir)/impl_top.tcl $(xdcFiles)
 	@echo impl_top.tcl nofile >> $(joblist)  ;\
-	rm -rf $(runDir)/impl_1                  ;\
+	rm -rf $(r unDir)/impl_1                  ;\
 	touch $(implTouch)
 
 $(synTouch): $(synTargets)
@@ -67,7 +67,8 @@ $(synTouch): $(synTargets)
 $(synTargets): $(ipTouch) $(HDLFiles) $(clkTargets) $(memTargets) $(tclDir)/synth_top.tcl
 	@echo synth_top.tcl nofile >> $(joblist)  ;\
 	rm -rf $(runDir)/synth_1                  ;\
-	touch $(synTouch)
+	touch $(synTouch)                         ;\
+	touch $(elabTouch)
 
 $(ipTouch): $(memTargets) $(clkTargets)
 
@@ -80,17 +81,12 @@ $(memTargets): %.xml : %.xci $(tclDir)/mem.tcl
 	touch $(ipTouch)
 
 #Not required
-$(elabTouch): $(ipTouch) $(HDLFiles) $(clkTargets) $(memTargets) $(tclDir)/elab.tcl
+elab:
 	vivado -mode batch -source $(tclDir)/dojob.tcl $(xprFile) -tclargs elab.tcl nofile ;\
-	touch $@
 
 .PHONY: clean
 
 clean:
-	rm -f $(clkTargets)
-	rm -f $(memTargets)
-	rm -f $(synTargets)
-	rm -f $(implTargets)
-	rm -f vivado*
-	rm -f $(makeDir)/*
+	rm -f $(clkTargets)$(memTargets) $(synTargets) $(implTargets)        ;\
+	rm -f $(makeDir)/* vivado* .init_design*.rst .opt_design*.rst hs_err*
 

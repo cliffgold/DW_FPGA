@@ -11,11 +11,11 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="995000000fs"></ZoomStartTime>
-      <ZoomEndTime time="1121000001fs"></ZoomEndTime>
-      <Cursor1Time time="1100000000fs"></Cursor1Time>
+      <ZoomStartTime time="1395864197fs"></ZoomStartTime>
+      <ZoomEndTime time="1448827161fs"></ZoomEndTime>
+      <Cursor1Time time="2890000000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="10" />
+   <WVObjectSize size="23" />
    <wvobject db_ref_id="1" fp_name="/sim_top/rst_in" type="logic">
       <obj_property name="ElementShortName">rst_in</obj_property>
       <obj_property name="ObjectShortName">rst_in</obj_property>
@@ -37,6 +37,7 @@
    <wvobject db_ref_id="1" fp_name="/sim_top/bus_pcie_wr" type="array">
       <obj_property name="ElementShortName">bus_pcie_wr</obj_property>
       <obj_property name="ObjectShortName">bus_pcie_wr</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sim_top/bus_pcie_req" type="array">
       <obj_property name="ElementShortName">bus_pcie_req</obj_property>
@@ -47,16 +48,228 @@
       <obj_property name="ObjectShortName">pcie_bus_rd</obj_property>
       <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_data_rd" type="array">
-      <obj_property name="ElementShortName">test_data_rd[63:0]</obj_property>
-      <obj_property name="ObjectShortName">test_data_rd[63:0]</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sim_top/bad_fail" type="array">
+      <obj_property name="ElementShortName">bad_fail[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bad_fail[31:0]</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_data_wr" type="array">
-      <obj_property name="ElementShortName">test_data_wr[63:0]</obj_property>
-      <obj_property name="ObjectShortName">test_data_wr[63:0]</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/rnd_bits" type="array">
+      <obj_property name="ElementShortName">rnd_bits[2047:0]</obj_property>
+      <obj_property name="ObjectShortName">rnd_bits[2047:0]</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/bad_fail" type="logic">
-      <obj_property name="ElementShortName">bad_fail</obj_property>
-      <obj_property name="ObjectShortName">bad_fail</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/pcie_rnd_wr" type="array">
+      <obj_property name="ElementShortName">pcie_rnd_wr</obj_property>
+      <obj_property name="ObjectShortName">pcie_rnd_wr</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/ctrl_rnd" type="array">
+      <obj_property name="ElementShortName">ctrl_rnd</obj_property>
+      <obj_property name="ObjectShortName">ctrl_rnd</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/\PRBS[0].prbs_543 /EN" type="logic">
+      <obj_property name="ElementShortName">EN</obj_property>
+      <obj_property name="ObjectShortName">EN</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/xor_bits_q[0]" type="array">
+      <obj_property name="ElementShortName">[0][2047:0]</obj_property>
+      <obj_property name="ObjectShortName">xor_bits_q[0][2047:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/xor_bits_q[0]" type="array">
+      <obj_property name="ElementShortName">[0][2047:0]</obj_property>
+      <obj_property name="ObjectShortName">xor_bits_q[0][2047:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/xor_bits_q[0]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[0][2047:0]</obj_property>
+      <obj_property name="ObjectShortName">xor_bits_q[0][2047:0]</obj_property>
+      <obj_property name="label">xor_/sim_top/top_0/rnd_0/xor_bits_q[0]bits_q[0][2047:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/picked" type="logic">
+      <obj_property name="ElementShortName">picked</obj_property>
+      <obj_property name="ObjectShortName">picked</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/new_xy[0]" type="array">
+      <obj_property name="ElementShortName">[0][2047:0]</obj_property>
+      <obj_property name="ObjectShortName">new_xy[0][2047:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/old_xy[0]" type="array">
+      <obj_property name="ElementShortName">[0][2047:0]</obj_property>
+      <obj_property name="ObjectShortName">old_xy[0][2047:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef" type="array">
+      <obj_property name="ElementShortName">rnd_coef</obj_property>
+      <obj_property name="ObjectShortName">rnd_coef</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x" type="array">
+         <obj_property name="ElementShortName">.x[1023:0]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[1023:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y" type="array">
+         <obj_property name="ElementShortName">.y[1023:0]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[1023:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.run" type="array">
+         <obj_property name="ElementShortName">.run[3:0]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.run[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="vbus5226" type="vbus">
+      <obj_property name="label">x low</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[15]" type="logic">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[15]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[14]" type="logic">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[14]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[13]" type="logic">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[13]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[12]" type="logic">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[12]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[11]" type="logic">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[11]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[10]" type="logic">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[10]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[9]" type="logic">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[9]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[8]" type="logic">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[8]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[7]" type="logic">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[7]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[6]" type="logic">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[6]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[5]" type="logic">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[5]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[4]" type="logic">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[4]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[3]" type="logic">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[3]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[2]" type="logic">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[2]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[1]" type="logic">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[1]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.x[0]" type="logic">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.x[0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="vbus6267" type="vbus">
+      <obj_property name="label">y low</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[15]" type="logic">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[15]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[14]" type="logic">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[14]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[13]" type="logic">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[13]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[12]" type="logic">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[12]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[11]" type="logic">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[11]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[10]" type="logic">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[10]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[9]" type="logic">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[9]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[8]" type="logic">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[8]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[7]" type="logic">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[7]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[6]" type="logic">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[6]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[5]" type="logic">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[5]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[4]" type="logic">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[4]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[3]" type="logic">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[3]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[2]" type="logic">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[2]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[1]" type="logic">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[1]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[0]" type="logic">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="vbus6301" type="vbus">
+      <obj_property name="label">y 67-64</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[67]" type="logic">
+         <obj_property name="ElementShortName">[67]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[67]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[66]" type="logic">
+         <obj_property name="ElementShortName">[66]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[66]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[65]" type="logic">
+         <obj_property name="ElementShortName">[65]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[65]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/rnd_coef.y[64]" type="logic">
+         <obj_property name="ElementShortName">[64]</obj_property>
+         <obj_property name="ObjectShortName">rnd_coef.y[64]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/MEMS[0].coef_mem/addra" type="array">
+      <obj_property name="ElementShortName">addra[9:0]</obj_property>
+      <obj_property name="ObjectShortName">addra[9:0]</obj_property>
    </wvobject>
 </wave_config>

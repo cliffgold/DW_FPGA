@@ -11,12 +11,12 @@ module sum
 `include "structs.svh"
       
    input sys_s      sys;
-   input coef_sum_s coef_sum;
+   input 	     coef_sum_s coef_sum;
    
-   output sum_pick_s  sum_pick;
+   output 	     sum_pick_s sum_pick;
 
-   reg signed [23:0]    sum_q [0:((MAX_CMEM+1)/2) -1][0:MAX_CMEM_SEL];
-   reg [MAX_RUN_BITS:0] run [0:MAX_CMEM_SEL-1];
+   reg signed [23:0] sum_q [0:((MAX_CMEM+1)/2) -1][0:MAX_CMEM_SEL];
+   reg [MAX_RUNS:0]  run [0:MAX_CMEM_SEL-1];
     
    integer 	      i;
    integer 	      j;
@@ -61,7 +61,7 @@ module sum
 	    end
 	 end
       end // else: !if(sys.rst)
-   end // always@ (posedge sys.clk or posedge sys.rst)
+   end // always@ (posedge sys.clk )
 
    always@(posedge sys.clk) begin
       if (sys.reset) begin

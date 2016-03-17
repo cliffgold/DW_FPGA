@@ -40,6 +40,25 @@ typedef struct packed
 
 parameter MAX_PCIE_REQ_S = MAX_RD_TAG+1 + 1 + 32 -1;
 
+typedef struct packed
+	       {
+		  logic [MAX_CMEM_SEL:0]  sel;
+		  logic [MAX_CMEM_ADDR:0] addr;
+		  }
+	       pcie_coef_addr_s;
+
+parameter MAX_COEF_ADDR_S = MAX_CMEM_ADDR + MAX_CMEM_SEL + 1;
+
+typedef struct packed
+	       {
+		  logic 		      is_cmd;
+		  logic [MAX_RUNS:0] 	      run;
+		  logic 		      ctrl1;
+		  logic [MAX_CTRL_MEM_ADDR:0] addr;
+		  }
+		 ctrl_addr_s;
+
+parameter MAX_CTRL_ADDR_S = MAX_CTRL_MEM_ADDR + MAX_RUN_BITS + 1 + 1;
 
 typedef struct packed
 	       {
@@ -53,67 +72,67 @@ parameter MAX_CTRL_COEF_S = 3 -1;
 
 typedef struct packed
 	       {
-		  logic                   init;
-		  logic                   en;
-		  logic [MAX_RUN_BITS:0]  run;
+		  logic               init;
+		  logic               en;
+		  logic [MAX_RUNS:0]  run;
 		  
 		  logic [MAX_FLIP_BITS:0] flips;
 		  }
 		 ctrl_rnd_s;
 
 parameter MAX_CTRL_RND_S = 1+1 + (MAX_FLIP_BITS+1) +
-                           MAX_RUN_BITS+1 -1;
+                           MAX_RUNS+1 -1;
 
 typedef struct packed
 	       {
 		  logic                  init;
 		  logic                  en;
 
-		  logic [0:MAX_RUN] [MAX_TEMP_BITS:0]   temperature;
-		  logic [0:MAX_RUN] [MAX_OFFSET_BITS:0] offset;
+		  logic [0:MAX_RUNS] [MAX_TEMP_BITS:0]   temperature;
+		  logic [0:MAX_RUNS] [MAX_OFFSET_BITS:0] offset;
 		}
 		 ctrl_pick_s;
 
-parameter MAX_CTRL_PICK_S = 2 + MAX_RUN_BITS+1 +
-			    (MAX_RUN+1)*(MAX_TEMP_BITS+1) +
-			    (MAX_RUN+1)*(MAX_OFFSET_BITS+1) -1;
+parameter MAX_CTRL_PICK_S = 2 + MAX_RUNS+1 +
+			    (MAX_RUNS+1)*(MAX_TEMP_BITS+1) +
+			    (MAX_RUNS+1)*(MAX_OFFSET_BITS+1) -1;
 
 typedef struct packed
 	       {
-		  logic [MAXXN:0]  x;
-		  logic [MAXYN:0]  y;
-		  logic [MAX_RUN_BITS:0] run;
+		  logic [MAXXN:0]    x;
+		  logic [MAXYN:0]    y;
+		  logic [MAX_RUNS:0] run;
 		}
 	       rnd_coef_s;
 
-parameter MAX_RND_COEF_S = MAXXN+1 + MAXYN+1 + MAX_RUN_BITS+1 - 1;
+parameter MAX_RND_COEF_S = MAXXN+1 + MAXYN+1 + MAX_RUNS+1 - 1;
 
 typedef struct packed
 	       {
 		  logic signed [0:MAX_CMEM] [MAX_CMEM_DATA:0]  subtotal;
-		  logic [MAX_RUN_BITS:0] run;
+		  logic [MAX_RUNS:0] run;
 		}
 	       coef_sum_s;
 
-parameter MAX_COEF_SUM_S = (MAX_CMEM+1)*(MAX_CMEM_DATA+1) + MAX_RUN_BITS+1 - 1;
+parameter MAX_COEF_SUM_S = (MAX_CMEM+1)*(MAX_CMEM_DATA+1) + MAX_RUNS+1 - 1;
 
 typedef struct packed
 	       {
-		  logic [MAX_RUN:0]      pick;
-		  logic [MAX_RUN_BITS:0] run;
+		  logic [MAX_RUN_BITS:0] pick;
+		  logic [MAX_RUNS:0]     run;
 		  }
 		 pick_rnd_s;
 
-parameter MAX_PICK_RND = MAX_RUN + 1;
+parameter MAX_PICK_RND = MAX_RUN_BITS + MAX_RUNS + 1;
 
 typedef struct packed
 	       {
-		  logic signed [23:0]    full_sum;
-		  logic [MAX_RUN_BITS:0] run;
+		  logic signed [23:0] full_sum;
+		  logic [MAX_RUNS:0]  run;
 		  }
 		 sum_pick_s;
 
-parameter MAX_SUM_PICK = 24 + MAX_RUN_BITS;
+parameter MAX_SUM_PICK = 24 + MAX_RUNS;
 
 typedef struct packed
 	       {
@@ -122,18 +141,37 @@ typedef struct packed
 		  logic [MAX_FLIP_BITS:0]   flips;
 		  logic [MAX_TEMP_BITS:0]   temperature;
 		  logic [MAX_OFFSET_BITS:0] offset;      
-		  logic [31:0] 		    count;
 		  }
-		 ctrl_word_s;
+		 ctrl_word1_s;
 
-parameter MAX_CTRL_WORD_S = 5 + MAX_FLIP_BITS+1 + NJIGGLE_WORD  -1;
+parameter MAX_CTRL1_WORD_S = 1                 + 
+			     MAX_FLIP_BITS+1   + 
+			     MAX_TEMP_BITS+1   +
+			     MAX_OFFSET_BITS+1   -1;
 
 typedef struct packed
 	       {
-		  logic [MAX_RUN:0] stop;
-		  logic [MAX_RUN:0] start;
-		  logic             init;
+		  logic [31:0] 		    count;
 		  }
-		 pcie_ctrl_data_s;
+		 ctrl_word0_s;
 
-parameter MAX_PCIE_CTRL_DATA_S = MAX_RUN+1 + MAX_RUN+1 + 1 -1;
+parameter MAX_CTRL0_WORD_S = 31;
+
+typedef struct packed
+	       {
+		  ctrl_word0_s ctrl0;
+		  ctrl_word1_s ctrl1;
+		  }
+		 ctrl_word_s;
+
+parameter MAX_CTRL_WORD_S = MAX_CTRL0_WORD_S + MAX_CTRL1_WORD_S + 1;
+
+typedef struct packed
+	       {
+		  logic [MAX_RUN_BITS:0] stop;
+		  logic [MAX_RUN_BITS:0] start;
+		  logic                  init;
+		  }
+		 ctrl_cmd_s;
+
+parameter MAX_CTRL_CMD_S = MAX_RUN_BITS+1 + MAX_RUN_BITS+1 + 1 -1;
