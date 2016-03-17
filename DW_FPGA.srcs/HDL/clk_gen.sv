@@ -23,18 +23,25 @@ module clk_gen
    reg    reset_q;
    reg    reset_in;
    reg    reset_in_q;
+   reg    sys_reset;
    
    always@(posedge sys.clk) begin
-      if (reset_in_q) begin
+      if (rst_in | reset_in_q) begin
 	 reset     <= 1'b1;
 	 reset_q   <= 1'b1;
-	 sys.reset <= 1'b1;
+	 sys_reset <= 1'b1;
       end else begin
 	 reset     <= 1'b0;
 	 reset_q   <= reset;
-	 sys.reset <= reset_q;
+	 sys_reset <= reset_q;
       end
    end // always@ (posedge clk)
+   
+   BUFG sys_reset_bufg_0
+     (
+      .I(sys_reset),
+      .O(sys.reset)
+      );
    
    clk_wiz_0 clk_wiz_0_0
      (

@@ -18,44 +18,44 @@ module coef
    
    
    input sys_s       sys;
-   input rnd_coef_s  rnd_coef;
-   input ctrl_coef_s ctrl_coef;
-   input pcie_wr_s   pcie_coef_wr;
-   input pcie_req_s  pcie_coef_req;
+   input 		     rnd_coef_s rnd_coef;
+   input 		     ctrl_coef_s ctrl_coef;
+   input 		     pcie_wr_s pcie_coef_wr;
+   input 		     pcie_req_s pcie_coef_req;
       
-   output coef_sum_s coef_sum;
-   output pcie_rd_s   coef_pcie_rd;
+   output 		     coef_sum_s coef_sum;
+   output 		     pcie_rd_s coef_pcie_rd;
 
-   wire [MAX_CMEM_DATA:0] subtotal [0:MAX_CMEM];  // unflopped outputs
+   wire [MAX_CMEM_DATA:0]    subtotal [0:MAX_CMEM]; // unflopped outputs
 
-   wire [MAX_CMEM_DATA:0]  rd_data;
+   wire [MAX_CMEM_DATA:0]    rd_data;
    
-   reg  [MAX_CMEM_ADDR:0] addr       [0:MAX_CMEM];
-   reg  [MAX_CMEM_ADDR:0] addr_q     [0:MAX_CMEM];
-   reg  [MAX_CMEM_DATA:0] wdata_q    [0:MAX_CMEM];
-   reg                    write_en_q [0:MAX_CMEM];
+   reg [MAX_CMEM_ADDR:0]     addr [0:MAX_CMEM];
+   reg [MAX_CMEM_ADDR:0]     addr_q [0:MAX_CMEM];
+   reg [MAX_CMEM_DATA:0]     wdata_q [0:MAX_CMEM];
+   reg 			     write_en_q [0:MAX_CMEM];
 
-   reg [MAXXN:0]        x;
-   reg [MAXYN:0]        y;
+   reg [MAXXN:0] 	     x;
+   reg [MAXYN:0] 	     y;
 
-   wire  [MAX_CMEM_SEL:0]  pcie_wr_sel;
-   wire  [MAX_CMEM_ADDR:0] pcie_wr_addr;
+   wire [MAX_CMEM_SEL:0]     pcie_wr_sel;
+   wire [MAX_CMEM_ADDR:0]    pcie_wr_addr;
    
-   wire  [MAX_CMEM_SEL:0]  pcie_req_sel;
-   wire  [MAX_CMEM_ADDR:0] pcie_req_addr;
+   wire [MAX_CMEM_SEL:0]     pcie_req_sel;
+   wire [MAX_CMEM_ADDR:0]    pcie_req_addr;
    
    reg [MAX_RD_TAG:0] 	     req_tag_hold;
-   reg [MAX_CMEM_SEL:0] 	     req_sel_hold;
+   reg [MAX_CMEM_SEL:0]      req_sel_hold;
    reg [MAX_COEF_REQ_PIPE:0] req_pipe;
 
-   reg                       active_q;
-   reg [MAX_RUN_BITS:0]      run;
-   reg [MAX_RUN_BITS:0]      run_q;
-   reg [MAX_RUN_BITS:0]      run_q2;
+   reg 			     active_q;
+   reg [MAX_RUNS:0] 	     run;
+   reg [MAX_RUNS:0] 	     run_q;
+   reg [MAX_RUNS:0] 	     run_q2;
    
-   genvar     mem;  //Each mem handles 2 bits, so count = xn/2
-   integer    xn;
-   integer    ii;
+   genvar 		     mem; //Each mem handles 2 bits, so count = xn/2
+   integer 		     xn;
+   integer 		     ii;
    
    assign pcie_wr_addr = pcie_coef_wr.addr[ MAX_CMEM_ADDR              : 0];
    assign pcie_wr_sel  = pcie_coef_wr.addr[(MAX_CMEM_ADDR+MAX_CMEM_SEL+1):(MAX_CMEM_ADDR+1)];
@@ -211,7 +211,8 @@ module coef
 	 
          blk_mem_gen_0 coef_mem
            (
-            .addra(addr_q[mem]),
+            .ena(~sys.reset),
+	    .addra(addr_q[mem]),
             .dina(wdata_q[mem]),
             .douta(subtotal[mem]),
             .wea(write_en_q[mem]),
