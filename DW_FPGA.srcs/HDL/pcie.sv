@@ -76,8 +76,8 @@ module pcie
             if ((bus_pcie_wr_q.addr >= COEF_BAR_START) &&
                 (bus_pcie_wr_q.addr <= COEF_BAR_END)) begin
             
-               pcie_coef_wr.data <= bus_pcie_wr_q.data[MAX_PCIE_COEF_DATA:0];
-               pcie_coef_wr.addr <= bus_pcie_wr_q.addr[MAX_PCIE_COEF_ADDR:0];
+               pcie_coef_wr.data <= bus_pcie_wr_q.data;
+               pcie_coef_wr.addr <= bus_pcie_wr_q.addr;
                pcie_coef_wr.vld  <= 1'b1;
                pcie_ctrl_wr.vld  <= 1'b0;
                pcie_rnd_wr.vld   <= 1'b0;
@@ -85,8 +85,8 @@ module pcie
             else if ((bus_pcie_wr_q.addr >= CTRL_BAR_START) &&
                      (bus_pcie_wr_q.addr <= CTRL_BAR_END)) begin
 
-               pcie_ctrl_wr.data <= bus_pcie_wr_q.data[MAX_PCIE_CTRL_DATA:0];
-               pcie_ctrl_wr.addr <= bus_pcie_wr_q.addr[MAX_PCIE_CTRL_ADDR:0];
+               pcie_ctrl_wr.data <= bus_pcie_wr_q.data;
+               pcie_ctrl_wr.addr <= bus_pcie_wr_q.addr;
                pcie_coef_wr.vld  <= 1'b0;
                pcie_ctrl_wr.vld  <= 1'b1;
                pcie_rnd_wr.vld   <= 1'b0;
@@ -94,8 +94,8 @@ module pcie
             else if ((bus_pcie_wr_q.addr >= RND_BAR_START) &&
                      (bus_pcie_wr_q.addr <= RND_BAR_END)) begin
 
-               pcie_rnd_wr.data <= bus_pcie_wr_q.data[MAX_PCIE_RND_DATA:0];
-               pcie_rnd_wr.addr <= bus_pcie_wr_q.addr[MAX_PCIE_RND_ADDR:0];
+               pcie_rnd_wr.data <= bus_pcie_wr_q.data;
+               pcie_rnd_wr.addr <= bus_pcie_wr_q.addr;
                pcie_coef_wr.vld <= 1'b0;
                pcie_ctrl_wr.vld <= 1'b0;
                pcie_rnd_wr.vld  <= 1'b1;

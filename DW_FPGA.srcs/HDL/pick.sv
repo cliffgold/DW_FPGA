@@ -14,17 +14,17 @@ module pick
 `include "structs.svh"
       
    input sys_s         sys;
-   input sum_pick_s    sum_pick;
-   input ctrl_pick_s   ctrl_pick;
-   input pcie_req_s    pcie_pick_req;
+   input 			 sum_pick_s sum_pick;
+   input 			 ctrl_pick_s ctrl_pick;
+   input 			 pcie_req_s pcie_pick_req;
 
-   output pcie_rd_s    pick_pcie_rd;
-   output pick_rnd_s   pick_rnd;
+   output 			 pcie_rd_s pick_pcie_rd;
+   output 			 pick_rnd_s pick_rnd;
 
    reg signed [NJIGGLE_WORD-1:0] jiggle;
    reg signed [NJIGGLE_WORD-2:0] rnd_bits;
 
-   reg signed [MAX_SUM_BITS:0] 	 old_sum [0:MAX_RUN];
+   reg signed [MAX_SUM_BITS:0] 	 old_sum [0:MAX_RUN_BITS];
    reg signed [MAX_SUM_BITS:0] 	 old_sum_q;
    reg signed [MAX_SUM_BITS:0] 	 old_sum_j;
    reg signed [MAX_SUM_BITS:0] 	 mult_j;
@@ -33,7 +33,7 @@ module pick
    reg signed [MAX_SUM_BITS:0] 	 full_sum_q1;
    reg signed [MAX_SUM_BITS:0] 	 full_sum_q2;
 
-   reg [MAX_RUN_BITS:0] 	 run_q;
+   reg [MAX_RUNS:0] 		 run_q;
    reg [MAX_RUN_BITS:0] 	 run_q1;
    reg [MAX_RUN_BITS:0] 	 run_q2;
    
@@ -82,8 +82,8 @@ module pick
 	 
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
-	 pick_rnd.pick[MAX_RUN:0]     <= 'b0;
-	 pick_rnd.run[MAX_RUN_BITS:0] <= 'b0;
+	 pick_rnd.pick[MAX_RUN_BITS:0] <= 'b0;
+	 pick_rnd.run[MAX_RUNS:0]      <= 'b0;
       end else begin
 	 pick_rnd.run <= run_q2;
 	 if (full_sum_q2 < old_sum_j)   begin
