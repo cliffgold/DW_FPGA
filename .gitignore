@@ -50,8 +50,8 @@ Temporary Items
 #   Vivado files added by Cliff
 # ===============================
 *~
-/DW_FPGA.srcs/IP/**/*
-!/DW_FPGA.srcs/IP/**/*.xci
+/DW_FPGA.srcs/IP/*/*
+!/DW_FPGA.srcs/IP/*/*.xci
 DW_FPGA.cache/
 DW_FPGA.runs/
 DW_FPGA.hw/
