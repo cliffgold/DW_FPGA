@@ -133,7 +133,9 @@ module top
       .rnd_coef(rnd_coef)
       );
 
-   coef coef_0
+   coef
+     #(.IS_SIM(IS_SIM)) 
+     coef_0
     ( 
      .sys(sys),
      .rnd_coef(rnd_coef),

@@ -1,12 +1,15 @@
 // Parameters
 
+parameter IS_SIM       = 0;
 //coef block 
 parameter NROWS        = 16;  //Number of 4x4 structures in a column.  12 for DWAVE-2x
 parameter NCOLS        = 16;  //Number of 4x4 structures in a row.     12 for DWAVE-2x
 
 parameter NBITSPERQBIT  = 8;     //Accuracy of coefficients
 parameter MAX_CMEM_ADDR = 10-1;  //Max address bit of each coef mem
-                                 //2 xbits + 4 shared ybits + 4 ybits 
+                                 //2 xbits + 4 shared ybits + 4 ybits
+parameter MAX_CMEM_ADDR_BITS = (2 ** (MAX_CMEM_ADDR+1)) - 1;
+ 
 parameter MAX_RUN_BITS  = 15;    //Max number of runs in the same pipe
 parameter MAX_RUNS      = $clog2(MAX_RUN_BITS) - 1;
 

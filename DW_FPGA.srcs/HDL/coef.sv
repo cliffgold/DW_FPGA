@@ -17,14 +17,14 @@ module coef
 `include "structs.svh"
    
    
-   input sys_s       sys;
-   input 		     rnd_coef_s rnd_coef;
-   input 		     ctrl_coef_s ctrl_coef;
-   input 		     pcie_wr_s pcie_coef_wr;
-   input 		     pcie_req_s pcie_coef_req;
+   input  sys_s       sys;
+   input  rnd_coef_s  rnd_coef;
+   input  ctrl_coef_s ctrl_coef;
+   input  pcie_wr_s   pcie_coef_wr;
+   input  pcie_req_s  pcie_coef_req;
       
-   output 		     coef_sum_s coef_sum;
-   output 		     pcie_rd_s coef_pcie_rd;
+   output coef_sum_s  coef_sum;
+   output pcie_rd_s   coef_pcie_rd;
 
    wire [MAX_CMEM_DATA:0]    subtotal [0:MAX_CMEM]; // unflopped outputs
 
@@ -184,7 +184,7 @@ module coef
       end // block: HORIZ
 
          
-      for (mem=0; mem<=MAX_CMEM; mem=mem+1) begin : MEMS       //All mems
+      for (mem=0; mem<=MAX_CMEM; mem=mem+1) begin : cmem       //All mems
          
          always @ (posedge sys.clk) begin
             if (sys.reset) begin
@@ -208,17 +208,68 @@ module coef
                end // else: !if((pcie_req_sel == mem) && pcie_coef_req.vld)
 	    end // else: !if(sys.reset)
 	 end // always @ (posedge sys.clk)
-	 
-         blk_mem_gen_0 coef_mem
-           (
-            .ena(~sys.reset),
-	    .addra(addr_q[mem]),
-            .dina(wdata_q[mem]),
-            .douta(subtotal[mem]),
-            .wea(write_en_q[mem]),
-            .clka(sys.clk)
-            );
 
+	 if (IS_SIM == 0) begin
+            coef_mem coef_mem_0
+              (
+               .ena(~sys.reset),
+	       .addra(addr_q[mem]),
+               .dina(wdata_q[mem]),
+               .douta(subtotal[mem]),
+               .wea(write_en_q[mem]),
+               .clka(sys.clk)
+               );
+	 end else begin // if (IS_SIM == 0)
+//synthesis translate_off
+	    if (mem == MAX_CMEM/2) begin
+               coef_mem_alt coef_mem_alt_0
+		 (
+		  .ena(~sys.reset),
+		  .addra(addr_q[mem]),
+		  .dina(wdata_q[mem]),
+		  .douta(subtotal[mem]),
+		  .wea(write_en_q[mem]),
+		  .clka(sys.clk)
+		  );
+	    end // if (mem == 65)
+
+	    else if (mem == 1 + (MAX_CMEM/2)) begin
+               coef_mem_inc coef_mem_inc_0
+		 (
+		  .ena(~sys.reset),
+		  .addra(addr_q[mem]),
+		  .dina(wdata_q[mem]),
+		  .douta(subtotal[mem]),
+		  .wea(write_en_q[mem]),
+		  .clka(sys.clk)
+		  );
+	    end // if (mem == 127)
+
+	    else if (mem == MAX_CMEM) begin
+               coef_mem_dec coef_mem_dec_0
+		 (
+		  .ena(~sys.reset),
+		  .addra(addr_q[mem]),
+		  .dina(wdata_q[mem]),
+		  .douta(subtotal[mem]),
+		  .wea(write_en_q[mem]),
+		  .clka(sys.clk)
+		  );
+	    end // if (mem == 127)
+
+	    else begin
+               coef_mem coef_mem_0
+		 (
+		  .ena(~sys.reset),
+		  .addra(addr_q[mem]),
+		  .dina(wdata_q[mem]),
+		  .douta(subtotal[mem]),
+		  .wea(write_en_q[mem]),
+		  .clka(sys.clk)
+		  );
+	    end // else: !if(mem == 511)
+//synthesis translate_on
+	 end // else: !if(IS_SIM == 0)
       end // block: MEMS
    endgenerate
 

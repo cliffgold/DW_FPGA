@@ -23,11 +23,21 @@ module sim_top();
    
    reg [63:0] test_data_rd;
    reg [63:0] test_data_wr;
+   reg [63:0] test_data_ex;
    reg [31:0] test_addr;
    
    reg [31:0]  bad_fail;
         
-   top top_0
+   reg [MAX_CMEM_SEL:0]  test_coef_sel  [0:3];
+   reg [MAX_CMEM_ADDR:0] test_coef_addr [0:3];
+   reg [MAX_CMEM_DATA:0] test_coef_data [0:3][0:3];
+
+   integer 		 i;
+   integer               randnum;
+
+   top 
+     #(.IS_SIM(1))
+     top_0
      (
       .clk_input(clk_input),
       .rst_in(rst_in),

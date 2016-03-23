@@ -46,4 +46,8 @@ task automatic pcie_read
       data = pcie_bus_rd.data;
    end // block: bus_pcie_read
    
-endtask //
+endtask // while
+
+
+
+   
