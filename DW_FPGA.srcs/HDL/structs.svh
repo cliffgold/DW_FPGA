@@ -58,17 +58,17 @@ typedef struct packed
 		  }
 		 ctrl_addr_s;
 
-parameter MAX_CTRL_ADDR_S = MAX_CTRL_MEM_ADDR + MAX_RUN_BITS + 1 + 1;
+parameter MAX_CTRL_ADDR_S = 1 + MAX_RUNS+1 + 1 + MAX_CTRL_MEM_ADDR+1 -1;
 
 typedef struct packed
 	       {
-		  logic active;
-		  logic init;
-		  logic en;
+		  logic [MAX_RUNS:0] run;
+		  logic [MAX_QBIT:0] addr;
 		  }
-		 ctrl_coef_s;
+	       pcie_rnd_addr_s;
 
-parameter MAX_CTRL_COEF_S = 3 -1;
+parameter MAX_RND_ADDR_S = MAX_CMEM_ADDR + MAX_CMEM_SEL + 1;
+
 
 typedef struct packed
 	       {
@@ -76,26 +76,24 @@ typedef struct packed
 		  logic               en;
 		  logic [MAX_RUNS:0]  run;
 		  
-		  logic [MAX_FLIP_BITS:0] flips;
+		  logic [MAX_FLIP:0] flips;
 		  }
 		 ctrl_rnd_s;
 
-parameter MAX_CTRL_RND_S = 1+1 + (MAX_FLIP_BITS+1) +
+parameter MAX_CTRL_RND_S = 1+1 + (MAX_FLIP+1) +
                            MAX_RUNS+1 -1;
 
 typedef struct packed
 	       {
-		  logic                  init;
-		  logic                  en;
+		  logic                 init;
+		  logic 		en;
+		  logic                 early_en;
 
-		  logic [0:MAX_RUNS] [MAX_TEMP_BITS:0]   temperature;
-		  logic [0:MAX_RUNS] [MAX_OFFSET_BITS:0] offset;
+		  logic [MAX_TEMP:0]    temperature;
 		}
 		 ctrl_pick_s;
 
-parameter MAX_CTRL_PICK_S = 2 + MAX_RUNS+1 +
-			    (MAX_RUNS+1)*(MAX_TEMP_BITS+1) +
-			    (MAX_RUNS+1)*(MAX_OFFSET_BITS+1) -1;
+parameter MAX_CTRL_PICK_S = 2 + MAX_TEMP+1 -1;
 
 typedef struct packed
 	       {
@@ -118,12 +116,12 @@ parameter MAX_COEF_SUM_S = (MAX_CMEM+1)*(MAX_CMEM_DATA+1) + MAX_RUNS+1 - 1;
 
 typedef struct packed
 	       {
-		  logic [MAX_RUN_BITS:0] pick;
-		  logic [MAX_RUNS:0]     run;
+		  logic               pick;
+		  logic [MAX_RUNS:0]  run;
 		  }
 		 pick_rnd_s;
 
-parameter MAX_PICK_RND = MAX_RUN_BITS + MAX_RUNS + 1;
+parameter MAX_PICK_RND = 1 + MAX_RUNS + 1;
 
 typedef struct packed
 	       {
@@ -138,16 +136,12 @@ typedef struct packed
 	       {
 		  logic done;
 
-		  logic [MAX_FLIP_BITS:0]   flips;
-		  logic [MAX_TEMP_BITS:0]   temperature;
-		  logic [MAX_OFFSET_BITS:0] offset;      
+		  logic [MAX_FLIP:0]   flips;
+		  logic [MAX_TEMP:0]   temperature;
 		  }
 		 ctrl_word1_s;
 
-parameter MAX_CTRL1_WORD_S = 1                 + 
-			     MAX_FLIP_BITS+1   + 
-			     MAX_TEMP_BITS+1   +
-			     MAX_OFFSET_BITS+1   -1;
+parameter MAX_CTRL1_WORD_S = 1 + MAX_FLIP+1 + MAX_TEMP+1 -1;
 
 typedef struct packed
 	       {

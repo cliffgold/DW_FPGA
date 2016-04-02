@@ -108,7 +108,7 @@ module ctrl_onerun
    
    blk_mem_gen_1 ctrl_mem_0
      (
-      .ena(sys.reset),
+      .ena(~sys.reset),
       .addra(addr),
       .dina(ram_data),
       .douta(ram_data_out),

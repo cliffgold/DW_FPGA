@@ -10,10 +10,11 @@ parameter MAX_CMEM_ADDR = 10-1;  //Max address bit of each coef mem
                                  //2 xbits + 4 shared ybits + 4 ybits
 parameter MAX_CMEM_ADDR_BITS = (2 ** (MAX_CMEM_ADDR+1)) - 1;
  
-parameter MAX_RUN_BITS  = 15;    //Max number of runs in the same pipe
+parameter MAX_RUN_BITS  = 19;    //Max number of runs in the same pipe - 1
 parameter MAX_RUNS      = $clog2(MAX_RUN_BITS) - 1;
 
 parameter NQBITS        = NROWS * NCOLS * 8;
+parameter MAX_QBIT      = $clog2(NQBITS-1) - 1;
 
  //Bits are divided into planes x and y;
 //There are 4 bits in each plane for each 4x4 unit
@@ -51,19 +52,25 @@ parameter MAX_PCIE_RND_DATA   = 31;
 parameter MAX_PCIE_RND_ADDR   = 8;
 parameter MAX_PCIE_CTRL_DATA  = 63;
 
-parameter NJIGGLE_WORD        = 24;
-parameter MAX_SUM_BITS        = 23;
+parameter MAX_SUM             = 23;
 
 //Pipes
 
 parameter MAX_COEF_REQ_PIPE = 2;
-parameter MAX_OFFSET_BITS   = 8;
-parameter MAX_TEMP_BITS     = 15;
+parameter MAX_TEMP          = 15;
 
 //prbs
-parameter MAX_FLIP_BITS     = $clog2(NQBITS) - 2;
+parameter MAX_FLIP          = $clog2(NQBITS) - 2;
 parameter MAX_PRBS          = (NQBITS+32-1)/288;
 parameter MAX_PRBS_CNT      = $clog2(MAX_PRBS*37);   
 
+//CTRL sequence
+parameter CTRL_RND_RUN    = 0;
+parameter CTRL_PICK_RUN   = 18;
+parameter CTRL_PICK_E_RUN = 16;
+
+parameter COEF_RUN        = 3;
+parameter SUM_RUN         = 8;
+parameter PICK_RUN        = 0;
 
    

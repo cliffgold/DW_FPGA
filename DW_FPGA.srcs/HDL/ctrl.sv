@@ -4,7 +4,6 @@ module ctrl
   (sys,	  
    pcie_ctrl_wr,
    ctrl_rnd,
-   ctrl_coef,
    ctrl_pick
    );
 
@@ -15,10 +14,9 @@ module ctrl
    input   pcie_wr_s pcie_ctrl_wr;
    
    output  ctrl_rnd_s  ctrl_rnd;
-   output  ctrl_coef_s ctrl_coef;
    output  ctrl_pick_s ctrl_pick;
    
-   reg [MAX_RUNS:0] 	   run;
+   reg [MAX_RUNS:0] 	   run [0:MAX_RUN_BITS];
    reg [MAX_RUN_BITS:0]    step;
  
    reg [MAX_RUN_BITS:0]      ram_we;
@@ -68,15 +66,20 @@ module ctrl
       
    always@(posedge sys.clk) begin
       if (sys.reset) begin
-	 run   <= 'b0;
-	 step <= 'b0;
+	 step  <= 'b0;
+	 for (i=0;i<=MAX_RUN_BITS;i=i+1) begin
+	    run[i] <= 'b0;
+	 end
       end else begin
-	 if (run == MAX_RUN_BITS) begin
-	    run   <= 'b0;
-	    step <= 'b1;
+	 if (run[0] == MAX_RUN_BITS) begin
+	    run[0] <= 'b0;
+	    step   <= 'b1;
 	 end else begin
-	    run   <= run + 1;
-	    step <= step << 1'b1;
+	    run[0] <= run[0] + 1;
+	    step   <= step << 1'b1;
+	 end
+	 for (i=1;i<=MAX_RUN_BITS;i=i+1) begin
+	    run[i] <= run[i-1];
 	 end
       end
    end // always@ (posedge sys.clk)
@@ -104,22 +107,17 @@ endgenerate
       if (sys.reset) begin
 	 ctrl_rnd  <= 'b0;
 	 ctrl_pick <= 'b0;
-	 ctrl_coef <= 'b0;
       end else begin
-	 ctrl_rnd.init <= ctrl_cmd.init;
-	 ctrl_rnd.en   <= ((|ctrl_cmd.start) | 
-			   (|ctrl_busy));
-	 ctrl_rnd.run  <= run;
-	 ctrl_rnd.flips <= ctrl_word[run].ctrl1.flips;
+	 ctrl_rnd.init  <= ctrl_cmd.init;
+	 ctrl_rnd.en    <= (ctrl_cmd.start[run[CTRL_RND_RUN]] | ctrl_busy[run[CTRL_RND_RUN]]); 
+	 ctrl_rnd.run   <= run[CTRL_RND_RUN];
+	 ctrl_rnd.flips <= ctrl_word[run[CTRL_RND_RUN]].ctrl1.flips;
 
-	 ctrl_pick.init             <= ctrl_cmd.init;
-	 ctrl_pick.temperature[run] <= ctrl_word[run].ctrl1.temperature;
-	 ctrl_pick.offset[run]      <= ctrl_word[run].ctrl1.offset;
+	 ctrl_pick.init        <= ctrl_cmd.init;
+	 ctrl_pick.early_en    <= ctrl_busy[run[CTRL_PICK_E_RUN]];
+	 ctrl_pick.en          <= ctrl_busy[run[CTRL_PICK_RUN]];
+	 ctrl_pick.temperature <= ctrl_word[run[CTRL_PICK_RUN]].ctrl1.temperature;
 
-	 ctrl_coef.init             <= ctrl_cmd.init;
-	 ctrl_coef.en               <= ctrl_busy[run];
-	 ctrl_coef.active           <= ((|ctrl_cmd.start) | 
-					(|ctrl_busy));
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)
    	 

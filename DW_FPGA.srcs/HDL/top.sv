@@ -50,13 +50,13 @@ module top
 
    pcie_wr_s   pcie_ctrl_wr;
 
-   pcie_wr_s   pcie_rnd_wr;    
+   pcie_req_s   pcie_rnd_req;    
+   pcie_rd_s    rnd_pcie_rd;    
 
    pcie_req_s  pcie_pick_req;
    pcie_rd_s   pick_pcie_rd;
    
    ctrl_rnd_s  ctrl_rnd;
-   ctrl_coef_s ctrl_coef;
    ctrl_pick_s ctrl_pick;
    
    rnd_coef_s  rnd_coef;
@@ -107,7 +107,8 @@ module top
                                 
       .pcie_ctrl_wr(pcie_ctrl_wr),
       
-      .pcie_rnd_wr(pcie_rnd_wr),
+      .pcie_rnd_req(pcie_rnd_req),
+      .rnd_pcie_rd(rnd_pcie_rd),
 
       .pcie_pick_req(pcie_pick_req),
       .pick_pcie_rd(pick_pcie_rd)
@@ -119,14 +120,14 @@ module top
       .pcie_ctrl_wr(pcie_ctrl_wr),
 
       .ctrl_rnd(ctrl_rnd),
-      .ctrl_coef(ctrl_coef),
       .ctrl_pick(ctrl_pick)
       );
 
    rnd rnd_0
      (
       .sys(sys),      
-      .pcie_rnd_wr(pcie_rnd_wr),
+      .pcie_rnd_req(pcie_rnd_req),
+      .rnd_pcie_rd(rnd_pcie_rd),
       .ctrl_rnd(ctrl_rnd),
       .pick_rnd(pick_rnd),
 
@@ -141,7 +142,6 @@ module top
      .rnd_coef(rnd_coef),
      .pcie_coef_wr(pcie_coef_wr),
      .pcie_coef_req(pcie_coef_req),
-     .ctrl_coef(ctrl_coef),
 
      .coef_pcie_rd(coef_pcie_rd),
      .coef_sum(coef_sum)

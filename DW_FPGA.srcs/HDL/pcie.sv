@@ -9,14 +9,15 @@ module pcie
    pcie_bus_rd,
 
    coef_pcie_rd,
-   pick_pcie_rd,
-   
+   pick_pcie_rd, 
+   rnd_pcie_rd,
+  
    pcie_coef_wr,
    pcie_ctrl_wr,
-   pcie_rnd_wr,
   
    pcie_coef_req,
-   pcie_pick_req
+   pcie_pick_req,
+   pcie_rnd_req
    );
    
 `include "params.svh"
@@ -31,14 +32,14 @@ module pcie
    
    input  pcie_rd_s  coef_pcie_rd;
    input  pcie_rd_s  pick_pcie_rd;
+   input  pcie_rd_s  rnd_pcie_rd;
    
    output pcie_wr_s  pcie_coef_wr;
    output pcie_wr_s  pcie_ctrl_wr;
-   output pcie_wr_s  pcie_rnd_wr;
 
    output pcie_req_s pcie_coef_req;
-
    output pcie_req_s pcie_pick_req;
+   output pcie_req_s pcie_rnd_req;
 
    reg    pcie_req_busy;
    reg    pcie_req_busy_clr;
@@ -70,7 +71,6 @@ module pcie
       if (sys.reset) begin
          pcie_coef_wr    <= 'b0;
          pcie_ctrl_wr    <= 'b0;
-         pcie_rnd_wr     <= 'b0;
       end else begin // if (sys.reset)
          if (bus_pcie_wr_q.vld) begin 
             if ((bus_pcie_wr_q.addr >= COEF_BAR_START) &&
@@ -80,7 +80,6 @@ module pcie
                pcie_coef_wr.addr <= bus_pcie_wr_q.addr;
                pcie_coef_wr.vld  <= 1'b1;
                pcie_ctrl_wr.vld  <= 1'b0;
-               pcie_rnd_wr.vld   <= 1'b0;
             end
             else if ((bus_pcie_wr_q.addr >= CTRL_BAR_START) &&
                      (bus_pcie_wr_q.addr <= CTRL_BAR_END)) begin
@@ -89,25 +88,10 @@ module pcie
                pcie_ctrl_wr.addr <= bus_pcie_wr_q.addr;
                pcie_coef_wr.vld  <= 1'b0;
                pcie_ctrl_wr.vld  <= 1'b1;
-               pcie_rnd_wr.vld   <= 1'b0;
-            end
-            else if ((bus_pcie_wr_q.addr >= RND_BAR_START) &&
-                     (bus_pcie_wr_q.addr <= RND_BAR_END)) begin
-
-               pcie_rnd_wr.data <= bus_pcie_wr_q.data;
-               pcie_rnd_wr.addr <= bus_pcie_wr_q.addr;
-               pcie_coef_wr.vld <= 1'b0;
-               pcie_ctrl_wr.vld <= 1'b0;
-               pcie_rnd_wr.vld  <= 1'b1;
-            end else begin
-               pcie_coef_wr.vld <= 1'b0;
-               pcie_ctrl_wr.vld <= 1'b0;
-               pcie_rnd_wr.vld  <= 1'b0;
             end
 	 end else begin
             pcie_coef_wr.vld <= 1'b0;
             pcie_ctrl_wr.vld <= 1'b0;
-            pcie_rnd_wr.vld  <= 1'b0;
          end
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)
@@ -137,9 +121,18 @@ module pcie
                pcie_pick_req.vld  <= 1'b1;
                pcie_req_busy      <= 1'b1;
             end
-	 end else begin // if (pcie_req.vld)
-            pcie_coef_req.vld <= 1'b0;
+            else if ((bus_pcie_req_q.addr >= RND_BAR_START) &&
+                     (bus_pcie_req_q.addr <= RND_BAR_END)) begin
+
+               pcie_rnd_req.tag  <= bus_pcie_req_q.tag;
+               pcie_rnd_req.addr <= bus_pcie_req_q.addr;
+               pcie_rnd_req.vld  <= 1'b1;
+               pcie_req_busy      <= 1'b1;
+            end
+	 end else begin // if (bus_pcie_req_q.vld)
+	    pcie_coef_req.vld <= 1'b0;
             pcie_pick_req.vld <= 1'b0;
+	    pcie_rnd_req.vld  <= 1'b0;
 	 end // else: !if(bus_pcie_req_q.vld)
 	 if (pcie_req_busy_clr) begin
 	    pcie_req_busy     <= 1'b0;
@@ -165,6 +158,12 @@ module pcie
 	    else if (pick_pcie_rd.vld) begin
 	       pcie_bus_rd_q.tag  <= pick_pcie_rd.tag;
 	       pcie_bus_rd_q.data <= pick_pcie_rd.data;
+	       pcie_bus_rd_q.vld  <= 1'b1;
+	       pcie_req_busy_clr  <= 1'b1;
+	    end
+	    else if (rnd_pcie_rd.vld) begin
+	       pcie_bus_rd_q.tag  <= rnd_pcie_rd.tag;
+	       pcie_bus_rd_q.data <= rnd_pcie_rd.data;
 	       pcie_bus_rd_q.vld  <= 1'b1;
 	       pcie_req_busy_clr  <= 1'b1;
 	    end else begin

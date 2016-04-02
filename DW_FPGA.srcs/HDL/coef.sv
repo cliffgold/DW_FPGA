@@ -8,7 +8,6 @@ module coef
    rnd_coef,     
    pcie_coef_wr,
    pcie_coef_req,
-   ctrl_coef,
    coef_pcie_rd,
    coef_sum
    );
@@ -19,7 +18,6 @@ module coef
    
    input  sys_s       sys;
    input  rnd_coef_s  rnd_coef;
-   input  ctrl_coef_s ctrl_coef;
    input  pcie_wr_s   pcie_coef_wr;
    input  pcie_req_s  pcie_coef_req;
       
@@ -50,8 +48,6 @@ module coef
 
    reg 			     active_q;
    reg [MAX_RUNS:0] 	     run;
-   reg [MAX_RUNS:0] 	     run_q;
-   reg [MAX_RUNS:0] 	     run_q2;
    
    genvar 		     mem; //Each mem handles 2 bits, so count = xn/2
    integer 		     xn;
@@ -65,14 +61,12 @@ module coef
    
    always @ (posedge sys.clk) begin
       if (sys.reset) begin
-         x <= 'b0;
-         y <= 'b0;
-	 active_q <= 1'b0;
-	 run      <= 'b0;
+         x   <= 'b0;
+         y   <= 'b0;
+	 run <= 'b0;
       end else begin
          x        <= rnd_coef.x;
          y        <= rnd_coef.y;
-	 active_q <= ctrl_coef.active;
 	 run      <= rnd_coef.run;
       end
    end
@@ -221,8 +215,20 @@ module coef
                );
 	 end else begin // if (IS_SIM == 0)
 //synthesis translate_off
-	    if (mem == MAX_CMEM/2) begin
-               coef_mem_alt coef_mem_alt_0
+	    if (mem == 0) begin
+               coef_mem_val coef_mem_val_0
+		 (
+		  .ena(~sys.reset),
+		  .addra(addr_q[mem]),
+		  .dina(wdata_q[mem]),
+		  .douta(subtotal[mem]),
+		  .wea(write_en_q[mem]),
+		  .clka(sys.clk)
+		  );
+	    end // if (mem == 0)
+
+	    else if (mem == MAX_CMEM/2) begin
+               coef_mem_mtn coef_mem_mtn_0
 		 (
 		  .ena(~sys.reset),
 		  .addra(addr_q[mem]),
@@ -275,16 +281,12 @@ module coef
 
    always @ (posedge sys.clk) begin
       if (sys.reset) begin
-	 run_q         <= 'b0;
-	 run_q2        <= 'b0;
 	 coef_sum.run <= 'b0;
 	 for (ii=0;ii<=MAX_CMEM;ii=ii+1) begin
             coef_sum.subtotal[ii] <= 'b0;
 	 end
       end else begin
-	 run_q  <= run;
-	 run_q2 <= run_q;  //memory adds coupla clocks
-	 coef_sum.run <= run_q2;
+	 coef_sum.run <= (MAX_RUN_BITS+1+run -COEF_RUN)%(MAX_RUN_BITS+1);
 	 for (ii=0;ii<=MAX_CMEM;ii=ii+1) begin
 	    coef_sum.subtotal[ii] <= subtotal[ii];
          end
