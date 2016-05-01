@@ -47,7 +47,7 @@ module rnd
    reg 		      pcie_gotrun;
    reg [MAX_RD_TAG:0] tag_q;
    wire		      pipe_out;
-   reg [63:0] 	      new_xy_run [((NQBITS/64)-1):0];
+   reg [63:0] 	      new_xy_run [0:(NQBITS/64)-1];
    wire [63:0] 	      rd_data;
    
 generate
@@ -161,16 +161,13 @@ endgenerate
    end // always@ (posedge sys.clk )
 
 generate
-   for (gi=0;gi<NQBITS/64;gi=gi+64) begin : PCIE_RD_GRAB
-      localparam QINDEX = gi/64;
-      localparam GITOP = gi+63;
-
+   for (gi=0;gi<NQBITS;gi=gi+64) begin : PCIE_RD_GRAB
       always@(posedge sys.clk ) begin
 	 if (sys.reset) begin
-	    new_xy_run[QINDEX] <= 'b0;
+	    new_xy_run[gi/64] <= 'b0;
 	 end else begin
 	    if ((addr_q.run == run) && pcie_req_q) begin
-	       new_xy_run[QINDEX]  <= new_xy[0][GITOP:gi];
+	       new_xy_run[gi/64]  <= new_xy[0][gi+63:gi];
 	    end
 	 end
       end // always@ (posedge sys.clk )
