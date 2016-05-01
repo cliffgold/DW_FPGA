@@ -43,10 +43,24 @@ task automatic pcie_read
       while (pcie_bus_rd.vld == 'b0) begin
 	 @(negedge clk_in);
       end
-      data = pcie_bus_rd.data;
+      data = pcie_bus_rd.data; 
    end // block: bus_pcie_read
-   
-endtask // while
+endtask
+
+// task automatic force_pattern_0
+//   (
+//    ref   reg        clk_in
+//    );
+//    
+//    begin : force_pattern_0
+//       @(negedge clk_in);
+// //      for (i=0;i<1024;i=i+1) begin
+// 	 force sim_top.top_0.coef_0.run=2;
+//          force sim_top.top_0.coef_0.\cmem[1].genblk1.genblk1.coef_mem_0 .U0.native_mem_module.mem_module.\memory_i[0][11:0] = 2;
+// //      end
+//       @(negedge clk_in);
+//    end
+// endtask // while
 
 
 

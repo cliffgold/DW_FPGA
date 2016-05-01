@@ -1,9 +1,10 @@
 //Program controller, start running
 
+// force_pattern_0(clk_input);
+
 ctrl_word.ctrl1.done 	     = 1'b1;
 ctrl_word.ctrl1.flips 	     = 'h2;
 ctrl_word.ctrl1.temperature  = 'h3;
-ctrl_word.ctrl1.offset 	     = 'h4;
 ctrl_word.ctrl0.count 	     = 'h5;
 
 ctrl_addr                    = 'b0;
@@ -50,7 +51,7 @@ pcie_write(CTRL_BAR_START,
 	   clk_input,
 	   bus_pcie_wr);
 
-repeat (10 * MAX_RUN_BITS) @(negedge clk_input);
+repeat ((5+5) * MAX_RUN_BITS) @(negedge clk_input);
 
 
 

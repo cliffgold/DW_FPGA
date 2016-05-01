@@ -33,6 +33,7 @@ module sim_top();
    reg [MAX_CMEM_DATA:0] test_coef_data [0:3][0:3];
 
    integer 		 i;
+   integer 		 j;
    integer               randnum;
 
    top 
