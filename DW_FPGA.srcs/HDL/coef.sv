@@ -36,12 +36,6 @@ module coef
    reg [MAXXN:0] 	     x;
    reg [MAXYN:0] 	     y;
 
-   wire [MAX_CMEM_SEL:0]     pcie_wr_sel;
-   wire [MAX_CMEM_ADDR:0]    pcie_wr_addr;
-   
-   wire [MAX_CMEM_SEL:0]     pcie_req_sel;
-   wire [MAX_CMEM_ADDR:0]    pcie_req_addr;
-   
    reg [MAX_RD_TAG:0] 	     req_tag_hold;
    reg [MAX_CMEM_SEL:0]      req_sel_hold;
    reg [MAX_COEF_REQ_PIPE:0] req_pipe;
@@ -52,13 +46,26 @@ module coef
    genvar 		     mem; //Each mem handles 2 bits, so count = xn/2
    integer 		     xn;
    integer 		     ii;
-   
-   assign pcie_wr_addr = pcie_coef_wr.addr[ MAX_CMEM_ADDR              : 0];
-   assign pcie_wr_sel  = pcie_coef_wr.addr[(MAX_CMEM_ADDR+MAX_CMEM_SEL+1):(MAX_CMEM_ADDR+1)];
 
-   assign pcie_req_addr = pcie_coef_req.addr[ MAX_CMEM_ADDR              : 0];
-   assign pcie_req_sel  = pcie_coef_req.addr[(MAX_CMEM_ADDR+MAX_CMEM_SEL+1):(MAX_CMEM_ADDR+1)];
+   pcie_wr_s                 pcie_coef_wr_q;
+   pcie_req_s                pcie_coef_req_q;
+
+   pcie_coef_addr_s          pcie_wr_addr;
+   pcie_coef_addr_s          pcie_req_addr;
    
+   assign pcie_wr_addr  = pcie_coef_wr_q.addr;
+   assign pcie_req_addr = pcie_coef_req_q.addr;
+   
+   always @ (posedge sys.clk) begin
+      if (sys.reset) begin
+         pcie_coef_wr_q  <= 'b0;
+         pcie_coef_req_q <= 'b0;
+      end else begin
+         pcie_coef_wr_q  <=  pcie_coef_wr;
+         pcie_coef_req_q <=  pcie_coef_req;
+      end
+   end
+
    always @ (posedge sys.clk) begin
       if (sys.reset) begin
          x   <= 'b0;
@@ -186,97 +193,38 @@ module coef
                wdata_q[mem]     <= 'b0;
                write_en_q[mem]  <= 'b0;
             end else begin
-               if ((pcie_wr_sel == mem) && pcie_coef_wr.vld) begin
-                  addr_q[mem]     <= pcie_wr_addr;
-                  wdata_q[mem]    <= pcie_coef_wr.data[MAX_CMEM_DATA:0];
-                  write_en_q[mem] <= 1'b1;
-               end
-               else if ((pcie_req_sel == mem) && pcie_coef_req.vld) begin
-                  addr_q[mem]     <= pcie_req_addr;
-                  wdata_q[mem]    <= 'b0;
-		  write_en_q[mem] <= 1'b0;
-               end else begin
+               wdata_q[mem] <= pcie_coef_wr_q.data[MAX_CMEM_DATA:0];
+               if (pcie_coef_wr_q.vld) begin
+                  addr_q[mem]  <= pcie_wr_addr.addr;
+		  if (mem == pcie_wr_addr.sel) begin
+                     write_en_q[mem] <= 1'b1;
+		  end else begin
+                     write_en_q[mem] <= 1'b0;
+		  end
+	       end
+	       
+               else if (pcie_coef_req_q.vld) begin
+                  addr_q[mem]  <= pcie_req_addr.addr;
+                  write_en_q[mem] <= 1'b0;
+               end 
+
+	       else begin
                   addr_q[mem]     <= addr[mem];
-                  wdata_q[mem]    <= 'b0;
                   write_en_q[mem] <= 'b0;
                end // else: !if((pcie_req_sel == mem) && pcie_coef_req.vld)
 	    end // else: !if(sys.reset)
 	 end // always @ (posedge sys.clk)
 
-	 if (IS_SIM == 0) begin
-            coef_mem coef_mem_0
-              (
-               .ena(~sys.reset),
-	       .addra(addr_q[mem]),
-               .dina(wdata_q[mem]),
-               .douta(subtotal[mem]),
-               .wea(write_en_q[mem]),
-               .clka(sys.clk)
-               );
-	 end else begin // if (IS_SIM == 0)
-//synthesis translate_off
-	    if (mem == 0) begin
-               coef_mem_val coef_mem_val_0
-		 (
-		  .ena(~sys.reset),
-		  .addra(addr_q[mem]),
-		  .dina(wdata_q[mem]),
-		  .douta(subtotal[mem]),
-		  .wea(write_en_q[mem]),
-		  .clka(sys.clk)
-		  );
-	    end // if (mem == 0)
-
-	    else if (mem == MAX_CMEM/2) begin
-               coef_mem_mtn coef_mem_mtn_0
-		 (
-		  .ena(~sys.reset),
-		  .addra(addr_q[mem]),
-		  .dina(wdata_q[mem]),
-		  .douta(subtotal[mem]),
-		  .wea(write_en_q[mem]),
-		  .clka(sys.clk)
-		  );
-	    end // if (mem == 65)
-
-	    else if (mem == 1 + (MAX_CMEM/2)) begin
-               coef_mem_inc coef_mem_inc_0
-		 (
-		  .ena(~sys.reset),
-		  .addra(addr_q[mem]),
-		  .dina(wdata_q[mem]),
-		  .douta(subtotal[mem]),
-		  .wea(write_en_q[mem]),
-		  .clka(sys.clk)
-		  );
-	    end // if (mem == 127)
-
-	    else if (mem == MAX_CMEM) begin
-               coef_mem_dec coef_mem_dec_0
-		 (
-		  .ena(~sys.reset),
-		  .addra(addr_q[mem]),
-		  .dina(wdata_q[mem]),
-		  .douta(subtotal[mem]),
-		  .wea(write_en_q[mem]),
-		  .clka(sys.clk)
-		  );
-	    end // if (mem == 127)
-
-	    else begin
-               coef_mem coef_mem_0
-		 (
-		  .ena(~sys.reset),
-		  .addra(addr_q[mem]),
-		  .dina(wdata_q[mem]),
-		  .douta(subtotal[mem]),
-		  .wea(write_en_q[mem]),
-		  .clka(sys.clk)
-		  );
-	    end // else: !if(mem == 511)
-//synthesis translate_on
-	 end // else: !if(IS_SIM == 0)
-      end // block: MEMS
+         coef_mem coef_mem_0
+           (
+            .ena(~sys.reset),
+	    .addra(addr_q[mem]),
+            .dina(wdata_q[mem]),
+            .douta(subtotal[mem]),
+            .wea(write_en_q[mem]),
+            .clka(sys.clk)
+            );
+      end // block: cmem
    endgenerate
 
    always @ (posedge sys.clk) begin
@@ -296,7 +244,7 @@ module coef
    bigmux
      #(.NBITS(MAX_CMEM_DATA+1),
        .NMUXIN(MAX_CMEM+1),
-       .NSEL(MAX_CMEM_SEL+1)
+       .NFLOPS(2)
        )
    coef_read_mux
      (
@@ -317,10 +265,10 @@ module coef
 	 req_tag_hold   <= 'b0;
 	 req_sel_hold   <= 'b0;
       end else begin
-	 req_pipe <= {req_pipe[MAX_COEF_REQ_PIPE-1:0],pcie_coef_req.vld};
-	 if (pcie_coef_req.vld) begin
-	    req_tag_hold <= pcie_coef_req.tag;
-	    req_sel_hold <= pcie_req_sel;
+	 req_pipe <= {req_pipe[MAX_COEF_REQ_PIPE-1:0],pcie_coef_req_q.vld};
+	 if (pcie_coef_req_q.vld) begin
+	    req_tag_hold <= pcie_coef_req_q.tag;
+	    req_sel_hold <= pcie_req_addr.sel;
 	 end
 	 if (pipe_out) begin
 	    coef_pcie_rd.data <= rd_data;
