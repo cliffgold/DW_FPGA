@@ -18,15 +18,18 @@ module clk_gen
    
    wire   locked;
    wire   clkin_out;
-
+   wire   clkfb_out;
+   wire   clkfb_buf;
+   
    reg    reset;
    reg    reset_q;
    reg    reset_in;
    reg    reset_in_q;
    reg    sys_reset;
    
+   
    always@(posedge sys.clk) begin
-      if (rst_in | reset_in_q) begin
+      if (reset_in_q) begin
 	 reset     <= 1'b1;
 	 reset_q   <= 1'b1;
 	 sys_reset <= 1'b1;
@@ -47,23 +50,29 @@ module clk_gen
      (
       // Clock in ports
       .clk_in1(clk_input),      // input clk_in1
-      .clkfb_in(sys_in.clk),
+      .clkfb_in(clkfb_buf),
       // Clock out ports
       .clk_out1(clk_output),   // output clk_out1
       .clk_out2(clkin_out),
-      .clkfb_out(),
+      .clkfb_out(clkfb_out),
       // Status and control signals
       .reset(rst_in),        // input reset
       .locked(locked)    // output locked
       );    
 
-   BUFG clkout_bufg_0
+   BUFG clkfb_bufg_0
+     (
+      .I(clkfb_out),
+      .O(clkfb_buf)
+      );
+   
+   BUFG sysclk_bufg_0
      (
       .I(clk_output),
       .O(sys.clk)
       );
-   
-   BUFG clkin_bufg_0
+
+   BUFG clkin_out_bufg_0
      (
       .I(clkin_out),
       .O(sys_in.clk)
