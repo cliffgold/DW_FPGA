@@ -10,8 +10,8 @@ set_input_delay -clock clk_input -min $DW_IN_MIN [get_ports bus_pcie*]
 set_input_delay -clock clk_input -max $DW_IN_MAX [get_ports rst_in]
 set_input_delay -clock clk_input -min $DW_IN_MIN [get_ports rst_in]
 
-set_output_delay -clock clkin_out -max $DW_OUT_MAX [get_ports pcie_bus*]
-set_output_delay -clock clkin_out -min $DW_OUT_MIN [get_ports pcie_bus*]
+set_output_delay -clock clk_out2_clk_wiz_0 -max $DW_OUT_MAX [get_ports pcie_bus*]
+set_output_delay -clock clk_out2_clk_wiz_0 -min $DW_OUT_MIN [get_ports pcie_bus*]
 
 set_property IOSTANDARD LVCMOS15 [get_ports bus_pcie*]
 set_property IOSTANDARD LVCMOS15 [get_ports pcie_bus*]
