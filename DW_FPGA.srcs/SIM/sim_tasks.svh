@@ -19,8 +19,8 @@ task automatic pcie_write
       @(negedge clk_in);
       bus_pcie_wr.vld  = 1'b0;
    end
-   
-endtask //
+endtask // while
+
 
 task automatic pcie_read
   (
@@ -45,22 +45,43 @@ task automatic pcie_read
       end
       data = pcie_bus_rd.data; 
    end // block: bus_pcie_read
-endtask
+endtask // while
 
-// task automatic force_pattern_0
-//   (
-//    ref   reg        clk_in
-//    );
-//    
-//    begin : force_pattern_0
-//       @(negedge clk_in);
-// //      for (i=0;i<1024;i=i+1) begin
-// 	 force sim_top.top_0.coef_0.run=2;
-//          force sim_top.top_0.coef_0.\cmem[1].genblk1.genblk1.coef_mem_0 .U0.native_mem_module.mem_module.\memory_i[0][11:0] = 2;
-// //      end
-//       @(negedge clk_in);
-//    end
-// endtask // while
+
+
+task automatic mem_pattern_0 ();
+   integer i;
+   reg [11:0] val;
+   
+   begin : mem_patt_0
+      for (i=0;i<1024;i=i+1) begin
+	 // $write(" %5d, ",i);
+	 val = -2048 + (i*4);
+	 // $write(" %4x, ",val);
+	 sim_top.top_0.coef_0.\cmem[0].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i]   = val;
+	 val = 2047 - (i*4);
+	 // $write(" %4x, ",val);
+	 sim_top.top_0.coef_0.\cmem[255].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	 
+	 if (i < 512) begin
+	    val = -2048 + (i*8);
+	    // $write(" %4x, ",val);
+	    sim_top.top_0.coef_0.\cmem[256].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	    val = 2047 - (i*8);
+	    // $display(" %4x, ",val);
+	    sim_top.top_0.coef_0.\cmem[511].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	 end else begin
+	    val = 4096  + 2047 - (i*8);
+	    // $write(" %4x, ",val);
+	    sim_top.top_0.coef_0.\cmem[256].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	    val = -4096 - 2048 + (i*8);
+	    // $display(" %4x, ",val);
+	    sim_top.top_0.coef_0.\cmem[511].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	 end
+      end // for (i=0;i<1024;i=i+1)
+   end // block: mem_patt_0
+endtask // mem_pattern_0
+
 
 
 

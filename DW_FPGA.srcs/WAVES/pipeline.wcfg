@@ -11,11 +11,11 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1459567965fs"></ZoomStartTime>
-      <ZoomEndTime time="1520431570fs"></ZoomEndTime>
-      <Cursor1Time time="1470000000fs"></Cursor1Time>
+      <ZoomStartTime time="1824884593fs"></ZoomStartTime>
+      <ZoomEndTime time="1853074656fs"></ZoomEndTime>
+      <Cursor1Time time="1835000000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="30" />
+   <WVObjectSize size="22" />
    <wave_markers>
       <marker time="10600000000" label="" />
    </wave_markers>
@@ -26,10 +26,6 @@
    <wvobject db_ref_id="1" fp_name="/sim_top/ready" type="logic">
       <obj_property name="ElementShortName">ready</obj_property>
       <obj_property name="ObjectShortName">ready</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/clk_gen_0/sys_in" type="array">
-      <obj_property name="ElementShortName">sys_in</obj_property>
-      <obj_property name="ObjectShortName">sys_in</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sim_top/top_0/clk_gen_0/sys" type="array">
       <obj_property name="ElementShortName">sys</obj_property>
@@ -116,41 +112,12 @@
       <obj_property name="ElementShortName">run[4:0]</obj_property>
       <obj_property name="ObjectShortName">run[4:0]</obj_property>
    </wvobject>
-   <wvobject type="divider" fp_name="divider1270">
-      <obj_property name="label">TBD</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-   </wvobject>
    <wvobject db_ref_id="1" fp_name="/sim_top/top_0/ctrl_0/ctrl_rnd.en" type="logic">
       <obj_property name="ElementShortName">.en</obj_property>
       <obj_property name="ObjectShortName">ctrl_rnd.en</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/ctrl_0/ctrl_pick.early_en" type="logic">
-      <obj_property name="ElementShortName">.early_en</obj_property>
-      <obj_property name="ObjectShortName">ctrl_pick.early_en</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/ctrl_0/ctrl_pick.init" type="logic">
-      <obj_property name="ElementShortName">.init</obj_property>
-      <obj_property name="ObjectShortName">ctrl_pick.init</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/ctrl_0/ctrl_rnd.init" type="logic">
-      <obj_property name="ElementShortName">.init</obj_property>
-      <obj_property name="ObjectShortName">ctrl_rnd.init</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/old_xy" type="array">
-      <obj_property name="ElementShortName">old_xy[19:0][2047:0]</obj_property>
-      <obj_property name="ObjectShortName">old_xy[19:0][2047:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/rnd_bits" type="array">
-      <obj_property name="ElementShortName">rnd_bits[2047:0]</obj_property>
-      <obj_property name="ObjectShortName">rnd_bits[2047:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/ctrl_rnd_init_q" type="logic">
-      <obj_property name="ElementShortName">ctrl_rnd_init_q</obj_property>
-      <obj_property name="ObjectShortName">ctrl_rnd_init_q</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/rnd_0/ctrl_rnd_init_edge" type="logic">
-      <obj_property name="ElementShortName">ctrl_rnd_init_edge</obj_property>
-      <obj_property name="ObjectShortName">ctrl_rnd_init_edge</obj_property>
+   <wvobject type="divider" fp_name="divider1270">
+      <obj_property name="label">TBD</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
    </wvobject>
 </wave_config>

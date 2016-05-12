@@ -1,8 +1,10 @@
 //Program controller, start running
 
+mem_pattern_0();
+
 // force_pattern_0(clk_input);
 
-ctrl_word.ctrl1.done 	     = 1'b1;
+ctrl_word.ctrl1.next 	     = 'b0;
 ctrl_word.ctrl1.flips 	     = 'h2;
 ctrl_word.ctrl1.temperature  = 'h3;
 ctrl_word.ctrl0.count 	     = 'h5;
