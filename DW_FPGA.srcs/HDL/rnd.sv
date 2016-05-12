@@ -31,6 +31,7 @@ module rnd
    reg [NQBITS-1:0]   old_xy [MAX_RUN_BITS:0];
    reg [MAX_FLIP:0]   flips;
    reg [MAX_RUNS:0]   run;
+   reg [MAX_RUNS:0]   run_q;
    reg 		      picked;
    reg 		      enable;
 
@@ -107,11 +108,13 @@ endgenerate
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 run    <= 'b0;
+	 run_q  <= 'b0;
 	 flips  <= 'b0;
 	 picked <= 'b0;
 	 enable <= 'b0;
       end else begin
 	 run    <= ctrl_rnd.run;
+	 run_q  <= run;
 	 flips  <= ctrl_rnd.flips;
 	 picked <= pick_rnd.pick;
 	 enable <= ctrl_rnd.en;
@@ -156,7 +159,7 @@ endgenerate
       end else begin
 	 rnd_coef.x   <= new_xy[0][MAXXN:0];
 	 rnd_coef.y   <= new_xy[0][(MAXXN*2)+1:MAXXN+1];
-	 rnd_coef.run <= run;
+	 rnd_coef.run <= run_q;
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk )
 

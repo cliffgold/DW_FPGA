@@ -65,7 +65,7 @@ parameter MAX_PRBS          = (NQBITS+32-1)/288;
 parameter MAX_PRBS_CNT      = $clog2(MAX_PRBS*37);   
 
 //CTRL sequence
-parameter CTRL_RND_RUN    = 0;
+parameter CTRL_RND_RUN    = 1;
 parameter CTRL_PICK_RUN   = 18;
 parameter CTRL_PICK_E_RUN = 16;
 

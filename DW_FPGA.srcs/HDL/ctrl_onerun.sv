@@ -57,35 +57,25 @@ module ctrl_onerun
 		    state     <= LOADING;
 		 end else begin
 		    state     <= IDLE;
-		    ctrl_addr <= 'h0;
-		    ctrl_busy <= 'b0;
 		 end // else: !if(start)
 	      end // case: state...
 	      LOADING: begin
-		 ctrl_busy   <= 1'b1;
-		 ctrl_word   <= ram_data_out;
-		 if (ram_data_out.ctrl0.count == 'b0) begin
-		    if (ram_data_out.ctrl1.done) begin
-		       state     <= IDLE;
-		       ctrl_addr <= 'b0;
-		    end else begin
-		       state     <= LOADING;
-		       ctrl_addr <= ctrl_addr + 'b1;
-		    end
-		 end else begin
-		    state     <= RUNNING;
-		 end // else: !if(ctrl_word.count == 'b0)
+		 ctrl_busy  <= 1'b1;
+		 ctrl_word  <= ram_data_out;
+		 ctrl_addr  <= ctrl_addr+1;
+		 state      <= RUNNING;
 	      end // case: LOADING
 	      RUNNING: begin
+		 ctrl_word.ctrl0.count <= ctrl_word.ctrl0.count - 'b1;
 		 if (ctrl_word.ctrl0.count == 'b1) begin
-		    if (ram_data_out.ctrl1.done) begin
-		       state     <= IDLE;
-		    end else begin
+		    if (ram_data_out.ctrl1.next) begin
 		       state     <= LOADING;
-		       ctrl_addr <= ctrl_addr + 'b1;
+		    end else begin
+		       state     <= IDLE;
+		       ctrl_addr <= 'h0;
+		       ctrl_busy <= 'b0;
 		    end
 		 end else begin // if (count == 'b1)
-		    ctrl_word.ctrl0.count <= ctrl_word.ctrl0.count - 'b1;
 		 end // else: !if(count == 'b1)
 	      end // case: RUNNING
 	      default: begin

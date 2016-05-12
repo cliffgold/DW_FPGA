@@ -27,6 +27,7 @@ module ctrl
 
    ctrl_word_s    ctrl_word [0:MAX_RUN_BITS];
    ctrl_cmd_s     ctrl_cmd;
+   ctrl_cmd_s     ctrl_cmd_q;
    ctrl_addr_s    address;
    
    
@@ -66,14 +67,16 @@ module ctrl
       
    always@(posedge sys.clk) begin
       if (sys.reset) begin
-	 step  <= 'b0;
+	 step       <= 'b0;
+	 ctrl_cmd_q <= 'b0;
 	 for (i=0;i<=MAX_RUN_BITS;i=i+1) begin
 	    run[i] <= 'b0;
 	 end
       end else begin
 	 if (run[0] == MAX_RUN_BITS) begin
-	    run[0] <= 'b0;
-	    step   <= 'b1;
+	    run[0]     <= 'b0;
+	    step       <= 'b1;
+	    ctrl_cmd_q <= ctrl_cmd;
 	 end else begin
 	    run[0] <= run[0] + 1;
 	    step   <= step << 1'b1;
@@ -86,15 +89,15 @@ module ctrl
 
 generate
    for (gi=0;gi<=MAX_RUN_BITS;gi=gi+1) begin : CTRL_RAM
-      
+
       ctrl_onerun ctrl_onerun_0
 	  (
 	   .sys(sys),
 	   .ram_we(ram_we[gi]),
 	   .ram_addr(ram_addr),
 	   .ram_data(ram_data),
-	   .start(ctrl_cmd.start[gi]),
-	   .stop(ctrl_cmd.stop[gi]),
+	   .start(ctrl_cmd_q.start[gi]),
+	   .stop(ctrl_cmd_q.stop[gi]),
 	   .step(step[gi]),
 	   
 	   .ctrl_word(ctrl_word[gi]),
@@ -109,15 +112,15 @@ endgenerate
 	 ctrl_pick <= 'b0;
       end else begin
 	 ctrl_rnd.init  <= ctrl_cmd.init;
-	 ctrl_rnd.en    <= (ctrl_cmd.start[run[CTRL_RND_RUN]] | ctrl_busy[run[CTRL_RND_RUN]]); 
+	 ctrl_rnd.en    <= ctrl_busy[run[CTRL_RND_RUN]]; 
 	 ctrl_rnd.run   <= run[CTRL_RND_RUN];
 	 ctrl_rnd.flips <= ctrl_word[run[CTRL_RND_RUN]].ctrl1.flips;
 
 	 ctrl_pick.init        <= ctrl_cmd.init;
-	 ctrl_pick.early_en    <= ctrl_busy[run[CTRL_PICK_E_RUN]];
-	 ctrl_pick.en          <= ctrl_busy[run[CTRL_PICK_RUN]];
-	 ctrl_pick.temperature <= ctrl_word[run[CTRL_PICK_RUN]].ctrl1.temperature;
-
+	 ctrl_pick.en          <= ctrl_busy[MAX_RUN_BITS:0];
+	 for (i=0;i<=MAX_RUN_BITS;i=i+1) begin
+	    ctrl_pick.temperature[i] <= ctrl_word[i].ctrl1.temperature;
+	 end
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)
    	 

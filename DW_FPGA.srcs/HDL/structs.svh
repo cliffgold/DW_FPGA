@@ -85,15 +85,13 @@ parameter MAX_CTRL_RND_S = 1+1 + (MAX_FLIP+1) +
 
 typedef struct packed
 	       {
-		  logic                 init;
-		  logic 		en;
-		  logic                 early_en;
-
-		  logic [MAX_TEMP:0]    temperature;
+		  logic                               init;
+		  logic [MAX_RUN_BITS:0]              en;
+		  logic [MAX_RUN_BITS:0] [MAX_TEMP:0] temperature;
 		}
 		 ctrl_pick_s;
 
-parameter MAX_CTRL_PICK_S = 2 + MAX_TEMP+1 -1;
+parameter MAX_CTRL_PICK_S = 1 + MAX_RUN_BITS+1 + MAX_TEMP+1 -1;
 
 typedef struct packed
 	       {
@@ -134,7 +132,7 @@ parameter MAX_SUM_PICK = 24 + MAX_RUNS;
 
 typedef struct packed
 	       {
-		  logic done;
+		  logic next;
 
 		  logic [MAX_FLIP:0]   flips;
 		  logic [MAX_TEMP:0]   temperature;

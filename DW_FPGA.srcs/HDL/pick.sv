@@ -48,7 +48,7 @@ module pick
       .RST(sys.reset),
       .CLK(sys.clk),
       .DATA_IN(63'b0),
-      .EN(ctrl_pick.early_en),
+      .EN(ctrl_pick.en[sum_pick.run]),
       .SEED_WRITE_EN(ctrl_pick.init),
       .SEED(63'h1BADF00DDEADBEEF),
       .DATA_OUT(rnd_bits)
@@ -59,32 +59,36 @@ module pick
 	 old_sum_j   <=  {1'b0,{MAX_SUM{1'b1}}};
       end else begin
 	 old_sum_j <= $signed(old_sum[sum_pick.run]) + 
-		      $signed(rnd_bits & ({MAX_SUM{1'b1}} >> (MAX_SUM - ctrl_pick.temperature)));
+		      $signed(rnd_bits & ({MAX_SUM{1'b1}} >> (MAX_SUM - ctrl_pick.temperature[sum_pick.run])));
       end // else: !if(sys.reset | ctrl_pick.init)
    end // always@ (posedge sys.clk)
    
    always@(posedge sys.clk) begin
-      if (sys.reset | ctrl_pick.init) begin
-	 run_q       <= 'b0;
-	 full_sum_q  <= 'b0;
-	 enable_q    <= 'b0;
+      if (sys.reset) begin
+	 run_q         <= 'b0;
+	 full_sum_q    <= 'b0;
+	 enable_q      <= 'b0;
       end else begin
-	 run_q       <= sum_pick.run;
-	 full_sum_q  <= sum_pick.full_sum;
-	 enable_q    <= ctrl_pick.en;
+	 run_q         <= sum_pick.run;
+	 full_sum_q    <= sum_pick.full_sum;
+	 enable_q      <= ctrl_pick.en[sum_pick.run];
       end // else: !if(sys.reset | ctrl_pick.init)
    end // always@ (posedge sys.clk)
 	 
    always@(posedge sys.clk ) begin
-      if (sys.reset | ctrl_pick.init) begin
-	 pick_rnd.pick  <= 'b0;
-	 pick_rnd.run   <= 'b0;
+      if (sys.reset) begin
+	 pick_rnd.pick <= 'b0;
+	 pick_rnd.run  <= 'b0;
 	 for (i=0;i<=MAX_RUN_BITS;i=i+1) begin
 	    old_sum[i] <= {1'b0,{MAX_SUM{1'b1}}};
 	 end
       end else begin
 	 pick_rnd.run <= (MAX_RUN_BITS+1+run_q - PICK_RUN)%(MAX_RUN_BITS+1);
-	 if ((full_sum_q < old_sum_j) & enable_q) begin
+	 if (ctrl_pick.init) begin
+	    old_sum[run_q] <= {1'b0,{MAX_SUM{1'b1}}};
+	    pick_rnd.pick <= 1'b0;
+	 end
+	 else if ((full_sum_q < old_sum_j) & enable_q) begin
 	    old_sum[run_q] <= full_sum_q;
 	    pick_rnd.pick   <= 1'b1;
 	 end else begin
