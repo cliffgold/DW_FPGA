@@ -36,7 +36,7 @@ module rnd
    reg 		      enable;
 
    integer     i;
-
+   integer     j;
    genvar      gi;
 
    reg [NQBITS-1:0] shift_bits [MAX_FLIP:0];
@@ -48,9 +48,9 @@ module rnd
    reg 		      pcie_gotrun;
    reg [MAX_RD_TAG:0] tag_q;
    wire		      pipe_out;
-   reg [63:0] 	      new_xy_run [0:(NQBITS/64)-1];
+   reg [63:0] 	      old_xy_run [0:(NQBITS/64)-1];
    wire [63:0] 	      rd_data;
-   
+      
 generate
    for(gi=0;gi<NQBITS;gi=gi+512) begin : PRBS
 
@@ -157,39 +157,32 @@ endgenerate
       if (sys.reset) begin
 	 rnd_coef    <= 'b0;
       end else begin
-	 rnd_coef.x   <= new_xy[0][MAXXN:0];
-	 rnd_coef.y   <= new_xy[0][(MAXXN*2)+1:MAXXN+1];
+	 rnd_coef.x   <= new_xy[0][MAX_X:0];
+	 rnd_coef.y   <= new_xy[0][(MAX_X*2)+1:MAX_X+1];
 	 rnd_coef.run <= run_q;
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk )
 
-generate
-   for (gi=0;gi<NQBITS;gi=gi+64) begin : PCIE_RD_GRAB
-      always@(posedge sys.clk ) begin
-	 if (sys.reset) begin
-	    new_xy_run[gi/64] <= 'b0;
-	 end else begin
-	    if ((addr_q.run == run) && pcie_req_q) begin
-	       new_xy_run[gi/64]  <= new_xy[0][gi+63:gi];
-	    end
-	 end
-      end // always@ (posedge sys.clk )
-   end // block: PCIE_RD_GRAB
-endgenerate
-    
+
+//PCIE read 
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 pcie_gotrun <= 'b0;
+ 	 for (i=0;i<NQBITS/64;i=i+1) begin
+ 	    old_xy_run[i] <= 'b0;
+ 	 end
       end else begin
 	 if ((addr_q.run == run) && pcie_req_q) begin
-	    pcie_gotrun <= 'b1;
+	    pcie_gotrun <= 1'b1;
+ 	    for (i=0;i<=MAX_QWORD_BITS;i=i+1) begin
+ 	       old_xy_run[i]  <= old_xy[MAX_RUN_BITS][(i*64)+:64];
+ 	    end
 	 end else begin
 	    pcie_gotrun <= 1'b0;
 	 end
-      end
+      end // always@ (posedge sys.clk )
    end // always@ (posedge sys.clk )
-   
-
+          
 //pcie - buffer req
    always @ (posedge sys.clk) begin
       if (sys.reset) begin
@@ -217,7 +210,7 @@ endgenerate
      (
       .clk(sys.clk),
       .reset(sys.reset),
-      .data_in(new_xy_run),
+      .data_in(old_xy_run),
       .sel_in(addr_q.addr),
       .pipe_in(pcie_gotrun),
 
@@ -238,9 +231,7 @@ endgenerate
 	 end
       end // else: !if(sys.reset)
    end // always @ (posedge sys.clk)
-
-
- 
+   
 endmodule // rnd
 
 		

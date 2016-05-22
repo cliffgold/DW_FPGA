@@ -101,6 +101,7 @@ module pcie
       if (sys.reset) begin
          pcie_coef_req   <= 'b0;
          pcie_pick_req   <= 'b0;
+	 pcie_rnd_req    <= 'b0;
 	 pcie_req_busy   <= 1'b0;
       end else begin // if (sys.reset)
          if (bus_pcie_req_q.vld) begin 

@@ -28,7 +28,8 @@ module ctrl
    ctrl_word_s    ctrl_word [0:MAX_RUN_BITS];
    ctrl_cmd_s     ctrl_cmd;
    ctrl_cmd_s     ctrl_cmd_q;
-   ctrl_addr_s    address;
+
+   pcie_ctrl_addr_s  address;
    
    
    integer              i;

@@ -15,6 +15,11 @@ parameter MAX_RUNS      = $clog2(MAX_RUN_BITS) - 1;
 
 parameter NQBITS        = NROWS * NCOLS * 8;
 parameter MAX_QBIT      = $clog2(NQBITS-1) - 1;
+parameter MAX_QWORD     = MAX_QBIT - 6; //64 bit words
+parameter MAX_QWORD_BITS= (NQBITS/64) - 1;
+
+parameter MAX_X        = 2*MAX_CMEM +1    ;  //Number of bits in the x plane -1
+parameter MAX_Y        = MAX_X           ;  //Number of bits in the y plane -1
 
  //Bits are divided into planes x and y;
 //There are 4 bits in each plane for each 4x4 unit
@@ -22,12 +27,10 @@ parameter NXROWS       = NROWS * 4;
 parameter NXCOLS       = NCOLS * 4;
 
 
-parameter MAX_CMEM      = NROWS*NCOLS*2 -1      ;  //Number of coef mems -1
+parameter MAX_CMEM       = NROWS*NCOLS*2 -1      ;  //Number of coef mems -1
 parameter MAX_CMEM_DATA  = NBITSPERQBIT + 4 - 1  ;  //Number of bits in subtotals
 parameter MAX_CMEM_SEL   = $clog2(MAX_CMEM) -1;   //Number of bits in selector
 
-parameter MAXXN        = 2*MAX_CMEM +1    ;  //Number of bits in the x plane -1
-parameter MAXYN        = MAXXN           ;  //Number of bits in the y plane -1
 
                       // 2 x's, 4 crosshatch y's, 4 y's around the edges
 

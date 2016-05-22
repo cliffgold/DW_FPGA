@@ -56,18 +56,18 @@ typedef struct packed
 		  logic 		      ctrl1;
 		  logic [MAX_CTRL_MEM_ADDR:0] addr;
 		  }
-		 ctrl_addr_s;
+		 pcie_ctrl_addr_s;
 
 parameter MAX_CTRL_ADDR_S = 1 + MAX_RUNS+1 + 1 + MAX_CTRL_MEM_ADDR+1 -1;
 
 typedef struct packed
 	       {
-		  logic [MAX_RUNS:0] run;
-		  logic [MAX_QBIT:0] addr;
+		  logic [MAX_RUNS:0]  run;
+		  logic [MAX_QWORD:0] addr; //-6 because 64 bits per word
 		  }
 	       pcie_rnd_addr_s;
 
-parameter MAX_RND_ADDR_S = MAX_CMEM_ADDR + MAX_CMEM_SEL + 1;
+parameter MAX_RND_ADDR_S = MAX_RUNS+1 + MAX_QWORD+1 -1;
 
 
 typedef struct packed
@@ -95,13 +95,13 @@ parameter MAX_CTRL_PICK_S = 1 + MAX_RUN_BITS+1 + MAX_TEMP+1 -1;
 
 typedef struct packed
 	       {
-		  logic [MAXXN:0]    x;
-		  logic [MAXYN:0]    y;
+		  logic [MAX_X:0]    x;
+		  logic [MAX_Y:0]    y;
 		  logic [MAX_RUNS:0] run;
 		}
 	       rnd_coef_s;
 
-parameter MAX_RND_COEF_S = MAXXN+1 + MAXYN+1 + MAX_RUNS+1 - 1;
+parameter MAX_RND_COEF_S = MAX_X+1 + MAX_Y+1 + MAX_RUNS+1 - 1;
 
 typedef struct packed
 	       {

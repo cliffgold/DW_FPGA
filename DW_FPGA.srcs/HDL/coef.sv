@@ -33,8 +33,8 @@ module coef
    reg [MAX_CMEM_DATA:0]     wdata_q [0:MAX_CMEM];
    reg 			     write_en_q [0:MAX_CMEM];
 
-   reg [MAXXN:0] 	     x;
-   reg [MAXYN:0] 	     y;
+   reg [MAX_X:0] 	     x;
+   reg [MAX_Y:0] 	     y;
 
    reg [MAX_RD_TAG:0] 	     req_tag_hold;
    reg [MAX_CMEM_SEL:0]      req_sel_hold;
@@ -43,10 +43,15 @@ module coef
    reg 			     active_q;
    reg [MAX_RUNS:0] 	     run;
    
-   genvar 		     mem; //Each mem handles 2 bits, so count = xn/2
-   integer 		     xn;
+   genvar 		     mem;
+   
+   integer 		     xh;
+   integer 		     xv;
+   integer                   imem;
+   integer 		     vmem;
+   integer 		     hmem;
    integer 		     ii;
-
+   
    pcie_wr_s                 pcie_coef_wr_q;
    pcie_req_s                pcie_coef_req_q;
 
@@ -78,113 +83,115 @@ module coef
       end
    end
    
+   always@(*) begin
+      for (imem=0; imem<=MAX_CMEM; imem = imem+4) begin : mem_conn
+         if ((((imem/2) + (imem/NXCOLS))%2) == 0) begin
+	    vmem = imem;
+	    xv   = vmem*2;
+	    hmem = imem+2;
+	    xh   = hmem*2;
+	 end else begin
+	    vmem = imem+2;
+	    xv   = vmem*2;
+	    hmem = imem;
+	    xh   = hmem*2;
+	 end // else: !if((((imem/2) + (imem/NXCOLS))%2) == 0)
+	 
+         //each loop covers 4 mems, or 8 x's
+         //The alternation between Horiz and Vertical X is not simple
+         //since each row starts with the opposite phase
+
+	 //VERTICAL first   
+         //Top "y" connections
+         if (xv < NXCOLS) begin                       //Trim top
+	    addr[vmem]  [0] = 1'b0;
+	    addr[vmem]  [1] = 1'b0;
+	    addr[vmem+1][0] = 1'b0;
+	    addr[vmem+1][1] = 1'b0;
+         end else begin
+	    addr[vmem][0]   = y[xv-NXCOLS];
+	    addr[vmem][1]   = y[xv-NXCOLS+1];
+	    addr[vmem+1][0] = y[xv-NXCOLS+2];
+	    addr[vmem+1][1] = y[xv-NXCOLS+3];
+         end // else: !if(vmem < NXCOLS)
+	 
+         //Middle connections
+         addr[vmem][2] = y[xv];
+         addr[vmem][3] = y[xv+1];
+         addr[vmem][4] = y[xv+2];
+         addr[vmem][5] = y[xv+3];
+	 
+         addr[vmem+1][2] = y[xv];
+         addr[vmem+1][3] = y[xv+1];
+         addr[vmem+1][4] = y[xv+2];
+         addr[vmem+1][5] = y[xv+3];
+	 
+         //Bottom "y" connections
+         if (xv+NXCOLS+3 > MAX_X) begin                       //Trim bottom
+	    addr[vmem][6] = 1'b0;
+	    addr[vmem][7] = 1'b0;
+	    addr[vmem+1][6] = 1'b0;
+	    addr[vmem+1][7] = 1'b0;
+         end else begin
+	    addr[vmem][6] = y[xv+NXCOLS];
+	    addr[vmem][7] = y[xv+NXCOLS+1];
+	    addr[vmem+1][6] = y[xv+NXCOLS+2];
+	    addr[vmem+1][7] = y[xv+NXCOLS+3];
+         end // else: !if(vmem < NXCOLS)
+	 
+         //now, state of 2 x's go into each RAM
+         addr[vmem][8]   = x[xv];
+         addr[vmem][9]   = x[xv+1];
+         addr[vmem+1][8] = x[xv+2];
+         addr[vmem+1][9] = x[xv+3];
+	 
+	 //HORIZ
+         //left "y" connections 
+         if ((xh % NXCOLS) < 2) begin //Trim left
+	    addr[hmem][0]   = 1'b0;
+            addr[hmem][1]   = 1'b0;
+	    addr[hmem+1][0] = 1'b0;
+	    addr[hmem+1][1] = 1'b0;
+         end else begin
+	    addr[hmem][0]   = y[xh-4];
+	    addr[hmem][1]   = y[xh-3];
+	    addr[hmem+1][0] = y[xh-2];
+	    addr[hmem+1][1] = y[xh-1];
+         end // else: !if(hmem < NXCOLS)
+	 
+         //Middle connections
+         addr[hmem][2] = y[xh];
+         addr[hmem][3] = y[xh+1];
+         addr[hmem][4] = y[xh+2];
+         addr[hmem][5] = y[xh+3];
+	 
+         addr[hmem+1][2] = y[xh];
+         addr[hmem+1][3] = y[xh+1];
+         addr[hmem+1][4] = y[xh+2];
+         addr[hmem+1][5] = y[xh+3];
+	 
+         //Right "y" connections
+         if ((xh % NXCOLS) >= NXCOLS-4) begin                       //Trim right
+	    addr[hmem][6]   = 1'b0;
+	    addr[hmem][7]   = 1'b0;
+	    addr[hmem+1][6] = 1'b0;
+	    addr[hmem+1][7] = 1'b0;
+         end else begin
+	    addr[hmem][6]   = y[xh+4];
+	    addr[hmem][7]   = y[xh+5];
+	    addr[hmem+1][6] = y[xh+6];
+	    addr[hmem+1][7] = y[xh+7];
+         end // else: !if(hmem < NXCOLS)
+	 
+         //now, state of 2 x's go into each RAM
+         addr[hmem][8]   = x[xh];
+         addr[hmem][9]   = x[xh+1];
+         addr[hmem+1][8] = x[xh+2];
+         addr[hmem+1][9] = x[xh+3];
+      end // block: mem_conn
+   end // always@ (*)
+      
    generate
-      for (mem=0; mem<=MAX_CMEM; mem = mem+4) begin : VERT       //Vertical bits
-         //each loop covers 2 mems, or 4 x's
-         //next 4 x's are horizontal
-         //then back to vertical etc.
-
-         localparam integer xn = mem*2;
-         
-         always@(*) begin
-            //Top "y" connections
-            if (xn < NXCOLS) begin                       //Trim top
-               addr[mem]  [0] = 1'b0;
-               addr[mem]  [1] = 1'b0;
-               addr[mem+1][0] = 1'b0;
-               addr[mem+1][1] = 1'b0;
-            end else begin
-               addr[mem][0]   = y[xn-NXCOLS];
-               addr[mem][1]   = y[xn-NXCOLS+1];
-               addr[mem+1][0] = y[xn-NXCOLS+2];
-               addr[mem+1][1] = y[xn-NXCOLS+3];
-            end // else: !if(mem < NXCOLS)
-
-            //Middle connections
-            addr[mem][2] = y[xn];
-            addr[mem][3] = y[xn+1];
-            addr[mem][4] = y[xn+2];
-            addr[mem][5] = y[xn+3];
-
-            addr[mem+1][2] = y[xn];
-            addr[mem+1][3] = y[xn+1];
-            addr[mem+1][4] = y[xn+2];
-            addr[mem+1][5] = y[xn+3];
-
-            //Bottom "y" connections
-            if (xn+NXCOLS+3 > MAXXN) begin                       //Trim bottom
-               addr[mem][6] = 1'b0;
-               addr[mem][7] = 1'b0;
-               addr[mem+1][6] = 1'b0;
-               addr[mem+1][7] = 1'b0;
-            end else begin
-               addr[mem][6] = y[xn+NXCOLS];
-               addr[mem][7] = y[xn+NXCOLS+1];
-               addr[mem+1][6] = y[xn+NXCOLS+2];
-               addr[mem+1][7] = y[xn+NXCOLS+3];
-            end // else: !if(mem < NXCOLS)
-
-            //now, state of 2 x's go into each RAM
-            addr[mem][8]   = x[xn];
-            addr[mem][9]   = x[xn+1];
-            addr[mem+1][8] = x[xn+2];
-            addr[mem+1][9] = x[xn+3];
-         end // always@ end
-      end // block: VERT
-
-      for (mem=2; mem<=MAX_CMEM; mem = mem+4) begin : HORIZ       //Horizontal bits
-         //each loop covers 2 mems, or 4 x's
-         //next 4 x's are vertical
-
-         localparam integer xn = mem*2;
-         
-         always@(*) begin
-            //left "y" connections
-            if ((xn % NXCOLS) < 2) begin                       //Trim left
-               addr[mem][0]   = 1'b0;
-               addr[mem][1]   = 1'b0;
-               addr[mem+1][0] = 1'b0;
-               addr[mem+1][1] = 1'b0;
-            end else begin
-               addr[mem][0]   = y[xn-4];
-               addr[mem][1]   = y[xn-3];
-               addr[mem+1][0] = y[xn-2];
-               addr[mem+1][1] = y[xn-1];
-            end // else: !if(mem < NXCOLS)
-
-            //Middle connections
-            addr[mem][2] = y[xn];
-            addr[mem][3] = y[xn+1];
-            addr[mem][4] = y[xn+2];
-            addr[mem][5] = y[xn+3];
-
-            addr[mem+1][2] = y[xn];
-            addr[mem+1][3] = y[xn+1];
-            addr[mem+1][4] = y[xn+2];
-            addr[mem+1][5] = y[xn+3];
-
-            //Right "y" connections
-            if ((xn % NXCOLS) >= NXCOLS-4) begin                       //Trim right
-               addr[mem][6]   = 1'b0;
-               addr[mem][7]   = 1'b0;
-               addr[mem+1][6] = 1'b0;
-               addr[mem+1][7] = 1'b0;
-            end else begin
-               addr[mem][6]   = y[xn+4];
-               addr[mem][7]   = y[xn+5];
-               addr[mem+1][6] = y[xn+6];
-               addr[mem+1][7] = y[xn+7];
-            end // else: !if(mem < NXCOLS)
-
-            //now, state of 2 x's go into each RAM
-            addr[mem][8]   = x[xn];
-            addr[mem][9]   = x[xn+1];
-            addr[mem+1][8] = x[xn+2];
-            addr[mem+1][9] = x[xn+3];
-         end // always@ end
-      end // block: HORIZ
-
-         
       for (mem=0; mem<=MAX_CMEM; mem=mem+1) begin : cmem       //All mems
          
          always @ (posedge sys.clk) begin

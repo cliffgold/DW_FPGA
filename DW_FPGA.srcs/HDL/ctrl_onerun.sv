@@ -68,7 +68,7 @@ module ctrl_onerun
 	      RUNNING: begin
 		 ctrl_word.ctrl0.count <= ctrl_word.ctrl0.count - 'b1;
 		 if (ctrl_word.ctrl0.count == 'b1) begin
-		    if (ram_data_out.ctrl1.next) begin
+		    if (ctrl_word.ctrl1.next) begin
 		       state     <= LOADING;
 		    end else begin
 		       state     <= IDLE;
