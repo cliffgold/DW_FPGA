@@ -1,6 +1,6 @@
 //Program controller, start running
 
-mem_pattern_0();
+mem_pattern_0(rnd_mem);
 
 // force_pattern_0(clk_input);
 

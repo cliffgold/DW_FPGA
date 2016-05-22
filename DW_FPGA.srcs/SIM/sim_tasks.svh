@@ -49,9 +49,13 @@ endtask // while
 
 
 
-task automatic mem_pattern_0 ();
+task automatic mem_pattern_0 (output [MAX_CMEM:0] mem [3:0]);
    integer i;
    reg [11:0] val;
+   mem[0] = 0;
+   mem[1] = 255;
+   mem[2] = 256;
+   mem[3] = 511;
    
    begin : mem_patt_0
       for (i=0;i<1024;i=i+1) begin
