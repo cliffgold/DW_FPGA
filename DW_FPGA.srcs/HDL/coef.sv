@@ -16,41 +16,42 @@ module coef
 `include "structs.svh"
    
    
-   input  sys_s       sys;
-   input  rnd_coef_s  rnd_coef;
-   input  pcie_wr_s   pcie_coef_wr;
-   input  pcie_req_s  pcie_coef_req;
+   input  sys_s            sys;
+   input 		   rnd_coef_s rnd_coef;
+   input 		   pcie_wr_s pcie_coef_wr;
+   input 		   pcie_req_s pcie_coef_req;
       
-   output coef_sum_s  coef_sum;
-   output pcie_rd_s   coef_pcie_rd;
+   output 		   coef_sum_s coef_sum;
+   output 		   pcie_rd_s coef_pcie_rd;
 
-   wire [MAX_CMEM_DATA:0]    subtotal [0:MAX_CMEM]; // unflopped outputs
+   wire [CMEM_DATA_W:0]    subtotal [0:NCMEMS-1]; // unflopped outputs
 
-   wire [MAX_CMEM_DATA:0]    rd_data;
+   wire [CMEM_DATA_W:0]    rd_data;
    
-   reg [MAX_CMEM_ADDR:0]     addr [0:MAX_CMEM];
-   reg [MAX_CMEM_ADDR:0]     addr_q [0:MAX_CMEM];
-   reg [MAX_CMEM_DATA:0]     wdata_q [0:MAX_CMEM];
-   reg 			     write_en_q [0:MAX_CMEM];
+   reg [CMEM_ADDR_W:0] 	   addr [0:NCMEMS-1];
+   reg [CMEM_ADDR_W:0] 	   addr_q [0:NCMEMS-1];
+   reg [CMEM_DATA_W:0] 	   wdata_q [0:NCMEMS-1];
+   reg 			   write_en_q [0:NCMEMS-1];
 
-   reg [MAX_X:0] 	     x;
-   reg [MAX_Y:0] 	     y;
+   reg [X_W:0] 		   x;
+   reg [Y_W:0] 		   y;
 
-   reg [MAX_RD_TAG:0] 	     req_tag_hold;
-   reg [MAX_CMEM_SEL:0]      req_sel_hold;
-   reg [MAX_COEF_REQ_PIPE:0] req_pipe;
-
-   reg 			     active_q;
-   reg [MAX_RUNS:0] 	     run;
    
-   genvar 		     mem;
+   reg [RD_TAG_W:0] 	    req_tag_hold;
+   reg [CMEM_SEL_W:0]  	    req_sel_hold;
+   reg [NCOEF_REQ_PIPE-1:0] req_pipe;
+
+   reg 			   active_q;
+   reg [RUN_W:0] 	   run;
    
-   integer 		     xh;
-   integer 		     xv;
-   integer                   imem;
-   integer 		     vmem;
-   integer 		     hmem;
-   integer 		     ii;
+   genvar 		   mem;
+   
+   integer 		   xh;
+   integer 		   xv;
+   integer 		   imem;
+   integer 		   vmem;
+   integer 		   hmem;
+   integer 		   ii;
    
    pcie_wr_s                 pcie_coef_wr_q;
    pcie_req_s                pcie_coef_req_q;
@@ -84,7 +85,7 @@ module coef
    end
    
    always@(*) begin
-      for (imem=0; imem<=MAX_CMEM; imem = imem+4) begin : mem_conn
+      for (imem=0; imem<NCMEMS; imem = imem+4) begin : mem_conn
          if ((((imem/2) + (imem/NXCOLS))%2) == 0) begin
 	    vmem = imem;
 	    xv   = vmem*2;
@@ -127,7 +128,7 @@ module coef
          addr[vmem+1][5] = y[xv+3];
 	 
          //Bottom "y" connections
-         if (xv+NXCOLS+3 > MAX_X) begin                       //Trim bottom
+         if (xv+NXCOLS+3 > X_W) begin                       //Trim bottom
 	    addr[vmem][6] = 1'b0;
 	    addr[vmem][7] = 1'b0;
 	    addr[vmem+1][6] = 1'b0;
@@ -192,7 +193,7 @@ module coef
    end // always@ (*)
       
    generate
-      for (mem=0; mem<=MAX_CMEM; mem=mem+1) begin : cmem       //All mems
+      for (mem=0; mem<NCMEMS; mem=mem+1) begin : cmem       //All mems
          
          always @ (posedge sys.clk) begin
             if (sys.reset) begin
@@ -200,7 +201,7 @@ module coef
                wdata_q[mem]     <= 'b0;
                write_en_q[mem]  <= 'b0;
             end else begin
-               wdata_q[mem] <= pcie_coef_wr_q.data[MAX_CMEM_DATA:0];
+               wdata_q[mem] <= pcie_coef_wr_q.data[CMEM_DATA_W:0];
                if (pcie_coef_wr_q.vld) begin
                   addr_q[mem]  <= pcie_wr_addr.addr;
 		  if (mem == pcie_wr_addr.sel) begin
@@ -237,20 +238,20 @@ module coef
    always @ (posedge sys.clk) begin
       if (sys.reset) begin
 	 coef_sum.run <= 'b0;
-	 for (ii=0;ii<=MAX_CMEM;ii=ii+1) begin
+	 for (ii=0;ii<NCMEMS;ii=ii+1) begin
             coef_sum.subtotal[ii] <= 'b0;
 	 end
       end else begin
-	 coef_sum.run <= (MAX_RUN_BITS+1+run -COEF_RUN)%(MAX_RUN_BITS+1);
-	 for (ii=0;ii<=MAX_CMEM;ii=ii+1) begin
+	 coef_sum.run <= (NRUNS+run -COEF_RUN)%(NRUNS);
+	 for (ii=0;ii<NCMEMS;ii=ii+1) begin
 	    coef_sum.subtotal[ii] <= subtotal[ii];
          end
       end // else: !if(sys.reset)
    end // always @ (posedge sys.clk)
    
    bigmux
-     #(.NBITS(MAX_CMEM_DATA+1),
-       .NMUXIN(MAX_CMEM+1),
+     #(.NBITS(CMEM_DATA_W+1),
+       .NMUXIN(NCMEMS),
        .NFLOPS(2)
        )
    coef_read_mux
@@ -272,7 +273,7 @@ module coef
 	 req_tag_hold   <= 'b0;
 	 req_sel_hold   <= 'b0;
       end else begin
-	 req_pipe <= {req_pipe[MAX_COEF_REQ_PIPE-1:0],pcie_coef_req_q.vld};
+	 req_pipe <= {req_pipe[NCOEF_REQ_PIPE-2:0],pcie_coef_req_q.vld};
 	 if (pcie_coef_req_q.vld) begin
 	    req_tag_hold <= pcie_coef_req_q.tag;
 	    req_sel_hold <= pcie_req_addr.sel;

@@ -28,13 +28,13 @@ module top
    input                 bus_pcie_wr_vld;
    input [31:0]          bus_pcie_wr_addr;
 
-   input [MAX_RD_TAG:0]  bus_pcie_req_tag;
+   input [RD_TAG_W:0]  bus_pcie_req_tag;
    input 		 bus_pcie_req_vld;
    input [31:0] 	 bus_pcie_req_addr;
 
    output [63:0]         pcie_bus_rd_data;
    output                pcie_bus_rd_vld;
-   output [MAX_RD_TAG:0] pcie_bus_rd_tag; 
+   output [RD_TAG_W:0] pcie_bus_rd_tag; 
 
    output              clk_output;
    

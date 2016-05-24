@@ -6,35 +6,33 @@ parameter NROWS        = 16;  //Number of 4x4 structures in a column.  12 for DW
 parameter NCOLS        = 16;  //Number of 4x4 structures in a row.     12 for DWAVE-2x
 
 parameter NBITSPERQBIT  = 8;     //Accuracy of coefficients
-parameter MAX_CMEM_ADDR = 10-1;  //Max address bit of each coef mem
+parameter NCMEM_ADDRS   = 1024;
+parameter CMEM_ADDR_W   = 10-1;  //Max address bit of each coef mem
+                      // 2 x's, 4 crosshatch y's, 4 y's around the edges
+parameter NCMEMS        = NROWS*NCOLS*2      ;  //Number of coef mems
+parameter CMEM_DATA_W   = NBITSPERQBIT + 4 - 1  ;  //Number of bits in subtotals
+parameter CMEM_SEL_W    = $clog2(NCMEMS) -1;   //Number of bits in selector
+
+parameter CTRL_MEM_ADDR_W  = 9;  // 10 address bits on each of the 16 ctrl mems
+
                                  //2 xbits + 4 shared ybits + 4 ybits
-parameter MAX_CMEM_ADDR_BITS = (2 ** (MAX_CMEM_ADDR+1)) - 1;
  
-parameter MAX_RUN_BITS  = 19;    //Max number of runs in the same pipe - 1
-parameter MAX_RUNS      = $clog2(MAX_RUN_BITS) - 1;
+parameter NRUNS         = 20;    //Max number of runs in the same pipe
+parameter RUN_W         = $clog2(NRUNS) - 1;
 
 parameter NQBITS        = NROWS * NCOLS * 8;
-parameter MAX_QBIT      = $clog2(NQBITS-1) - 1;
-parameter MAX_QWORD     = MAX_QBIT - 6; //64 bit words
-parameter MAX_QWORD_BITS= (NQBITS/64) - 1;
+parameter QBIT_W        = $clog2(NQBITS-1) - 1;
+parameter QWORD_W       = QBIT_W - 6; //64 bit words
+parameter NQWORDS       = NQBITS/64;
 
-parameter MAX_X        = 2*MAX_CMEM +1    ;  //Number of bits in the x plane -1
-parameter MAX_Y        = MAX_X           ;  //Number of bits in the y plane -1
+parameter X_W           = 2*NCMEMS -1    ;  //Number of bits in the x plane -1
+parameter Y_W           = X_W           ;  //Number of bits in the y plane -1
 
  //Bits are divided into planes x and y;
 //There are 4 bits in each plane for each 4x4 unit
 parameter NXROWS       = NROWS * 4; 
 parameter NXCOLS       = NCOLS * 4;
 
-
-parameter MAX_CMEM       = NROWS*NCOLS*2 -1      ;  //Number of coef mems -1
-parameter MAX_CMEM_DATA  = NBITSPERQBIT + 4 - 1  ;  //Number of bits in subtotals
-parameter MAX_CMEM_SEL   = $clog2(MAX_CMEM) -1;   //Number of bits in selector
-
-
-                      // 2 x's, 4 crosshatch y's, 4 y's around the edges
-
-parameter MAX_CTRL_MEM_ADDR  = 9;  // 10 address bits on each of the 16 ctrl mems
 
 //TBD - This is not how BARs really work
 
@@ -48,24 +46,20 @@ parameter PICK_BAR_START = 32'h6000_0000;
 parameter PICK_BAR_END   = 32'h7FFF_FFFF;
 
 //Bit Widths
-parameter MAX_RD_TAG = 7;
-parameter MAX_PCIE_COEF_DATA  = MAX_CMEM_DATA;
-parameter MAX_PCIE_COEF_ADDR  = MAX_CMEM_ADDR + MAX_CMEM_SEL + 1;
-parameter MAX_PCIE_RND_DATA   = 31;
-parameter MAX_PCIE_RND_ADDR   = 8;
-parameter MAX_PCIE_CTRL_DATA  = 63;
+parameter RD_TAG_W          = 7;
+parameter PCIE_COEF_DATA_W  = CMEM_DATA_W;
+parameter PCIE_COEF_ADDR_W  = CMEM_ADDR_W + CMEM_SEL_W + 1;
+parameter PCIE_RND_DATA_W   = 31;
+parameter PCIE_RND_ADDR_W   = 8;
+parameter PCIE_CTRL_DATA_W  = 63;
 
-parameter MAX_SUM             = 23;
+parameter SUM_W             = 23;
 
 //Pipes
 
-parameter MAX_COEF_REQ_PIPE = 2;
-parameter MAX_TEMP          = 15;
-
-//prbs
-parameter MAX_FLIP          = $clog2(NQBITS) - 2;
-parameter MAX_PRBS          = (NQBITS+32-1)/288;
-parameter MAX_PRBS_CNT      = $clog2(MAX_PRBS*37);   
+parameter NCOEF_REQ_PIPE  = 2;
+parameter TEMP_W          = 15;
+parameter FLIP_W          = $clog2(NQBITS) - 2;
 
 //CTRL sequence
 parameter CTRL_RND_RUN    = 1;

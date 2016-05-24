@@ -18,38 +18,39 @@ module rnd
 `include "structs.svh"
 `include "seeds.svh"
    
-   input sys_s        sys;
-   input  pcie_req_s  pcie_rnd_req;
-   input  ctrl_rnd_s  ctrl_rnd;
-   input  pick_rnd_s  pick_rnd;
+   input sys_s       sys;
+   input 	     pcie_req_s pcie_rnd_req;
+   input 	     ctrl_rnd_s ctrl_rnd;
+   input 	     pick_rnd_s pick_rnd;
       
-   output pcie_rd_s   rnd_pcie_rd;
-   output rnd_coef_s  rnd_coef;
+   output 	     pcie_rd_s rnd_pcie_rd;
+   output 	     rnd_coef_s rnd_coef;
 
-   wire [NQBITS-1:0]  rnd_bits;
-   reg [NQBITS-1:0]   new_xy [MAX_RUN_BITS:0];
-   reg [NQBITS-1:0]   old_xy [MAX_RUN_BITS:0];
-   reg [MAX_FLIP:0]   flips;
-   reg [MAX_RUNS:0]   run;
-   reg [MAX_RUNS:0]   run_q;
-   reg 		      picked;
-   reg 		      enable;
+   wire [NQBITS-1:0] rnd_bits;
+   reg [NQBITS-1:0]  new_xy [NRUNS-1:0];
+   reg [NQBITS-1:0]  old_xy [NRUNS-1:0];
+   reg [FLIP_W:0]    flips;
+   reg [RUN_W:0]     run;
+   reg [RUN_W:0]     run_q;
+   reg 		     picked;
+   reg 		     enable;
 
-   integer     i;
-   integer     j;
-   genvar      gi;
+   integer 	     i;
+   integer 	     j;
+   genvar 	     gi;
 
-   reg [NQBITS-1:0] shift_bits [MAX_FLIP:0];
-   reg [NQBITS-1:0] xor_bits   [MAX_FLIP:0];
-   reg [NQBITS-1:0] xor_bits_q [MAX_FLIP:0];
+   reg [NQBITS-1:0]  shift_bits [FLIP_W:0];
+   reg [NQBITS-1:0]  xor_bits [FLIP_W:0];
+   reg [NQBITS-1:0]  xor_bits_q [FLIP_W:0];
 
    pcie_rnd_addr_s    addr_q;
    reg 		      pcie_req_q;
    reg 		      pcie_gotrun;
-   reg [MAX_RD_TAG:0] tag_q;
+   reg [RD_TAG_W:0]   tag_q;
    wire		      pipe_out;
    reg [63:0] 	      old_xy_run [0:(NQBITS/64)-1];
    wire [63:0] 	      rd_data;
+
       
 generate
    for(gi=0;gi<NQBITS;gi=gi+512) begin : PRBS
@@ -81,7 +82,7 @@ endgenerate
    assign shift_bits[0] = rnd_bits[NQBITS-1:0];
       
 generate
-   for (gi=1;gi<=MAX_FLIP;gi=gi+1) begin :XOR_COMB	 
+   for (gi=1;gi<=FLIP_W;gi=gi+1) begin :XOR_COMB	 
       
       always@ (*) begin
 	 shift_bits[gi] = {shift_bits[gi-1][0],
@@ -94,11 +95,11 @@ endgenerate
    
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
-	 for (i=0;i<=MAX_FLIP;i=i+1) begin	 
+	 for (i=0;i<=FLIP_W;i=i+1) begin	 
 	    xor_bits_q[i] <= 'b0;
 	 end
       end else begin
-	 for (i=0;i<=MAX_FLIP;i=i+1) begin	 
+	 for (i=0;i<=FLIP_W;i=i+1) begin	 
 	    xor_bits_q[i] <= xor_bits[i];
 	 end
       end
@@ -124,7 +125,7 @@ endgenerate
 //Do stuff
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
-	 for (i=0;i<=MAX_RUN_BITS;i=i+1) begin
+	 for (i=0;i<NRUNS;i=i+1) begin
 	    old_xy[i]  <= 'b0;
 	    new_xy[i]  <= 'b0;
 	 end
@@ -134,18 +135,18 @@ endgenerate
 	 end
 	 else if (enable == 1'b1) begin
 	    if (picked == 1'b1) begin
-	       new_xy[0] <= new_xy[MAX_RUN_BITS] ^ xor_bits_q[flips];
-	       old_xy[0] <= new_xy[MAX_RUN_BITS];
+	       new_xy[0] <= new_xy[NRUNS-1] ^ xor_bits_q[flips];
+	       old_xy[0] <= new_xy[NRUNS-1];
 	    end else begin
-	       new_xy[0] <= old_xy[MAX_RUN_BITS] ^ xor_bits_q[flips];
-	       old_xy[0] <= old_xy[MAX_RUN_BITS];
+	       new_xy[0] <= old_xy[NRUNS-1] ^ xor_bits_q[flips];
+	       old_xy[0] <= old_xy[NRUNS-1];
 	    end
 	 end else begin
-	    new_xy[0] <= new_xy[MAX_RUN_BITS];
-	    old_xy[0] <= old_xy[MAX_RUN_BITS];
+	    new_xy[0] <= new_xy[NRUNS-1];
+	    old_xy[0] <= old_xy[NRUNS-1];
 	 end // else: !if(ctrl_rnd.en == 1'b1)
 	 
-	 for (i=1;i<=MAX_RUN_BITS;i=i+1) begin
+	 for (i=1;i<NRUNS;i=i+1) begin
 	    new_xy[i] <= new_xy[i-1];
 	    old_xy[i] <= old_xy[i-1];
 	 end
@@ -157,8 +158,8 @@ endgenerate
       if (sys.reset) begin
 	 rnd_coef    <= 'b0;
       end else begin
-	 rnd_coef.x   <= new_xy[0][MAX_X:0];
-	 rnd_coef.y   <= new_xy[0][(MAX_X*2)+1:MAX_X+1];
+	 rnd_coef.x   <= new_xy[0][X_W:0];
+	 rnd_coef.y   <= new_xy[0][(X_W*2)+1:X_W+1];
 	 rnd_coef.run <= run_q;
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk )
@@ -174,8 +175,8 @@ endgenerate
       end else begin
 	 if ((addr_q.run == run) && pcie_req_q) begin
 	    pcie_gotrun <= 1'b1;
- 	    for (i=0;i<=MAX_QWORD_BITS;i=i+1) begin
- 	       old_xy_run[i]  <= old_xy[MAX_RUN_BITS][(i*64)+:64];
+ 	    for (i=0;i<NQWORDS;i=i+1) begin
+ 	       old_xy_run[i]  <= old_xy[NRUNS-1][(i*64)+:64];
  	    end
 	 end else begin
 	    pcie_gotrun <= 1'b0;

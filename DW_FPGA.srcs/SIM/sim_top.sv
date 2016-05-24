@@ -23,11 +23,11 @@ module sim_top();
    ctrl_word_s      ctrl_word;
 
    pcie_rnd_addr_s   rnd_addr;
-   reg [MAX_RUNS:0]  rnd_run [0:MAX_RUN_BITS];
-   reg [MAX_X:0]     test_x [0:MAX_RUN_BITS];
-   reg [MAX_Y:0]     test_y [0:MAX_RUN_BITS];
+   reg [RUN_W:0]  rnd_run [0:NRUNS-1];
+   reg [X_W:0]     test_x [0:NRUNS-1];
+   reg [Y_W:0]     test_y [0:NRUNS-1];
 
-   reg [MAX_CMEM:0]  rnd_mem [3:0];
+   reg [NCMEMS-1:0]  rnd_mem [3:0];
       
    reg [63:0] test_data_rd;
    reg [63:0] test_data_wr;
@@ -36,9 +36,9 @@ module sim_top();
    
    reg [31:0]  bad_fail;
         
-   reg [MAX_CMEM_SEL:0]  test_coef_sel  [0:3];
-   reg [MAX_CMEM_ADDR:0] test_coef_addr [0:3];
-   reg [MAX_CMEM_DATA:0] test_coef_data [0:3][0:3];
+   reg [CMEM_SEL_W:0]  test_coef_sel  [0:3];
+   reg [CMEM_ADDR_W:0] test_coef_addr [0:3];
+   reg [CMEM_DATA_W:0] test_coef_data [0:3][0:3];
 
    integer 		 i;
    integer 		 j;
@@ -114,23 +114,23 @@ module sim_top();
 // Test Signals
 //************************* Old x/y values (previous winners)  ********************   
    
-   reg [9:0] old_mem_add_0   [0:MAX_RUN_BITS];
-   reg [9:0] old_mem_add_255 [0:MAX_RUN_BITS];
-   reg [9:0] old_mem_add_256 [0:MAX_RUN_BITS];
-   reg [9:0] old_mem_add_511 [0:MAX_RUN_BITS];
+   reg [9:0] old_mem_add_0   [0:NRUNS-1];
+   reg [9:0] old_mem_add_255 [0:NRUNS-1];
+   reg [9:0] old_mem_add_256 [0:NRUNS-1];
+   reg [9:0] old_mem_add_511 [0:NRUNS-1];
    
-   reg [MAX_X:0]     old_x [0:MAX_RUN_BITS];
-   reg [MAX_Y:0]     old_y [0:MAX_RUN_BITS];
+   reg [X_W:0]     old_x [0:NRUNS-1];
+   reg [Y_W:0]     old_y [0:NRUNS-1];
 
    always@(negedge sys_clk) begin
       {old_y[top_0.rnd_0.run],old_x[top_0.rnd_0.run]} <= 
-		             top_0.rnd_0.old_xy[MAX_RUN_BITS];
+		             top_0.rnd_0.old_xy[NRUNS-1];
    end
    
    genvar    gi;
    
 generate
-   for (gi=0;gi<=MAX_RUN_BITS;gi++) begin : old_sig
+   for (gi=0;gi<=NRUNS-1;gi++) begin : old_sig
       
       assign old_mem_add_0[gi] = {
 		   old_x[gi] [1],
@@ -191,21 +191,21 @@ generate
 endgenerate
 //    
 // // ************************* New x/y values for comparison ********************   
-//    reg [9:0] new_mem_add_0   [0:MAX_RUN_BITS];
-//    reg [9:0] new_mem_add_255 [0:MAX_RUN_BITS];
-//    reg [9:0] new_mem_add_256 [0:MAX_RUN_BITS];
-//    reg [9:0] new_mem_add_511 [0:MAX_RUN_BITS];
+//    reg [9:0] new_mem_add_0   [0:NRUNS-1];
+//    reg [9:0] new_mem_add_255 [0:NRUNS-1];
+//    reg [9:0] new_mem_add_256 [0:NRUNS-1];
+//    reg [9:0] new_mem_add_511 [0:NRUNS-1];
 //    
-//    reg [MAX_X:0]     new_x [0:MAX_RUN_BITS];
-//    reg [MAX_Y:0]     new_y [0:MAX_RUN_BITS];
+//    reg [X_W:0]     new_x [0:NRUNS-1];
+//    reg [Y_W:0]     new_y [0:NRUNS-1];
 // 
 //    always@(negedge sys_clk) begin
 //       {new_y[top_0.rnd_0.run],new_x[top_0.rnd_0.run]} <= 
-// 		             top_0.rnd_0.new_xy[MAX_RUN_BITS];
+// 		             top_0.rnd_0.new_xy[NRUNS-1];
 //    end
 //    
 // generate
-//    for (gi=0;gi<=MAX_RUN_BITS;gi++) begin : new_sig
+//    for (gi=0;gi<=NRUNS-1;gi++) begin : new_sig
 //       
 //       assign new_mem_add_0[gi] = {
 // 		   1'b0,

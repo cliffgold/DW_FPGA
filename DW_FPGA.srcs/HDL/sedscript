@@ -1,0 +1,25 @@
+#!/usr/bin/sh
+
+sed -i 's/MAX_CMEM_ADDR/CMEM_ADDR_W/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_RUNS/RUN_W/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_QBIT/QBIT_W/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_QWORD/QWORD_W/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_X/X_W/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_Y/Y_W/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_CMEM_DATA/CMEM_DATA_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_CMEM_SEL/CMEM_SEL_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_CTRL_MEM_ADDR/CTRL_MEM_ADDR_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_RD_TAG/RD_TAG_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_PCIE_COEF_DATA/PCIE_COEF_DATA_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_PCIE_COEF_ADDR/PCIE_COEF_ADDR_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_PCIE_RND_DATA/PCIE_RND_DATA_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_PCIE_RND_ADDR/PCIE_RND_ADDR_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_PCIE_CTRL_DATA/PCIE_CTRL_DATA_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_SUM/SUM_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_TEMP/TEMP_W/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_FLIP/FLIP_W/' *.sv *.svh tests/*.svh
+
+sed -i 's/MAX_RUN_BITS/NRUNS/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_QWORD_BITS/NQWORDS/g' *.sv *.svh tests/*.svh
+sed -i 's/MAX_CMEM/NCMEMS/' *.sv *.svh tests/*.svh
+sed -i 's/MAX_COEF_REQ_PIPE/NCOEF_REQ_PIPE/' *.sv *.svh tests/*.svh

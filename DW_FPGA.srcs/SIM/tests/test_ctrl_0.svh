@@ -25,7 +25,7 @@ pcie_write(CTRL_BAR_START,
 	   clk_input,
 	   bus_pcie_wr);
 
-repeat (MAX_RUN_BITS) @(negedge clk_input);
+repeat (NRUNS-1) @(negedge clk_input);
 
 ctrl_cmd      = 'b0;
 ctrl_cmd.init = 'b1;
@@ -39,7 +39,7 @@ pcie_write(CTRL_BAR_START,
 	   clk_input,
 	   bus_pcie_wr);
 
-repeat (MAX_RUN_BITS) @(negedge clk_input);
+repeat (NRUNS-1) @(negedge clk_input);
 
 ctrl_cmd       = 'b0;
 ctrl_cmd.start = 'b1;
@@ -53,7 +53,7 @@ pcie_write(CTRL_BAR_START,
 	   clk_input,
 	   bus_pcie_wr);
 
-repeat ((5+5) * MAX_RUN_BITS) @(negedge clk_input);
+repeat ((5+5) * NRUNS-1) @(negedge clk_input);
 
 
 

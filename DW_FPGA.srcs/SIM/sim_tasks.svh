@@ -49,7 +49,7 @@ endtask // while
 
 
 
-task automatic mem_pattern_0 (output [MAX_CMEM:0] mem [3:0]);
+task automatic mem_pattern_0 (output [NCMEMS-1:0] mem [3:0]);
    integer i;
    reg [11:0] val;
    mem[0] = 0;

@@ -7,9 +7,9 @@ ctrl_word.ctrl1.temperature  = 'h2;
 ctrl_word.ctrl0.count 	     = 32;
 
 rnd_run[0] = 0;
-rnd_run[1] = MAX_RUN_BITS/2;
-rnd_run[2] = MAX_RUN_BITS;
-rnd_run[3] = MAX_RUN_BITS/3;
+rnd_run[1] = (NRUNS-1)/2;
+rnd_run[2] = NRUNS-1;
+rnd_run[3] = (NRUNS-1)/3;
 
 ctrl_addr = 0;
 
@@ -59,7 +59,7 @@ for (i=0;i<4;i++) begin
 	      bus_pcie_wr);
 end // for (i=0;i<3;i++)
 
-repeat (MAX_RUN_BITS+1) @(negedge clk_input);
+repeat (NRUNS) @(negedge clk_input);
 
 ctrl_cmd      = 'b0;
 ctrl_cmd.init = 'b1;
@@ -73,13 +73,13 @@ pcie_write(CTRL_BAR_START,
 	   clk_input,
 	   bus_pcie_wr);
 
-repeat (MAX_RUN_BITS+1) @(negedge clk_input);
+repeat (NRUNS) @(negedge clk_input);
 
 ctrl_cmd       = 'b0;
 ctrl_cmd.start =  'b1 | 
-		 ('b1 << (MAX_RUN_BITS/3)) | 
-		 ('b1 << (MAX_RUN_BITS/2)) | 
-		 ('b1 << MAX_RUN_BITS);
+		 ('b1 << ((NRUNS-1)/3)) | 
+		 ('b1 << ((NRUNS-1)/2)) | 
+		 ('b1 << (NRUNS-1));
 
 ctrl_addr        = 'b0;
 ctrl_addr.is_cmd = 'b1;
@@ -90,7 +90,7 @@ pcie_write(CTRL_BAR_START,
 	   clk_input,
 	   bus_pcie_wr);
 
-repeat (100 + 160*(MAX_RUN_BITS+1)/2) @(negedge clk_input);
+repeat (100 + (160*NRUNS/2)) @(negedge clk_input);
 
 // Check that values are within expected range
 
@@ -122,15 +122,15 @@ end // for (i=0;i<4;i++)
 
 for (i=0;i<8;i++) begin
    randnum = $random();
-   j = randnum[MAX_QWORD+2:MAX_QWORD+1]; //used for run number
-   if (randnum[MAX_QWORD] == 1'b0) begin
-      test_data_ex = old_x[rnd_run[j]] [randnum[MAX_QWORD-1:0]*64 +:64];
+   j = randnum[QWORD_W+2:QWORD_W+1]; //used for run number
+   if (randnum[QWORD_W] == 1'b0) begin
+      test_data_ex = old_x[rnd_run[j]] [randnum[QWORD_W-1:0]*64 +:64];
    end else begin
-      test_data_ex = old_y[rnd_run[j]] [randnum[MAX_QWORD-1:0]*64 +:64];
+      test_data_ex = old_y[rnd_run[j]] [randnum[QWORD_W-1:0]*64 +:64];
    end
 
    rnd_addr.run = rnd_run[j];
-   rnd_addr.addr = randnum[MAX_QWORD:0];
+   rnd_addr.addr = randnum[QWORD_W:0];
       
    pcie_read(RND_BAR_START,
 	     rnd_addr,
