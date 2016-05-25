@@ -86,6 +86,36 @@ task automatic mem_pattern_0 (output [NCMEMS-1:0] mem [3:0]);
    end // block: mem_patt_0
 endtask // mem_pattern_0
 
+task automatic pcie_ctrl
+  (
+   input pcie_ctrl_addr_s  ctrl_addr,
+   input ctrl_word_s       ctrl_word,
+   ref   reg               clk_in,
+   
+   ref pcie_wr_s    bus_pcie_wr
+   );
+   
+   begin : bus_pcie_ctrl
+      
+      ctrl_addr.ctrl1 = 1'b0;
+   
+      pcie_write(CTRL_BAR_START,
+		 ctrl_addr,
+		 ctrl_word.ctrl0,
+		 clk_in,
+		 bus_pcie_wr);
+
+ctrl_addr.ctrl1 = 'b1;
+   
+      pcie_write(CTRL_BAR_START,
+		 ctrl_addr,
+		 ctrl_word.ctrl1,
+		 clk_in,
+		 bus_pcie_wr);
+   end // block: bus_pcie_ctrl
+endtask
+
+
 
 
 
