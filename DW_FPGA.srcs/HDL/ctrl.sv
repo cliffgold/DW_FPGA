@@ -48,15 +48,15 @@ module ctrl
 	 if (pcie_ctrl_wr.vld) begin  
 	    if (address.is_cmd == 1'b0) begin
 	       if (address.ctrl1 == 1'b0) begin
-		  ram_data.ctrl0 <= pcie_ctrl_wr.data[MAX_CTRL0_WORD_S:0];
+		  ram_data.ctrl0 <= pcie_ctrl_wr.data[CTRL0_WORD_S_W:0];
 	       end else begin
-		  ram_data.ctrl1 <= pcie_ctrl_wr.data[MAX_CTRL1_WORD_S:0];
+		  ram_data.ctrl1 <= pcie_ctrl_wr.data[CTRL1_WORD_S_W:0];
 		  ram_addr 	 <= address.addr;
 		  ram_we 	 <= 16'b1 << address.run;
 	       end
 	    end else begin
 	       ram_we    <= 'b0;
-	       ctrl_cmd  <= pcie_ctrl_wr.data[MAX_CTRL_CMD_S:0];
+	       ctrl_cmd  <= pcie_ctrl_wr.data[CTRL_CMD_S_W:0];
 	    end // else: !if(pcie_ctrl_wr.addr[NRUNS-1+11] == 1'b0)
 	 end else begin // if (pcie_ctrl_wr.vld)
 	    ram_we 	   <= 1'b0;

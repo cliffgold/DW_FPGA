@@ -192,7 +192,7 @@ endgenerate
 	 tag_q       <= 'b0;
       end else begin
 	 if (pcie_rnd_req.vld) begin
-            addr_q     <= pcie_rnd_req.addr[MAX_RND_ADDR_S:0];
+            addr_q     <= pcie_rnd_req.addr[RND_ADDR_S_W:0];
 	    tag_q      <= pcie_rnd_req.tag;
 	    pcie_req_q <= 1'b1;
          end 

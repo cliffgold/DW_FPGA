@@ -114,12 +114,12 @@ parameter COEF_SUM_S_W = (NCMEMS)*(CMEM_DATA_W+1) + RUN_W+1 - 1;
 
 typedef struct packed
 	       {
-		  logic               pick;
+		  logic            pick;
 		  logic [RUN_W:0]  run;
 		  }
 		 pick_rnd_s;
 
-parameter MAX_PICK_RND = 1 + RUN_W + 1;
+parameter PICK_RND_S_W = 1 + RUN_W + 1 - 1;
 
 typedef struct packed
 	       {
@@ -139,7 +139,7 @@ typedef struct packed
 		  }
 		 ctrl_word1_s;
 
-parameter MAX_CTRL1_WORD_S = 1 + FLIP_W+1 + TEMP_W+1 -1;
+parameter CTRL1_WORD_S_W = 1 + FLIP_W+1 + TEMP_W+1 -1;
 
 typedef struct packed
 	       {
@@ -147,7 +147,7 @@ typedef struct packed
 		  }
 		 ctrl_word0_s;
 
-parameter MAX_CTRL0_WORD_S = 31;
+parameter CTRL0_WORD_S_W = 31;
 
 typedef struct packed
 	       {
@@ -156,7 +156,7 @@ typedef struct packed
 		  }
 		 ctrl_word_s;
 
-parameter CTRL_WORD_S_W = MAX_CTRL0_WORD_S + MAX_CTRL1_WORD_S + 1;
+parameter CTRL_WORD_S_W = CTRL0_WORD_S_W + CTRL1_WORD_S_W + 1;
 
 typedef struct packed
 	       {
