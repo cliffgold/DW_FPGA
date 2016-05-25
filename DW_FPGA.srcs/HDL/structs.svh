@@ -7,7 +7,7 @@ typedef struct packed
 		  }
 	       sys_s;
 
-parameter MAX_SYS_S = 2 -1;
+parameter SYS_S_W = 2 -1;
 
 
 typedef struct packed
@@ -18,7 +18,7 @@ typedef struct packed
 		  }
 		 pcie_wr_s;
 
-parameter MAX_PCIE_WR_S = 64 + 1 + 32 -1;
+parameter PCIE_WR_S_W = 64 + 1 + 32 -1;
 
 typedef struct packed
 	       {
@@ -28,7 +28,7 @@ typedef struct packed
 		  }
 		 pcie_rd_s;
 
-parameter MAX_PCIE_RD_S = 64 + 1 + RD_TAG_W+1 -1;
+parameter PCIE_RD_S_W = 64 + 1 + RD_TAG_W+1 -1;
 
 typedef struct packed
 	       {
@@ -38,7 +38,7 @@ typedef struct packed
 		  }
 		 pcie_req_s;
 
-parameter MAX_PCIE_REQ_S = RD_TAG_W+1 + 1 + 32 -1;
+parameter PCIE_REQ_S_W = RD_TAG_W+1 + 1 + 32 -1;
 
 typedef struct packed
 	       {
@@ -47,7 +47,7 @@ typedef struct packed
 		  }
 	       pcie_coef_addr_s;
 
-parameter MAX_COEF_ADDR_S = CMEM_ADDR_W + CMEM_SEL_W + 1;
+parameter COEF_ADDR_S_W = CMEM_ADDR_W + CMEM_SEL_W + 1;
 
 typedef struct packed
 	       {
@@ -58,7 +58,7 @@ typedef struct packed
 		  }
 		 pcie_ctrl_addr_s;
 
-parameter MAX_CTRL_ADDR_S = 1 + RUN_W+1 + 1 + CTRL_MEM_ADDR_W+1 -1;
+parameter CTRL_ADDR_S_W = 1 + RUN_W+1 + 1 + CTRL_MEM_ADDR_W+1 -1;
 
 typedef struct packed
 	       {
@@ -67,7 +67,7 @@ typedef struct packed
 		  }
 	       pcie_rnd_addr_s;
 
-parameter MAX_RND_ADDR_S = RUN_W+1 + QWORD_W+1 -1;
+parameter RND_ADDR_S_W = RUN_W+1 + QWORD_W+1 -1;
 
 
 typedef struct packed
@@ -80,7 +80,7 @@ typedef struct packed
 		  }
 		 ctrl_rnd_s;
 
-parameter MAX_CTRL_RND_S = 1+1 + (FLIP_W+1) +
+parameter CTRL_RND_S_W = 1+1 + (FLIP_W+1) +
                            RUN_W+1 -1;
 
 typedef struct packed
@@ -91,7 +91,7 @@ typedef struct packed
 		}
 		 ctrl_pick_s;
 
-parameter MAX_CTRL_PICK_S = 1 + NRUNS-1+1 + TEMP_W+1 -1;
+parameter CTRL_PICK_S_W = 1 + NRUNS-1+1 + TEMP_W+1 -1;
 
 typedef struct packed
 	       {
@@ -101,7 +101,7 @@ typedef struct packed
 		}
 	       rnd_coef_s;
 
-parameter MAX_RND_COEF_S = X_W+1 + Y_W+1 + RUN_W+1 - 1;
+parameter RND_COEF_S_W = X_W+1 + Y_W+1 + RUN_W+1 - 1;
 
 typedef struct packed
 	       {
@@ -110,7 +110,7 @@ typedef struct packed
 		}
 	       coef_sum_s;
 
-parameter MAX_COEF_SUM_S = (NCMEMS)*(CMEM_DATA_W+1) + RUN_W+1 - 1;
+parameter COEF_SUM_S_W = (NCMEMS)*(CMEM_DATA_W+1) + RUN_W+1 - 1;
 
 typedef struct packed
 	       {
@@ -156,7 +156,7 @@ typedef struct packed
 		  }
 		 ctrl_word_s;
 
-parameter MAX_CTRL_WORD_S = MAX_CTRL0_WORD_S + MAX_CTRL1_WORD_S + 1;
+parameter CTRL_WORD_S_W = MAX_CTRL0_WORD_S + MAX_CTRL1_WORD_S + 1;
 
 typedef struct packed
 	       {
@@ -166,4 +166,4 @@ typedef struct packed
 		  }
 		 ctrl_cmd_s;
 
-parameter MAX_CTRL_CMD_S = NRUNS-1+1 + NRUNS-1+1 + 1 -1;
+parameter CTRL_CMD_S_W = NRUNS-1+1 + NRUNS-1+1 + 1 -1;

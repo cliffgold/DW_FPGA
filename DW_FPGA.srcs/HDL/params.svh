@@ -21,7 +21,7 @@ parameter NRUNS         = 20;    //Max number of runs in the same pipe
 parameter RUN_W         = $clog2(NRUNS) - 1;
 
 parameter NQBITS        = NROWS * NCOLS * 8;
-parameter QBIT_W        = $clog2(NQBITS-1) - 1;
+parameter QBIT_W        = $clog2(NQBITS) - 1;
 parameter QWORD_W       = QBIT_W - 6; //64 bit words
 parameter NQWORDS       = NQBITS/64;
 
