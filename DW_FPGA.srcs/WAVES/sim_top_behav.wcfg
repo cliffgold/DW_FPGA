@@ -11,170 +11,42 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="6180927836fs"></ZoomEndTime>
-      <Cursor1Time time="5710000000fs"></Cursor1Time>
+      <ZoomStartTime time="12977080859fs"></ZoomStartTime>
+      <ZoomEndTime time="13032761532fs"></ZoomEndTime>
+      <Cursor1Time time="13007500000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="22" />
-   <wvobject db_ref_id="1" fp_name="/sim_top/rst_in" type="logic">
+   <WVObjectSize size="8" />
+   <wvobject fp_name="/sim_top/rst_in" type="logic">
       <obj_property name="ElementShortName">rst_in</obj_property>
       <obj_property name="ObjectShortName">rst_in</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/ready" type="logic">
+   <wvobject fp_name="/sim_top/ready" type="logic">
       <obj_property name="ElementShortName">ready</obj_property>
       <obj_property name="ObjectShortName">ready</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/clk_gen_0/sys_in" type="array">
+   <wvobject fp_name="/sim_top/top_0/clk_gen_0/sys_in" type="array">
       <obj_property name="ElementShortName">sys_in</obj_property>
       <obj_property name="ObjectShortName">sys_in</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/clk_gen_0/sys" type="array">
+   <wvobject fp_name="/sim_top/top_0/clk_gen_0/sys" type="array">
       <obj_property name="ElementShortName">sys</obj_property>
       <obj_property name="ObjectShortName">sys</obj_property>
       <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/bus_pcie_wr" type="array">
+   <wvobject fp_name="/sim_top/bus_pcie_wr" type="array">
       <obj_property name="ElementShortName">bus_pcie_wr</obj_property>
       <obj_property name="ObjectShortName">bus_pcie_wr</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/bus_pcie_req" type="array">
+   <wvobject fp_name="/sim_top/bus_pcie_req" type="array">
       <obj_property name="ElementShortName">bus_pcie_req</obj_property>
       <obj_property name="ObjectShortName">bus_pcie_req</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/pcie_bus_rd" type="array">
+   <wvobject fp_name="/sim_top/pcie_bus_rd" type="array">
       <obj_property name="ElementShortName">pcie_bus_rd</obj_property>
       <obj_property name="ObjectShortName">pcie_bus_rd</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/bad_fail" type="array">
+   <wvobject fp_name="/sim_top/bad_fail" type="array">
       <obj_property name="ElementShortName">bad_fail[31:0]</obj_property>
       <obj_property name="ObjectShortName">bad_fail[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_coef_sel" type="array">
-      <obj_property name="ElementShortName">test_coef_sel[0:3][8:0]</obj_property>
-      <obj_property name="ObjectShortName">test_coef_sel[0:3][8:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_coef_addr" type="array">
-      <obj_property name="ElementShortName">test_coef_addr[0:3][9:0]</obj_property>
-      <obj_property name="ObjectShortName">test_coef_addr[0:3][9:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_coef_data" type="array">
-      <obj_property name="ElementShortName">test_coef_data[0:3][0:3][11:0]</obj_property>
-      <obj_property name="ObjectShortName">test_coef_data[0:3][0:3][11:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_data_rd" type="array">
-      <obj_property name="ElementShortName">test_data_rd[63:0]</obj_property>
-      <obj_property name="ObjectShortName">test_data_rd[63:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_data_wr" type="array">
-      <obj_property name="ElementShortName">test_data_wr[63:0]</obj_property>
-      <obj_property name="ObjectShortName">test_data_wr[63:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/test_data_ex" type="array">
-      <obj_property name="ElementShortName">test_data_ex[63:0]</obj_property>
-      <obj_property name="ObjectShortName">test_data_ex[63:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="vbus125" type="vbus">
-      <obj_property name="label">mem_data</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[16]" type="logic">
-         <obj_property name="ElementShortName">[16]</obj_property>
-         <obj_property name="ObjectShortName">randnum[16]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[15]" type="logic">
-         <obj_property name="ElementShortName">[15]</obj_property>
-         <obj_property name="ObjectShortName">randnum[15]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[14]" type="logic">
-         <obj_property name="ElementShortName">[14]</obj_property>
-         <obj_property name="ObjectShortName">randnum[14]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[13]" type="logic">
-         <obj_property name="ElementShortName">[13]</obj_property>
-         <obj_property name="ObjectShortName">randnum[13]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[12]" type="logic">
-         <obj_property name="ElementShortName">[12]</obj_property>
-         <obj_property name="ObjectShortName">randnum[12]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[11]" type="logic">
-         <obj_property name="ElementShortName">[11]</obj_property>
-         <obj_property name="ObjectShortName">randnum[11]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[10]" type="logic">
-         <obj_property name="ElementShortName">[10]</obj_property>
-         <obj_property name="ObjectShortName">randnum[10]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[9]" type="logic">
-         <obj_property name="ElementShortName">[9]</obj_property>
-         <obj_property name="ObjectShortName">randnum[9]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[8]" type="logic">
-         <obj_property name="ElementShortName">[8]</obj_property>
-         <obj_property name="ObjectShortName">randnum[8]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[7]" type="logic">
-         <obj_property name="ElementShortName">[7]</obj_property>
-         <obj_property name="ObjectShortName">randnum[7]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[6]" type="logic">
-         <obj_property name="ElementShortName">[6]</obj_property>
-         <obj_property name="ObjectShortName">randnum[6]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[5]" type="logic">
-         <obj_property name="ElementShortName">[5]</obj_property>
-         <obj_property name="ObjectShortName">randnum[5]</obj_property>
-      </wvobject>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="vbus123" type="vbus">
-      <obj_property name="label">mem_wr</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[4]" type="logic">
-         <obj_property name="ElementShortName">[4]</obj_property>
-         <obj_property name="ObjectShortName">randnum[4]</obj_property>
-      </wvobject>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="vbus120" type="vbus">
-      <obj_property name="label">mem_addr</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[3]" type="logic">
-         <obj_property name="ElementShortName">[3]</obj_property>
-         <obj_property name="ObjectShortName">randnum[3]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[2]" type="logic">
-         <obj_property name="ElementShortName">[2]</obj_property>
-         <obj_property name="ObjectShortName">randnum[2]</obj_property>
-      </wvobject>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="vbus117" type="vbus">
-      <obj_property name="label">mem_sel</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[1]" type="logic">
-         <obj_property name="ElementShortName">[1]</obj_property>
-         <obj_property name="ObjectShortName">randnum[1]</obj_property>
-      </wvobject>
-      <wvobject db_ref_id="1" fp_name="/sim_top/randnum[0]" type="logic">
-         <obj_property name="ElementShortName">[0]</obj_property>
-         <obj_property name="ObjectShortName">randnum[0]</obj_property>
-      </wvobject>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/pcie_req_sel" type="array">
-      <obj_property name="ElementShortName">pcie_req_sel[8:0]</obj_property>
-      <obj_property name="ObjectShortName">pcie_req_sel[8:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/pcie_req_addr" type="array">
-      <obj_property name="ElementShortName">pcie_req_addr[9:0]</obj_property>
-      <obj_property name="ObjectShortName">pcie_req_addr[9:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/cmem[255].genblk1.genblk1.coef_mem_alt_0/addra" type="array">
-      <obj_property name="ElementShortName">addra[9:0]</obj_property>
-      <obj_property name="ObjectShortName">addra[9:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sim_top/top_0/coef_0/cmem[255].genblk1.genblk1.coef_mem_alt_0/douta" type="array">
-      <obj_property name="ElementShortName">douta[11:0]</obj_property>
-      <obj_property name="ObjectShortName">douta[11:0]</obj_property>
    </wvobject>
 </wave_config>

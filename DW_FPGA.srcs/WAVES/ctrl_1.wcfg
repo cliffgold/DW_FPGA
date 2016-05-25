@@ -13,9 +13,9 @@
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
       <ZoomEndTime time="19817500001fs"></ZoomEndTime>
-      <Cursor1Time time="2360000000fs"></Cursor1Time>
+      <Cursor1Time time="12462500000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="36" />
+   <WVObjectSize size="34" />
    <wvobject fp_name="/sim_top/rst_in" type="logic">
       <obj_property name="ElementShortName">rst_in</obj_property>
       <obj_property name="ObjectShortName">rst_in</obj_property>
@@ -49,14 +49,6 @@
       <obj_property name="ElementShortName">bad_fail[31:0]</obj_property>
       <obj_property name="ObjectShortName">bad_fail[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/sim_top/test_data_ex" type="array">
-      <obj_property name="ElementShortName">test_data_ex[63:0]</obj_property>
-      <obj_property name="ObjectShortName">test_data_ex[63:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/sim_top/test_data_rd" type="array">
-      <obj_property name="ElementShortName">test_data_rd[63:0]</obj_property>
-      <obj_property name="ObjectShortName">test_data_rd[63:0]</obj_property>
-   </wvobject>
    <wvobject type="divider" fp_name="divider43">
       <obj_property name="label">Sum</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -68,7 +60,7 @@
       <obj_property name="CellHeight">100</obj_property>
       <obj_property name="AnalogYRangeType">ANALOG_YRANGETYPE_FIXED</obj_property>
       <obj_property name="AnalogYRangeMin">-9000.000000</obj_property>
-      <obj_property name="AnalogYRRangeMax">0.000000</obj_property>
+      <obj_property name="AnalogYRRangeMax">5000.000000</obj_property>
       <obj_property name="AnalogInterpolation">ANALOG_INTERPOLATION_HOLD</obj_property>
       <obj_property name="AnalogOffscale">ANALOG_OFFSCALE_HIDE</obj_property>
       <obj_property name="AnalogHorizLine">0.000000</obj_property>
@@ -80,7 +72,7 @@
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       <obj_property name="CellHeight">100</obj_property>
       <obj_property name="AnalogYRangeMin">-9000.000000</obj_property>
-      <obj_property name="AnalogYRRangeMax">0.000000</obj_property>
+      <obj_property name="AnalogYRRangeMax">5000.000000</obj_property>
       <obj_property name="AnalogInterpolation">ANALOG_INTERPOLATION_HOLD</obj_property>
       <obj_property name="AnalogOffscale">ANALOG_OFFSCALE_HIDE</obj_property>
       <obj_property name="AnalogHorizLine">0.000000</obj_property>
@@ -94,7 +86,7 @@
       <obj_property name="CellHeight">100</obj_property>
       <obj_property name="AnalogYRangeType">ANALOG_YRANGETYPE_FIXED</obj_property>
       <obj_property name="AnalogYRangeMin">-9000.000000</obj_property>
-      <obj_property name="AnalogYRRangeMax">0.000000</obj_property>
+      <obj_property name="AnalogYRRangeMax">5000.000000</obj_property>
       <obj_property name="AnalogInterpolation">ANALOG_INTERPOLATION_HOLD</obj_property>
       <obj_property name="AnalogOffscale">ANALOG_OFFSCALE_HIDE</obj_property>
       <obj_property name="AnalogHorizLine">0.000000</obj_property>
@@ -107,14 +99,14 @@
       <obj_property name="CellHeight">100</obj_property>
       <obj_property name="AnalogYRangeType">ANALOG_YRANGETYPE_FIXED</obj_property>
       <obj_property name="AnalogYRangeMin">-9000.000000</obj_property>
-      <obj_property name="AnalogYRRangeMax">0.000000</obj_property>
+      <obj_property name="AnalogYRRangeMax">5000.000000</obj_property>
       <obj_property name="AnalogInterpolation">ANALOG_INTERPOLATION_HOLD</obj_property>
       <obj_property name="AnalogOffscale">ANALOG_OFFSCALE_HIDE</obj_property>
       <obj_property name="AnalogHorizLine">0.000000</obj_property>
       <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
    </wvobject>
    <wvobject type="divider" fp_name="divider30">
-      <obj_property name="label">Mem 0</obj_property>
+      <obj_property name="label">Mem 0 - s/b small</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_top/old_mem_add_0[0]" type="array">
@@ -166,7 +158,7 @@
       <obj_property name="AnalogHorizLine">0.000000</obj_property>
    </wvobject>
    <wvobject type="divider" fp_name="divider70">
-      <obj_property name="label">mem 255</obj_property>
+      <obj_property name="label">mem 255 - s/b big</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_top/old_mem_add_255[0]" type="array">
@@ -270,7 +262,7 @@
       <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
    </wvobject>
    <wvobject type="divider" fp_name="divider42">
-      <obj_property name="label">mem 511</obj_property>
+      <obj_property name="label">mem 511 s/b mid (200h)</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_top/old_mem_add_511[0]" type="array">
