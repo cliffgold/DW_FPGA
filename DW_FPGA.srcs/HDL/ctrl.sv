@@ -10,20 +10,20 @@ module ctrl
 `include "params.svh"
 `include "structs.svh"
       
-   input   sys_s     sys;
-   input   pcie_wr_s pcie_ctrl_wr;
+   input 	   sys_s sys;
+   input 	   pcie_wr_s pcie_ctrl_wr;
    
-   output  ctrl_rnd_s  ctrl_rnd;
-   output  ctrl_pick_s ctrl_pick;
+   output 	   ctrl_rnd_s ctrl_rnd;
+   output 	   ctrl_pick_s ctrl_pick;
    
-   reg [RUN_W:0] 	   run [0:NRUNS-1];
-   reg [NRUNS-1:0]    step;
+   reg [RUN_W:0]   run [0:NRUNS-1];
+   reg [NRUNS-1:0] step;
  
-   reg [NRUNS-1:0]      ram_we;
-   ctrl_word_s               ram_data;
+   reg [NRUNS-1:0]         ram_we;
+   ctrl_word_s             ram_data;
    reg [CTRL_MEM_ADDR_W:0] ram_addr;
    
-   wire [NRUNS-1:0]     ctrl_busy;
+   wire [NRUNS-1:0] 	   ctrl_busy;
 
    ctrl_word_s    ctrl_word [0:NRUNS-1];
    ctrl_cmd_s     ctrl_cmd;
@@ -32,8 +32,8 @@ module ctrl
    pcie_ctrl_addr_s  address;
    
    
-   integer              i;
-   genvar 		gi;
+   integer i;
+   genvar  gi;
    
    assign address = pcie_ctrl_wr.addr;
    

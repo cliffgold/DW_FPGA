@@ -17,7 +17,7 @@ parameter CTRL_MEM_ADDR_W  = 9;  // 10 address bits on each of the 16 ctrl mems
 
                                  //2 xbits + 4 shared ybits + 4 ybits
  
-parameter NRUNS         = 20;    //Max number of runs in the same pipe
+parameter NRUNS         = 21;    //Max number of runs in the same pipe
 parameter RUN_W         = $clog2(NRUNS) - 1;
 
 parameter NQBITS        = NROWS * NCOLS * 8;
@@ -51,15 +51,15 @@ parameter PCIE_COEF_DATA_W  = CMEM_DATA_W;
 parameter PCIE_COEF_ADDR_W  = CMEM_ADDR_W + CMEM_SEL_W + 1;
 parameter PCIE_RND_DATA_W   = 31;
 parameter PCIE_RND_ADDR_W   = 8;
-parameter PCIE_CTRL_DATA_W  = 63;
 
 parameter SUM_W             = 23;
 
 //Pipes
+parameter NCOEF_REQ_PIPE  = 3;
 
-parameter NCOEF_REQ_PIPE  = 2;
 parameter TEMP_W          = 15;
-parameter FLIP_W          = $clog2(NQBITS) - 2;
+parameter NFLIPS          = 16;
+parameter FLIP_W          = $clog2(NFLIPS) -1;
 
 //CTRL sequence
 parameter CTRL_RND_RUN    = 1;

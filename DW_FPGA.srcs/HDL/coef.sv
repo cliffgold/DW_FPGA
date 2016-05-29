@@ -252,7 +252,7 @@ module coef
    bigmux
      #(.NBITS(CMEM_DATA_W+1),
        .NMUXIN(NCMEMS),
-       .NFLOPS(2)
+       .NFLOPS(NCOEF_REQ_PIPE)
        )
    coef_read_mux
      (

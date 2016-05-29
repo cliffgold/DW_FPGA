@@ -1,11 +1,15 @@
 
-set_input_delay -clock clk_input -max 1.000 [get_ports bus_pcie*]
-set_input_delay -clock clk_input -min -1.000 [get_ports bus_pcie*]
-set_input_delay -clock clk_input -max 1.000 [get_ports rst_in]
-set_input_delay -clock clk_input -min -1.000 [get_ports rst_in]
+set_input_delay -clock clk_input -max 5.000 [get_ports bus_pcie*]
+set_input_delay -clock clk_input -min 3.000 [get_ports bus_pcie*]
+set_input_delay -clock clk_input -max 5.000 [get_ports rst_in]
+set_input_delay -clock clk_input -min 3.000 [get_ports rst_in]
 
-set_output_delay -clock clk_out2_clk_wiz_0 -max 1.000 [get_ports pcie_bus*]
-set_output_delay -clock clk_out2_clk_wiz_0 -min -1.000 [get_ports pcie_bus*]
+set_multicycle_path -from [get_ports bus_pcie*] -to [get_clocks clk_out2_clk_wiz_0] 2
+set_multicycle_path -from [get_ports rst_in] -to [get_clocks clk_out2_clk_wiz_0] 2
+
+create_clock -period 8.000 -name clk_output -waveform {0.000 4.000} -add [get_ports clk_output]
+set_output_delay -clock clk_output -max 1.000 [get_ports pcie_bus*]
+set_output_delay -clock clk_output -min -1.000 [get_ports pcie_bus*]
 
 set_property IOSTANDARD LVCMOS15 [get_ports bus_pcie*]
 set_property IOSTANDARD LVCMOS15 [get_ports pcie_bus*]
@@ -27,9 +31,6 @@ set_property INTERNAL_VREF 0.75 [get_iobanks 34]
 
 set_property CONFIG_VOLTAGE 1.5 [current_design]
 set_property CFGBVS GND [current_design]
-
-
-
 
 set_property PACKAGE_PIN H23 [get_ports {bus_pcie_req_addr[0]}]
 set_property PACKAGE_PIN V23 [get_ports {pcie_bus_rd_data[55]}]
@@ -245,3 +246,5 @@ set_property PACKAGE_PIN G17 [get_ports {bus_pcie_wr_data[42]}]
 set_property PACKAGE_PIN C13 [get_ports {bus_pcie_wr_addr[26]}]
 set_property PACKAGE_PIN H16 [get_ports {bus_pcie_wr_data[50]}]
 set_property PACKAGE_PIN R18 [get_ports {bus_pcie_req_addr[22]}]
+
+

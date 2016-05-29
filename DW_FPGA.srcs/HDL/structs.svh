@@ -166,4 +166,4 @@ typedef struct packed
 		  }
 		 ctrl_cmd_s;
 
-parameter CTRL_CMD_S_W = NRUNS-1+1 + NRUNS-1+1 + 1 -1;
+parameter CTRL_CMD_S_W = NRUNS + NRUNS + 1 -1;

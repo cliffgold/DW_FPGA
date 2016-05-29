@@ -27,8 +27,8 @@ module rnd
    output 	     rnd_coef_s rnd_coef;
 
    wire [NQBITS-1:0] rnd_bits;
-   reg [NQBITS-1:0]  new_xy [NRUNS-1:0];
-   reg [NQBITS-1:0]  old_xy [NRUNS-1:0];
+   reg [NQBITS-1:0]  new_xy [0:NRUNS-1];
+   reg [NQBITS-1:0]  old_xy [0:NRUNS-1];
    reg [FLIP_W:0]    flips;
    reg [RUN_W:0]     run;
    reg [RUN_W:0]     run_q;
@@ -39,9 +39,9 @@ module rnd
    integer 	     j;
    genvar 	     gi;
 
-   reg [NQBITS-1:0]  shift_bits [FLIP_W:0];
-   reg [NQBITS-1:0]  xor_bits [FLIP_W:0];
-   reg [NQBITS-1:0]  xor_bits_q [FLIP_W:0];
+   reg [NQBITS-1:0]  shift_bits [0:NFLIPS];
+   reg [NQBITS-1:0]  xor_bits   [0:NFLIPS];
+   reg [NQBITS-1:0]  xor_bits_q [0:NFLIPS];
 
    pcie_rnd_addr_s    addr_q;
    reg 		      pcie_req_q;
@@ -51,7 +51,9 @@ module rnd
    reg [63:0] 	      old_xy_run [0:(NQBITS/64)-1];
    wire [63:0] 	      rd_data;
 
-      
+   reg 		      was_init;
+   reg 		      init;
+         
 generate
    for(gi=0;gi<NQBITS;gi=gi+512) begin : PRBS
 
@@ -82,7 +84,7 @@ endgenerate
    assign shift_bits[0] = rnd_bits[NQBITS-1:0];
       
 generate
-   for (gi=1;gi<=FLIP_W;gi=gi+1) begin :XOR_COMB	 
+   for (gi=1;gi<NFLIPS;gi=gi+1) begin :XOR_COMB	 
       
       always@ (*) begin
 	 shift_bits[gi] = {shift_bits[gi-1][0],
@@ -95,11 +97,11 @@ endgenerate
    
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
-	 for (i=0;i<=FLIP_W;i=i+1) begin	 
+	 for (i=0;i<NFLIPS;i=i+1) begin	 
 	    xor_bits_q[i] <= 'b0;
 	 end
       end else begin
-	 for (i=0;i<=FLIP_W;i=i+1) begin	 
+	 for (i=0;i<NFLIPS;i=i+1) begin	 
 	    xor_bits_q[i] <= xor_bits[i];
 	 end
       end
@@ -122,7 +124,27 @@ endgenerate
       end
    end // always@ (posedge sys.clk )
    
-//Do stuff
+   always@(posedge sys.clk ) begin
+      if (sys.reset) begin
+	 was_init <= 1'b0;
+	 init     <= 1'b0;
+      end else begin
+	 if (run == 'b0) begin
+	    if (ctrl_rnd.init == 1'b0) begin
+	       was_init <= 1'b0;
+	       init     <= 1'b0;
+	    end else begin
+	       if (was_init == 1'b0) begin
+		  was_init <= 1'b1;
+		  init     <= 1'b1;
+	       end else begin
+		  init <= 1'b0;
+	       end
+	    end // else: !if(ctrl_rnd.init == 1'b0)
+	 end // if (run == 'b0)
+      end // else: !if(sys.reset)
+   end // always@ (posedge sys.clk )
+   
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 for (i=0;i<NRUNS;i=i+1) begin
@@ -130,7 +152,7 @@ endgenerate
 	    new_xy[i]  <= 'b0;
 	 end
       end else begin
-	 if (ctrl_rnd.init) begin
+	 if (init) begin
 	    old_xy[0] <= rnd_bits;
 	 end
 	 else if (enable == 1'b1) begin
