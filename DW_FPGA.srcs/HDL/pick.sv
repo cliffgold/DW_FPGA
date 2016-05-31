@@ -13,32 +13,32 @@ module pick
 `include "params.svh"
 `include "structs.svh"
       
-   input sys_s         sys;
-   input sum_pick_s    sum_pick;
-   input ctrl_pick_s   ctrl_pick;
-   input pcie_req_s    pcie_pick_req;
+   input sys_s            sys;
+   input 		  sum_pick_s      sum_pick;
+   input 		  ctrl_pick_s     ctrl_pick;
+   input 		  pcie_pick_req_s pcie_pick_req;
 
-   output pcie_rd_s    pick_pcie_rd;
-   output pick_rnd_s   pick_rnd;
+   output 		  pick_pcie_rd_s pick_pcie_rd;
+   output 		  pick_rnd_s     pick_rnd;
 
-   reg signed [SUM_W-1:0]      rnd_bits;
+   reg signed [SUM_W-1:0] rnd_bits;
 
-   reg [TEMP_W:0] 		 temperature;
+   reg [TEMP_W:0] 	  temperature;
    
-   reg signed [SUM_W:0] 	 old_sum [0:NRUNS-1];
-   reg signed [SUM_W:0] 	 old_sum_q;
-   reg signed [SUM_W+2:0] 	 old_sum_j;
+   reg signed [SUM_W:0]   old_sum [0:NRUNS-1];
+   reg signed [SUM_W:0]   old_sum_q;
+   reg signed [SUM_W+2:0] old_sum_j;
 
-   reg signed [SUM_W:0] 	 full_sum_q;
-   reg signed [SUM_W:0] 	 full_sum_q2;
+   reg signed [SUM_W:0]   full_sum_q;
+   reg signed [SUM_W:0]   full_sum_q2;
 
-   reg [RUN_W:0] 		 run_q;
-   reg [RUN_W:0] 		 run_q2;
+   reg [RUN_W:0] 	  run_q;
+   reg [RUN_W:0] 	  run_q2;
 
-   reg 				 enable_q;
-   reg 				 enable_q2;
+   reg 			  enable_q;
+   reg 			  enable_q2;
    
-   integer 			 i;
+   integer 		  i;
    
    prbs_many 
      #(
@@ -117,9 +117,7 @@ module pick
 	 pick_pcie_rd <= 'b0;
       end else begin
 	 if (pcie_pick_req.vld) begin
-	    pick_pcie_rd.data <= {{64-RUN_W-1-SUM_W-1{1'b0}},
-				  run_q2[RUN_W:0],
-				  old_sum[pcie_pick_req.addr[SUM_W:0]]};
+	    pick_pcie_rd.data <= old_sum[pcie_pick_req.addr];
 	    pick_pcie_rd.vld  <= 1'b1;
 	    pick_pcie_rd.tag  <= pcie_pick_req.tag;
 	 end else begin

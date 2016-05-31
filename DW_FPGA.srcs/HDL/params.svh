@@ -1,7 +1,9 @@
 // Parameters
 
 parameter IS_SIM       = 0;
-//coef block 
+
+parameter CLK_IN_PERIOD= 8;
+
 parameter NROWS        = 16;  //Number of 4x4 structures in a column.  12 for DWAVE-2x
 parameter NCOLS        = 16;  //Number of 4x4 structures in a row.     12 for DWAVE-2x
 
@@ -70,4 +72,3 @@ parameter COEF_RUN        = 3;
 parameter SUM_RUN         = 8;
 parameter PICK_RUN        = 0;
 
-   

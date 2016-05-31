@@ -30,16 +30,16 @@ module pcie
    input  pcie_req_s bus_pcie_req;
    output pcie_rd_s  pcie_bus_rd;
    
-   input  pcie_rd_s  coef_pcie_rd;
-   input  pcie_rd_s  pick_pcie_rd;
-   input  pcie_rd_s  rnd_pcie_rd;
+   input  coef_pcie_rd_s  coef_pcie_rd;
+   input  pick_pcie_rd_s  pick_pcie_rd;
+   input  rnd_pcie_rd_s   rnd_pcie_rd;
    
-   output pcie_wr_s  pcie_coef_wr;
-   output pcie_wr_s  pcie_ctrl_wr;
+   output pcie_coef_wr_s  pcie_coef_wr;
+   output pcie_ctrl_wr_s  pcie_ctrl_wr;
 
-   output pcie_req_s pcie_coef_req;
-   output pcie_req_s pcie_pick_req;
-   output pcie_req_s pcie_rnd_req;
+   output pcie_coef_req_s pcie_coef_req;
+   output pcie_pick_req_s pcie_pick_req;
+   output pcie_rnd_req_s  pcie_rnd_req;
 
    reg    pcie_req_busy;
    reg    pcie_req_busy_clr;
@@ -109,10 +109,10 @@ module pcie
                 (bus_pcie_req_q.addr <= COEF_BAR_END)   &&
 		(pcie_req_busy   == 1'b0)) begin
             
-               pcie_coef_req.tag     <= bus_pcie_req_q.tag;
+               pcie_coef_req.tag  <= bus_pcie_req_q.tag;
                pcie_coef_req.addr <= bus_pcie_req_q.addr;
                pcie_coef_req.vld  <= 1'b1;
-               pcie_req_busy         <= 1'b1;
+               pcie_req_busy      <= 1'b1;
             end
             else if ((bus_pcie_req_q.addr >= PICK_BAR_START) &&
                      (bus_pcie_req_q.addr <= PICK_BAR_END)) begin

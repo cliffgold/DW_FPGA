@@ -10,14 +10,14 @@ module ctrl
 `include "params.svh"
 `include "structs.svh"
       
-   input 	   sys_s sys;
-   input 	   pcie_wr_s pcie_ctrl_wr;
+   input  sys_s          sys;
+   input  pcie_ctrl_wr_s pcie_ctrl_wr;
    
-   output 	   ctrl_rnd_s ctrl_rnd;
-   output 	   ctrl_pick_s ctrl_pick;
+   output ctrl_rnd_s     ctrl_rnd;
+   output ctrl_pick_s    ctrl_pick;
    
-   reg [RUN_W:0]   run [0:NRUNS-1];
-   reg [NRUNS-1:0] step;
+   reg [RUN_W:0]         run [0:NRUNS-1];
+   reg [NRUNS-1:0]       step;
  
    reg [NRUNS-1:0]         ram_we;
    ctrl_word_s             ram_data;
@@ -25,17 +25,13 @@ module ctrl
    
    wire [NRUNS-1:0] 	   ctrl_busy;
 
-   ctrl_word_s    ctrl_word [0:NRUNS-1];
-   ctrl_cmd_s     ctrl_cmd;
-   ctrl_cmd_s     ctrl_cmd_q;
+   ctrl_word_s             ctrl_word [0:NRUNS-1];
+   ctrl_cmd_s              ctrl_cmd;
+   ctrl_cmd_s              ctrl_cmd_q;
 
-   pcie_ctrl_addr_s  address;
-   
    
    integer i;
    genvar  gi;
-   
-   assign address = pcie_ctrl_wr.addr;
    
    always@(posedge sys.clk) begin
       if (sys.reset) begin
@@ -46,13 +42,13 @@ module ctrl
 	 
       end else begin
 	 if (pcie_ctrl_wr.vld) begin  
-	    if (address.is_cmd == 1'b0) begin
-	       if (address.ctrl1 == 1'b0) begin
+	    if (pcie_ctrl_wr.addr.is_cmd == 1'b0) begin
+	       if (pcie_ctrl_wr.addr.is_ctrl1 == 1'b0) begin
 		  ram_data.ctrl0 <= pcie_ctrl_wr.data[CTRL0_WORD_S_W:0];
 	       end else begin
 		  ram_data.ctrl1 <= pcie_ctrl_wr.data[CTRL1_WORD_S_W:0];
-		  ram_addr 	 <= address.addr;
-		  ram_we 	 <= 16'b1 << address.run;
+		  ram_addr 	 <= pcie_ctrl_wr.addr.addr;
+		  ram_we 	 <= 16'b1 << pcie_ctrl_wr.addr.run;
 	       end
 	    end else begin
 	       ram_we    <= 'b0;
