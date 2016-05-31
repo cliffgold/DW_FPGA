@@ -42,7 +42,11 @@ module bigmux #(
       for (lvl=0;lvl<NLEVELS;lvl=lvl+1)             begin : LEVELS
 	 for (i=lvl*4;i<lvl*4+4;i=i+1)              begin : PAD_SEL_BITS
             if (i<NSEL) begin
-               assign mux16_sel[lvl][i-(lvl*4)] = sel_pipe[lvl][i];
+	       if (lvl==0) begin
+		  assign mux16_sel[lvl][i-(lvl*4)] = sel_in[i];
+	       end else begin
+		  assign mux16_sel[lvl][i-(lvl*4)] = sel_pipe[lvl-1][i];
+	       end
             end else begin
                assign mux16_sel[lvl][i-(lvl*4)] = 1'b0;
             end
@@ -69,7 +73,7 @@ module bigmux #(
 		 #(
                    .NBITS(NBITS)
                    ) 
-               word_mux_0
+               word_mux_f_0
 		 (
 		  .clk(clk),
 		  .reset(reset),
@@ -83,7 +87,7 @@ module bigmux #(
 		 #(
                    .NBITS(NBITS)
                    ) 
-               word_mux_0
+               word_mux_nf_0
 		 (
 		  .data_in(mux16_data_in[lvl][mux][0:15]),
 		  .sel(mux16_sel[lvl][3:0]),
