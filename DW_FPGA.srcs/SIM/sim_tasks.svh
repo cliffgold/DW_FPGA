@@ -88,16 +88,16 @@ endtask // mem_pattern_0
 
 task automatic pcie_ctrl
   (
-   input pcie_ctrl_addr_s  ctrl_addr,
-   input ctrl_word_s       ctrl_word,
-   ref   reg               clk_in,
-   
-   ref pcie_wr_s    bus_pcie_wr
+   input   ctrl_addr_s ctrl_addr,
+   input   ctrl_word_s ctrl_word,
+   ref     reg         clk_in,
+	   
+	   ref pcie_wr_s bus_pcie_wr
    );
    
    begin : bus_pcie_ctrl
       
-      ctrl_addr.ctrl1 = 1'b0;
+      ctrl_addr.is_ctrl1 = 1'b0;
    
       pcie_write(CTRL_BAR_START,
 		 ctrl_addr,
@@ -105,7 +105,7 @@ task automatic pcie_ctrl
 		 clk_in,
 		 bus_pcie_wr);
 
-ctrl_addr.ctrl1 = 'b1;
+ctrl_addr.is_ctrl1 = 'b1;
    
       pcie_write(CTRL_BAR_START,
 		 ctrl_addr,

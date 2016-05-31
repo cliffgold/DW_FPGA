@@ -16,11 +16,11 @@ module sim_top();
 
    pcie_rd_s   pcie_bus_rd;
 
-   pcie_coef_addr_s pcie_coef_addr;
+   coef_addr_s coef_addr;
    
-   pcie_ctrl_addr_s ctrl_addr;
-   ctrl_cmd_s       ctrl_cmd;
-   ctrl_word_s      ctrl_word;
+   ctrl_addr_s ctrl_addr;
+   ctrl_cmd_s  ctrl_cmd;
+   ctrl_word_s ctrl_word;
 
    pcie_rnd_addr_s   rnd_addr;
    reg [RUN_W:0]  rnd_run [0:NRUNS-1];
@@ -71,10 +71,10 @@ module sim_top();
       bus_pcie_req = 'b0;
       ready        = 1'b0;
       
-      #10;
+      #CLK_IN_PERIOD;
       
       repeat(50) begin
-	 #5
+	 #(CLK_IN_PERIOD/2)
 	   clk_input = ~clk_input;
       end
 
@@ -83,19 +83,19 @@ module sim_top();
       assign sys_clk = top_0.clk_gen_0.sys.clk;
       
       while (top_0.clk_gen_0.locked == 1'b0) begin
-	 #5
+	 #(CLK_IN_PERIOD/2)
 	   clk_input = ~clk_input;
       end
       
       repeat(50) begin
-	 #5
+	 #(CLK_IN_PERIOD/2)
 	   clk_input = ~clk_input;
       end
 
       ready = 1;
       
       forever begin
-	 #5
+	 #(CLK_IN_PERIOD/2)
 	   clk_input = ~clk_input;
       end
    end // initial begin
@@ -124,7 +124,7 @@ module sim_top();
 
    always@(negedge sys_clk) begin
       {old_y[top_0.rnd_0.run],old_x[top_0.rnd_0.run]} <= 
-		             top_0.rnd_0.old_xy[NRUNS-1];
+		             top_0.rnd_0.old_xy_out;
    end
    
    genvar    gi;

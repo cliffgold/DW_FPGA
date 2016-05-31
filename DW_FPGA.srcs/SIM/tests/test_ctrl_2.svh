@@ -12,8 +12,8 @@ ctrl_word.ctrl1.flips 	     = 'h0;
 ctrl_word.ctrl1.temperature  = 'h0;
 ctrl_word.ctrl0.count 	     = 128;
 
-ctrl_addr = 0;
-ctrl_addr.run   = rnd_run[0];
+ctrl_addr     = 0;
+ctrl_addr.run = rnd_run[0];
 
 pcie_ctrl(
 	  ctrl_addr,
@@ -27,9 +27,9 @@ ctrl_word.ctrl1.flips 	     = 'h0;
 ctrl_word.ctrl1.temperature  = 'hb;
 ctrl_word.ctrl0.count 	     = 128;
 
-ctrl_addr       = 0;
-ctrl_addr.run   = rnd_run[1];
-ctrl_addr.ctrl1 = 1'b0;
+ctrl_addr          = 0;
+ctrl_addr.run      = rnd_run[1];
+ctrl_addr.is_ctrl1 = 1'b0;
    
 pcie_ctrl(
 	  ctrl_addr,
@@ -43,9 +43,9 @@ ctrl_word.ctrl1.flips 	     = 'h3;
 ctrl_word.ctrl1.temperature  = 'h0;
 ctrl_word.ctrl0.count 	     = 128;
 
-ctrl_addr       = 0;
-ctrl_addr.run   = rnd_run[2];
-ctrl_addr.ctrl1 = 1'b0;
+ctrl_addr          = 0;
+ctrl_addr.run      = rnd_run[2];
+ctrl_addr.is_ctrl1 = 1'b0;
    
 pcie_ctrl(
 	  ctrl_addr,
@@ -59,9 +59,9 @@ ctrl_word.ctrl1.flips 	     = 'h3;
 ctrl_word.ctrl1.temperature  = 'hb;
 ctrl_word.ctrl0.count 	     = 128;
 
-ctrl_addr       = 0;
-ctrl_addr.run   = rnd_run[3];
-ctrl_addr.ctrl1 = 1'b0;
+ctrl_addr          = 0;
+ctrl_addr.run      = rnd_run[3];
+ctrl_addr.is_ctrl1 = 1'b0;
    
 pcie_ctrl(
 	  ctrl_addr,
