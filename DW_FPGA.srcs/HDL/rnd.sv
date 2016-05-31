@@ -19,16 +19,19 @@ module rnd
 `include "seeds.svh"
    
    input sys_s       sys;
-   input 	     pcie_req_s pcie_rnd_req;
-   input 	     ctrl_rnd_s ctrl_rnd;
-   input 	     pick_rnd_s pick_rnd;
+   input 	     pcie_rnd_req_s pcie_rnd_req;
+   input 	     ctrl_rnd_s     ctrl_rnd;
+   input 	     pick_rnd_s     pick_rnd;
       
-   output 	     pcie_rd_s rnd_pcie_rd;
-   output 	     rnd_coef_s rnd_coef;
+   output 	     rnd_pcie_rd_s rnd_pcie_rd;
+   output 	     rnd_coef_s    rnd_coef;
 
    wire [NQBITS-1:0] rnd_bits;
-   reg [NQBITS-1:0]  new_xy [0:NRUNS-1];
-   reg [NQBITS-1:0]  old_xy [0:NRUNS-1];
+   reg [NQBITS-1:0]  new_xy_in;
+   reg [NQBITS-1:0]  new_xy_out;
+   reg [NQBITS-1:0]  old_xy_in;
+   reg [NQBITS-1:0]  old_xy_out;
+
    reg [FLIP_W:0]    flips;
    reg [RUN_W:0]     run;
    reg [RUN_W:0]     run_q;
@@ -147,45 +150,59 @@ endgenerate
    
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
-	 for (i=0;i<NRUNS;i=i+1) begin
-	    old_xy[i]  <= 'b0;
-	    new_xy[i]  <= 'b0;
-	 end
+	 old_xy_in  <= 'b0;
+	 new_xy_in  <= 'b0;
       end else begin
 	 if (init) begin
-	    old_xy[0] <= rnd_bits;
+	    old_xy_in <= rnd_bits;
 	 end
 	 else if (enable == 1'b1) begin
 	    if (picked == 1'b1) begin
-	       new_xy[0] <= new_xy[NRUNS-1] ^ xor_bits_q[flips];
-	       old_xy[0] <= new_xy[NRUNS-1];
+	       new_xy_in <= new_xy_out ^ xor_bits_q[flips];
+	       old_xy_in <= new_xy_out;
 	    end else begin
-	       new_xy[0] <= old_xy[NRUNS-1] ^ xor_bits_q[flips];
-	       old_xy[0] <= old_xy[NRUNS-1];
+	       new_xy_in <= old_xy_out ^ xor_bits_q[flips];
+	       old_xy_in <= old_xy_out;
 	    end
 	 end else begin
-	    new_xy[0] <= new_xy[NRUNS-1];
-	    old_xy[0] <= old_xy[NRUNS-1];
-	 end // else: !if(ctrl_rnd.en == 1'b1)
-	 
-	 for (i=1;i<NRUNS;i=i+1) begin
-	    new_xy[i] <= new_xy[i-1];
-	    old_xy[i] <= old_xy[i-1];
-	 end
+	    new_xy_in <= new_xy_out;
+	    old_xy_in <= old_xy_out;
+	 end // else: !if(enable == 1'b1)
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk )
+
+generate
+   for (gi=0;gi<NQBITS/256;gi++) begin : xy_shift_regs
+      localparam XY_INDEX = gi*256;
+
+      c_shift_ram_0 new_xy_0 
+	(
+	 .D(new_xy_in[XY_INDEX +:256]),     // input wire [255 : 0] D
+	 .CLK(sys.clk),                     // input wire CLK
+	 .SCLR(sys.reset),                  // input wire SCLR
+	 .Q(new_xy_out[XY_INDEX +:256])  // output wire [255 : 0] Q
+	 );
+      
+      c_shift_ram_0 old_xy_0 
+	(
+	 .D(old_xy_in[XY_INDEX +:256]),     // input wire [255 : 0] D
+	 .CLK(sys.clk),                     // input wire CLK
+	 .SCLR(sys.reset),                  // input wire SCLR
+	 .Q(old_xy_out[XY_INDEX +:256])  // output wire [255 : 0] Q
+	 );
+   end // block: xy_shift_regs
+endgenerate
 
 //Now buffer outputs
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 rnd_coef    <= 'b0;
       end else begin
-	 rnd_coef.x   <= new_xy[0][X_W:0];
-	 rnd_coef.y   <= new_xy[0][(X_W*2)+1:X_W+1];
+	 rnd_coef.x   <= new_xy_in[X_W:0];
+	 rnd_coef.y   <= new_xy_in[(X_W*2)+1:X_W+1];
 	 rnd_coef.run <= run_q;
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk )
-
 
 //PCIE read 
    always@(posedge sys.clk ) begin
@@ -198,7 +215,7 @@ endgenerate
 	 if ((addr_q.run == run) && pcie_req_q) begin
 	    pcie_gotrun <= 1'b1;
  	    for (i=0;i<NQWORDS;i=i+1) begin
- 	       old_xy_run[i]  <= old_xy[NRUNS-1][(i*64)+:64];
+ 	       old_xy_run[i]  <= old_xy_out[(i*64)+:64];
  	    end
 	 end else begin
 	    pcie_gotrun <= 1'b0;
@@ -214,7 +231,7 @@ endgenerate
 	 tag_q       <= 'b0;
       end else begin
 	 if (pcie_rnd_req.vld) begin
-            addr_q     <= pcie_rnd_req.addr[RND_ADDR_S_W:0];
+            addr_q     <= pcie_rnd_req.addr;
 	    tag_q      <= pcie_rnd_req.tag;
 	    pcie_req_q <= 1'b1;
          end 
@@ -258,3 +275,4 @@ endgenerate
 endmodule // rnd
 
 		
+ 
