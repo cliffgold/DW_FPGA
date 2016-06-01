@@ -1,4 +1,5 @@
 // Module to control one of 16 runs
+`include "timescale.svh"
 
 module ctrl_onerun
   (sys,
@@ -66,9 +67,9 @@ module ctrl_onerun
 		 state      <= RUNNING;
 	      end // case: LOADING
 	      RUNNING: begin
-		 ctrl_word.ctrl0.count <= ctrl_word.ctrl0.count - 'b1;
-		 if (ctrl_word.ctrl0.count == 'b1) begin
-		    if (ctrl_word.ctrl1.next) begin
+		 ctrl_word.count <= ctrl_word.count - 'b1;
+		 if (ctrl_word.count == 'b1) begin
+		    if (ctrl_word.next) begin
 		       state     <= LOADING;
 		    end else begin
 		       state     <= IDLE;

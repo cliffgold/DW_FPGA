@@ -1,4 +1,5 @@
 // Module to control the 16 runs
+`include "timescale.svh"
 
 module ctrl
   (sys,	  
@@ -43,13 +44,9 @@ module ctrl
       end else begin
 	 if (pcie_ctrl_wr.vld) begin  
 	    if (pcie_ctrl_wr.addr.is_cmd == 1'b0) begin
-	       if (pcie_ctrl_wr.addr.is_ctrl1 == 1'b0) begin
-		  ram_data.ctrl0 <= pcie_ctrl_wr.data[CTRL0_WORD_S_W:0];
-	       end else begin
-		  ram_data.ctrl1 <= pcie_ctrl_wr.data[CTRL1_WORD_S_W:0];
-		  ram_addr 	 <= pcie_ctrl_wr.addr.addr;
-		  ram_we 	 <= 16'b1 << pcie_ctrl_wr.addr.run;
-	       end
+	       ram_data   <= pcie_ctrl_wr.data[CTRL_WORD_S_W:0];
+	       ram_addr   <= pcie_ctrl_wr.addr.addr;
+	       ram_we 	  <= 16'b1 << pcie_ctrl_wr.addr.run;
 	    end else begin
 	       ram_we    <= 'b0;
 	       ctrl_cmd  <= pcie_ctrl_wr.data[CTRL_CMD_S_W:0];
@@ -111,12 +108,12 @@ endgenerate
 	 ctrl_rnd.init  <= ctrl_cmd.init;
 	 ctrl_rnd.en    <= ctrl_busy[run[CTRL_RND_RUN]]; 
 	 ctrl_rnd.run   <= run[CTRL_RND_RUN];
-	 ctrl_rnd.flips <= ctrl_word[run[CTRL_RND_RUN]].ctrl1.flips;
+	 ctrl_rnd.flips <= ctrl_word[run[CTRL_RND_RUN]].flips;
 
 	 ctrl_pick.init        <= ctrl_cmd.init;
 	 ctrl_pick.en          <= ctrl_busy[NRUNS-1:0];
 	 for (i=0;i<NRUNS;i=i+1) begin
-	    ctrl_pick.temperature[i] <= ctrl_word[i].ctrl1.temperature;
+	    ctrl_pick.temperature[i] <= ctrl_word[i].temperature;
 	 end
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)

@@ -141,7 +141,6 @@ typedef struct packed
 	       {
 		  logic 		    is_cmd;
 		  logic [RUN_W:0] 	    run;
-		  logic 		    is_ctrl1;
 		  logic [CTRL_MEM_ADDR_W:0] addr;
 		  }
 		 ctrl_addr_s;
@@ -154,27 +153,11 @@ typedef struct packed
 
 		  logic [FLIP_W:0]   flips;
 		  logic [TEMP_W:0]   temperature;
-		  }
-		 ctrl_word1_s;
-
-parameter CTRL1_WORD_S_W = 1 + FLIP_W+1 + TEMP_W+1 -1;
-
-typedef struct packed
-	       {
-		  logic [31:0] 		    count;
-		  }
-		 ctrl_word0_s;
-
-parameter CTRL0_WORD_S_W = 31;
-
-typedef struct packed
-	       {
-		  ctrl_word0_s ctrl0;
-		  ctrl_word1_s ctrl1;
+		  logic [31:0] 	     count;
 		  }
 		 ctrl_word_s;
 
-parameter CTRL_WORD_S_W = CTRL0_WORD_S_W + CTRL1_WORD_S_W + 1;
+parameter CTRL_WORD_S_W = 1 + FLIP_W+1 + TEMP_W+1 + 31+1 -1;
 
 typedef struct packed
 	       {
@@ -186,11 +169,8 @@ typedef struct packed
 
 parameter CTRL_CMD_S_W = NRUNS + NRUNS + 1 -1;
 
-parameter BIG_CTRL01_W = (CTRL0_WORD_S_W > CTRL1_WORD_S_W) ?
-			 CTRL0_WORD_S_W  : CTRL1_WORD_S_W;
-
-parameter BIG_CTRL_DATA_W = (BIG_CTRL01_W > CTRL_CMD_S_W) ?
-			    BIG_CTRL01_W  : CTRL_CMD_S_W;
+parameter BIG_CTRL_DATA_W = (CTRL_WORD_S_W > CTRL_CMD_S_W) ?
+			    CTRL_WORD_S_W : CTRL_CMD_S_W;
 typedef struct packed
 	       {
 		  logic [BIG_CTRL_DATA_W:0] data;
