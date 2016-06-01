@@ -27,20 +27,20 @@
     <Option Name="IPUserFilesDir" Val="$PPRDIR/DW_FPGA.ip_user_files"/>
     <Option Name="IPStaticSourceDir" Val="$PPRDIR/DW_FPGA.ip_user_files/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="223"/>
+    <Option Name="WTXSimLaunchSim" Val="253"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
     <Option Name="WTActivehdlLaunchSim" Val="0"/>
-    <Option Name="WTXSimExportSim" Val="22"/>
-    <Option Name="WTModelSimExportSim" Val="22"/>
-    <Option Name="WTQuestaExportSim" Val="22"/>
-    <Option Name="WTIesExportSim" Val="22"/>
-    <Option Name="WTVcsExportSim" Val="22"/>
-    <Option Name="WTRivieraExportSim" Val="22"/>
-    <Option Name="WTActivehdlExportSim" Val="22"/>
+    <Option Name="WTXSimExportSim" Val="26"/>
+    <Option Name="WTModelSimExportSim" Val="26"/>
+    <Option Name="WTQuestaExportSim" Val="26"/>
+    <Option Name="WTIesExportSim" Val="26"/>
+    <Option Name="WTVcsExportSim" Val="26"/>
+    <Option Name="WTRivieraExportSim" Val="26"/>
+    <Option Name="WTActivehdlExportSim" Val="26"/>
     <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
   </Configuration>
   <FileSets Version="1" Minor="31">
@@ -247,6 +247,7 @@
         <Option Name="XSimWcfgFile" Val="$PSRCDIR/WAVES/sim_top_behav.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PSRCDIR/WAVES/sim_top_behav.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PSRCDIR/WAVES/ctrl_1.wcfg"/>
+        <Option Name="xsim.elaborate.xelab.more_options" Val="-cc clang"/>
         <Option Name="xsim.simulate.runtime" Val="200000ns"/>
       </Config>
     </FileSet>
