@@ -3,6 +3,8 @@
 //   This instantiates logic, so that optimum slice use is guaranteed
 //   per Xilinx xapp522
 
+`include "timescale.svh"
+
 module mux16_word_flop #(parameter NBITS=12)
   (
    input clk,

@@ -1,3 +1,5 @@
+`include "timescale.svh"
+
 module clk_gen
   (
    clk_input,

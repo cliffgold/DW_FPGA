@@ -1,5 +1,7 @@
 //Top level of sim
 //Includes HDL Design, clocks, and tests as listed in test.list
+`include "timescale.svh"
+
 module sim_top();
 
 `include "params.svh"
@@ -23,9 +25,9 @@ module sim_top();
    ctrl_word_s ctrl_word;
 
    pcie_rnd_addr_s   rnd_addr;
-   reg [RUN_W:0]  rnd_run [0:NRUNS-1];
-   reg [X_W:0]     test_x [0:NRUNS-1];
-   reg [Y_W:0]     test_y [0:NRUNS-1];
+   reg [RUN_W:0]     rnd_run [0:NRUNS-1];
+   reg [X_W:0]       test_x [0:NRUNS-1];
+   reg [Y_W:0]       test_y [0:NRUNS-1];
 
    reg [NCMEMS-1:0]  rnd_mem [3:0];
       
@@ -43,6 +45,8 @@ module sim_top();
    integer 		 i;
    integer 		 j;
    integer               randnum;
+   integer               maxerr;
+   
 
    top 
      #(.IS_SIM(1))

@@ -3,6 +3,8 @@
 //   This instantiates logic, so that optimum slice use is guaranteed
 //   per Xilinx xapp522
 
+`include "timescale.svh"
+
 module bigmux #(
 		parameter NBITS=12,     //Word size
                           NMUXIN=576,   //Number of words

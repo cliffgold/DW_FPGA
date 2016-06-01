@@ -1,6 +1,8 @@
 //Module to move between input clk and system clk
 //Assumes the two clocks are synced, and system clk freq = 2x input clk freq
 
+`include "timescale.svh"
+
 module resync
   (
    sys,

@@ -63,6 +63,8 @@
 //  in the readme file included with the reference design
 //
 
+`include "timescale.svh"
+
 module mux16_flop (
  input 	      clk,
  input        reset,

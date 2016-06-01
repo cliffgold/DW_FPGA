@@ -1,4 +1,5 @@
 //Top level module
+`include "timescale.svh"
 
 module top
   (clk_input,
@@ -44,17 +45,17 @@ module top
    pcie_req_s   bus_pcie_req;
    pcie_rd_s    pcie_bus_rd;
 
-   pcie_wr_s   pcie_coef_wr;
-   pcie_req_s  pcie_coef_req;
-   pcie_rd_s   coef_pcie_rd;
+   pcie_coef_wr_s   pcie_coef_wr;
+   pcie_coef_req_s  pcie_coef_req;
+   coef_pcie_rd_s   coef_pcie_rd;
 
-   pcie_wr_s   pcie_ctrl_wr;
+   pcie_ctrl_wr_s   pcie_ctrl_wr;
 
-   pcie_req_s   pcie_rnd_req;    
-   pcie_rd_s    rnd_pcie_rd;    
+   pcie_rnd_req_s   pcie_rnd_req;    
+   rnd_pcie_rd_s    rnd_pcie_rd;    
 
-   pcie_req_s  pcie_pick_req;
-   pcie_rd_s   pick_pcie_rd;
+   pcie_pick_req_s  pcie_pick_req;
+   pick_pcie_rd_s   pick_pcie_rd;
    
    ctrl_rnd_s  ctrl_rnd;
    ctrl_pick_s ctrl_pick;

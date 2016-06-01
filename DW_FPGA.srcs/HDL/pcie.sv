@@ -1,6 +1,8 @@
 // Module to interface to the future Xilinx PCIE block
 //   Currently, it is just a shell for simulation 
 
+`include "timescale.svh"
+
 module pcie
   (sys,
    sys_in,

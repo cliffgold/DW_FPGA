@@ -63,6 +63,8 @@
 //  in the readme file included with the reference design
 //
 
+`include "timescale.svh"
+
 module mux16_noflop (
  input [15:0] data_in,
  input [3:0]  sel,

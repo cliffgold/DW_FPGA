@@ -110,6 +110,8 @@
 //-------------------------------------------------------------------------------------------------
 // no timescale needed
 
+`include "timescale.svh"
+
 module prbs_many(RST, CLK, DATA_IN, EN, SEED_WRITE_EN, SEED, DATA_OUT);
 
   //--------------------------------------------		

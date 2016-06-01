@@ -3,6 +3,8 @@
 //   output is the sum of coefs depending on state of x's and y's
 //   memory is loaded with the sums.
 
+`include "timescale.svh"
+
 module coef
   (sys,  
    rnd_coef,     

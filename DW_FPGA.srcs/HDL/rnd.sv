@@ -5,6 +5,8 @@
 //   Their length is 31 bits, so we can go a while before
 //   having to switch their seed.
 
+`include "timescale.svh"
+
 module rnd
   (sys,	 
    pcie_rnd_req,

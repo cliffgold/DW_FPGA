@@ -1,5 +1,7 @@
 // Module to sum up the results of the coef memory multiplications
 
+`include "timescale.svh"
+
 module sum
   (sys,	  
    coef_sum,

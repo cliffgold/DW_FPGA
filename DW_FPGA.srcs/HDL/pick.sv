@@ -1,4 +1,6 @@
-// Module to pick the step to take
+// Module to pick old vs new better
+
+`include "timescale.svh"
 
 module pick
   (sys,	  
@@ -21,7 +23,7 @@ module pick
    output 		  pick_pcie_rd_s pick_pcie_rd;
    output 		  pick_rnd_s     pick_rnd;
 
-   reg signed [SUM_W-1:0] rnd_bits;
+   reg signed [SUM_W:0]   rnd_bits;
 
    reg [TEMP_W:0] 	  temperature;
    
@@ -46,13 +48,13 @@ module pick
        .INV_PATTERN(0),
        .POLY_LENGTH(63),
        .POLY_TAP(62),
-       .NBITS(SUM_W)
+       .NBITS(SUM_W+1)
        )
    prbs_63
      (
       .RST(sys.reset),
       .CLK(sys.clk),
-      .DATA_IN(63'b0),
+      .DATA_IN({SUM_W+1{1'b0}}),
       .EN(ctrl_pick.en[sum_pick.run]),
       .SEED_WRITE_EN(ctrl_pick.init),
       .SEED(63'h1BADF00DDEADBEEF),
