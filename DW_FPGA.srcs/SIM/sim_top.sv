@@ -24,28 +24,33 @@ module sim_top();
    ctrl_cmd_s  ctrl_cmd;
    ctrl_word_s ctrl_word;
 
-   pcie_rnd_addr_s   rnd_addr;
-   reg [RUN_W:0]     rnd_run [0:NRUNS-1];
-   reg [X_W:0]       test_x [0:NRUNS-1];
-   reg [Y_W:0]       test_y [0:NRUNS-1];
+   pcie_rnd_addr_s            rnd_addr;
+   reg [RUN_W:0] 	      rnd_run [0:NRUNS-1];
+   reg [X_W:0] 		      test_x [0:NRUNS-1];
+   reg [Y_W:0] 		      test_y [0:NRUNS-1];
 
-   reg [NCMEMS-1:0]  rnd_mem [3:0];
+   reg [NCMEMS-1:0] 	      rnd_mem [3:0];
       
-   reg [63:0] test_data_rd;
-   reg [63:0] test_data_wr;
-   reg [63:0] test_data_ex;
-   reg [31:0] test_addr;
+   reg [63:0] 		      test_data_rd;
+   reg [63:0] 		      test_data_wr;
+   reg [63:0] 		      test_data_ex;
+   reg [31:0] 		      test_addr;
    
-   reg [31:0]  bad_fail;
+   reg [31:0] 		      bad_fail;
         
-   reg [CMEM_SEL_W:0]  test_coef_sel  [0:3];
-   reg [CMEM_ADDR_W:0] test_coef_addr [0:3];
-   reg [CMEM_DATA_W:0] test_coef_data [0:3][0:3];
+   reg [CMEM_SEL_W:0] 	      test_coef_sel [0:3];
+   reg [CMEM_ADDR_W:0] 	      test_coef_addr [0:3];
+   reg [CMEM_DATA_W:0] 	      test_coef_data [0:3][0:3];
 
-   integer 		 i;
-   integer 		 j;
-   integer               randnum;
-   integer               maxerr;
+   reg signed [SUM_W:0]       test_sum;
+   reg signed [CMEM_DATA_W:0] test_subtotal;
+
+   reg [CMEM_DATA_W:0] 	      coef_mem [0:NCMEMS-1] [0:NCMEM_ADDRS-1];
+
+   integer 		      i;
+   integer 		      j;
+   integer 		      randnum;
+   integer 		      maxerr;
    
 
    top 

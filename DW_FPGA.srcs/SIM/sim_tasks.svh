@@ -1,5 +1,7 @@
 // This is included, so does not need to be in module.
 
+`include "poke_cmem.svh"
+
 task automatic pcie_write
   (
    input reg [31:0] block_offset,
@@ -85,7 +87,6 @@ task automatic mem_pattern_0 (output [NCMEMS-1:0] mem [3:0]);
       end // for (i=0;i<1024;i=i+1)
    end // block: mem_patt_0
 endtask // mem_pattern_0
-
 
 
 
