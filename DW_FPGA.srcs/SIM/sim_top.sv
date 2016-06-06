@@ -42,6 +42,7 @@ module sim_top();
    reg [CMEM_ADDR_W:0] 	      test_coef_addr [0:3];
    reg [CMEM_DATA_W:0] 	      test_coef_data [0:3][0:3];
 
+   reg signed [SUM_W:0]       test_ex_sum;
    reg signed [SUM_W:0]       test_sum;
    reg signed [CMEM_DATA_W:0] test_subtotal;
 
@@ -49,6 +50,7 @@ module sim_top();
 
    integer 		      i;
    integer 		      j;
+   integer 		      k;
    integer 		      randnum;
    integer 		      maxerr;
    
