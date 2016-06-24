@@ -3,7 +3,8 @@
 
 module ctrl_onerun
   (sys,
-   ram_we,  
+   ram_we0,  
+   ram_we1,  
    ram_addr,
    ram_data,
    start,   
@@ -22,7 +23,8 @@ module ctrl_onerun
    localparam RUNNING = 2'b10;
    
    input sys_s        sys;
-   input              ram_we;
+   input              ram_we0;
+   input              ram_we1;
    input [9:0]        ram_addr;
    input ctrl_word_s  ram_data;
    input              start;
@@ -67,9 +69,9 @@ module ctrl_onerun
 		 state      <= RUNNING;
 	      end // case: LOADING
 	      RUNNING: begin
-		 ctrl_word.count <= ctrl_word.count - 'b1;
-		 if (ctrl_word.count == 'b1) begin
-		    if (ctrl_word.next) begin
+		 ctrl_word.word1.count <= ctrl_word.word1.count - 'b1;
+		 if (ctrl_word.word1.count == 'b1) begin
+		    if (ctrl_word.word0.next) begin
 		       state     <= LOADING;
 		    end else begin
 		       state     <= IDLE;
@@ -90,20 +92,30 @@ module ctrl_onerun
    end // always@ (posedge sys.clk)
    
    always@(*) begin
-      if (ram_we) begin
+      if (ram_we0 | ram_we1) begin
 	 addr = ram_addr;
       end else begin
 	 addr = ctrl_addr;
       end
    end // always@ (*)
    
-   blk_mem_gen_1 ctrl_mem_0
+   ctrl0_mem ctrl0_mem_0
      (
       .ena(~sys.reset),
       .addra(addr),
-      .dina(ram_data),
-      .douta(ram_data_out),
-      .wea(ram_we),
+      .dina(ram_data.word0),
+      .douta(ram_data_out.word0),
+      .wea(ram_we0),
+      .clka(sys.clk)
+      );
+
+   ctrl1_mem ctrl1_mem_0
+     (
+      .ena(~sys.reset),
+      .addra(addr),
+      .dina(ram_data.word1),
+      .douta(ram_data_out.word1),
+      .wea(ram_we1),
       .clka(sys.clk)
       );
 

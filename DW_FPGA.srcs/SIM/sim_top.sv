@@ -123,6 +123,8 @@ module sim_top();
    end
  
 // Test Signals
+   genvar    gi;
+   
 //************************* Old x/y values (previous winners)  ********************   
    
    reg [9:0] old_mem_add_0   [0:NRUNS-1];
@@ -138,8 +140,6 @@ module sim_top();
 		             top_0.rnd_0.old_xy_out;
    end
    
-   genvar    gi;
-   
 generate
    for (gi=0;gi<=NRUNS-1;gi++) begin : old_sig
       
@@ -149,9 +149,7 @@ generate
 		   old_y[gi] [65],
 		   old_y[gi] [64],
 		   old_y[gi] [3],
-		   old_y[gi] [3],
 		   old_y[gi] [2],
-		   old_y[gi] [3],
 		   old_y[gi] [1],
 		   old_y[gi] [0],
 		   1'b0,
@@ -200,8 +198,9 @@ generate
    end // block: old_sig
    
 endgenerate
+
+// //************************* New x/y values (test values)  ********************   
 //    
-// // ************************* New x/y values for comparison ********************   
 //    reg [9:0] new_mem_add_0   [0:NRUNS-1];
 //    reg [9:0] new_mem_add_255 [0:NRUNS-1];
 //    reg [9:0] new_mem_add_256 [0:NRUNS-1];
@@ -212,66 +211,67 @@ endgenerate
 // 
 //    always@(negedge sys_clk) begin
 //       {new_y[top_0.rnd_0.run],new_x[top_0.rnd_0.run]} <= 
-// 		             top_0.rnd_0.new_xy[NRUNS-1];
+// 		             top_0.rnd_0.new_xy_out;
 //    end
 //    
 // generate
 //    for (gi=0;gi<=NRUNS-1;gi++) begin : new_sig
 //       
 //       assign new_mem_add_0[gi] = {
-// 		   1'b0,
-// 		   1'b0,
-// 		   new_y[gi] [0],
-// 		   new_y[gi] [1],
-// 		   new_y[gi] [2],
-// 		   new_y[gi] [3],
-// 		   new_y[gi] [64],
-// 		   new_y[gi] [65],
+// 		   new_x[gi] [1],
 // 		   new_x[gi] [0],
-// 		   new_x[gi] [1]
-// 		   };
-// 			    
-//    assign new_mem_add_255[gi] = {
-// 		   new_y[gi] [446],
-// 		   new_y[gi] [447],
-// 		   new_y[gi] [508],
-// 		   new_y[gi] [509],
-// 		   new_y[gi] [510],
-// 		   new_y[gi] [511],
-// 		   new_y[gi] [574],
-// 		   new_y[gi] [575],
+// 		   new_y[gi] [65],
+// 		   new_y[gi] [64],
+// 		   new_y[gi] [3],
+// 		   new_y[gi] [2],
+// 		   new_y[gi] [1],
+// 		   new_y[gi] [0],
+// 		   1'b0,
+// 		   1'b0
+//  		   };
+// 
+//       assign new_mem_add_255[gi] = {
+// 		   new_x[gi] [511],
 // 		   new_x[gi] [510],
-// 		   new_x[gi] [511]
+// 		   new_y[gi] [575],
+// 		   new_y[gi] [574],
+// 		   new_y[gi] [511],
+// 		   new_y[gi] [510],
+// 		   new_y[gi] [509],
+// 		   new_y[gi] [508],
+// 		   new_y[gi] [447],
+// 		   new_y[gi] [446]
 // 		   };
 //    
-//    assign new_mem_add_256[gi] = {
-// 		   new_y[gi] [448],
-// 		   new_y[gi] [449],
-// 		   new_y[gi] [512],
-// 		   new_y[gi] [513],
-// 		   new_y[gi] [514],
-// 		   new_y[gi] [515],
-// 		   new_y[gi] [576],
-// 		   new_y[gi] [577],
+//       assign new_mem_add_256[gi] = {
+// 		   new_x[gi] [513],
 // 		   new_x[gi] [512],
-// 		   new_x[gi] [513]
+// 		   new_y[gi] [577],
+// 		   new_y[gi] [576],
+// 		   new_y[gi] [515],
+// 		   new_y[gi] [514],
+// 		   new_y[gi] [513],
+// 		   new_y[gi] [512],
+// 		   new_y[gi] [449],
+// 		   new_y[gi] [448]
 // 		   };
 //    
-//    assign new_mem_add_511[gi] = {
-// 		   new_y[gi] [958],
-// 		   new_y[gi] [959],
-// 		   new_y[gi] [1020],
-// 		   new_y[gi] [1021],
-// 		   new_y[gi] [1022],
-// 		   new_y[gi] [1023],
-// 		   1'b0,
-// 		   1'b0,
+//       assign new_mem_add_511[gi] = {
+// 		   new_x[gi] [1023],
 // 		   new_x[gi] [1022],
-// 		   new_x[gi] [1023]
+// 		   1'b0,
+// 		   1'b0,
+// 		   new_y[gi] [1023],
+// 		   new_y[gi] [1022],
+// 		   new_y[gi] [1021],
+// 		   new_y[gi] [1020],
+// 		   new_y[gi] [959],
+// 		   new_y[gi] [958]
 // 		   };
-//    end // block: new_sig
-// endgenerate
 //    
-
+//    end // block: new_sig
+//    
+// endgenerate   
+//    
 endmodule // sim_top
 

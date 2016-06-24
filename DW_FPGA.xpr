@@ -27,20 +27,20 @@
     <Option Name="IPUserFilesDir" Val="$PPRDIR/DW_FPGA.ip_user_files"/>
     <Option Name="IPStaticSourceDir" Val="$PPRDIR/DW_FPGA.ip_user_files/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="265"/>
+    <Option Name="WTXSimLaunchSim" Val="312"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
     <Option Name="WTActivehdlLaunchSim" Val="0"/>
-    <Option Name="WTXSimExportSim" Val="26"/>
-    <Option Name="WTModelSimExportSim" Val="26"/>
-    <Option Name="WTQuestaExportSim" Val="26"/>
-    <Option Name="WTIesExportSim" Val="26"/>
-    <Option Name="WTVcsExportSim" Val="26"/>
-    <Option Name="WTRivieraExportSim" Val="26"/>
-    <Option Name="WTActivehdlExportSim" Val="26"/>
+    <Option Name="WTXSimExportSim" Val="31"/>
+    <Option Name="WTModelSimExportSim" Val="31"/>
+    <Option Name="WTQuestaExportSim" Val="31"/>
+    <Option Name="WTIesExportSim" Val="31"/>
+    <Option Name="WTVcsExportSim" Val="31"/>
+    <Option Name="WTRivieraExportSim" Val="31"/>
+    <Option Name="WTActivehdlExportSim" Val="31"/>
     <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
   </Configuration>
   <FileSets Version="1" Minor="31">
@@ -263,19 +263,6 @@
         <Option Name="xsim.simulate.runtime" Val="200000ns"/>
       </Config>
     </FileSet>
-    <FileSet Name="blk_mem_gen_1" Type="BlockSrcs" RelSrcDir="$PSRCDIR/blk_mem_gen_1">
-      <File Path="$PSRCDIR/IP/blk_mem_gen_1/blk_mem_gen_1.xci">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <Config>
-        <Option Name="TopModule" Val="blk_mem_gen_1"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
     <FileSet Name="coef_mem" Type="BlockSrcs" RelSrcDir="$PSRCDIR/coef_mem">
       <File Path="$PSRCDIR/IP/coef_mem/coef_mem.xci">
         <FileInfo>
@@ -299,6 +286,49 @@
       </File>
       <Config>
         <Option Name="TopModule" Val="clk_wiz_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="ctrl0_mem" Type="BlockSrcs" RelSrcDir="$PSRCDIR/ctrl0_mem">
+      <File Path="$PSRCDIR/IP/ctrl0_mem/ctrl0_mem.xci">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="blk_mem_gen_v8_3_2/hdl/blk_mem_gen_v8_3_vhsyn_rfs.vhd"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="blk_mem_gen_v8_3_2/hdl/blk_mem_gen_v8_3.vhd"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem.veo"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="sim/ctrl0_mem.v"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem.vho"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="synth/ctrl0_mem.vhd"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem_ooc.xdc"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="misc/blk_mem_gen_v8_3.vhd"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="summary.log"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="doc/blk_mem_gen_v8_3_changelog.txt"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="blk_mem_gen_v8_3_2/simulation/blk_mem_gen_v8_3.v"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem.xml"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem_sim_netlist.v"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem_sim_netlist.vhdl"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem_stub.vhdl"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem_stub.v"/>
+        <CompFileExtendedInfo CompFileName="ctrl0_mem.xci" FileRelPathName="ctrl0_mem.dcp"/>
+      </File>
+      <Config>
+        <Option Name="TopModule" Val="ctrl0_mem"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="ctrl1_mem" Type="BlockSrcs" RelSrcDir="$PSRCDIR/ctrl1_mem">
+      <File Path="$PSRCDIR/IP/ctrl1_mem/ctrl1_mem.xci">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <Config>
+        <Option Name="TopModule" Val="ctrl1_mem"/>
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
@@ -335,13 +365,6 @@
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
     </Run>
-    <Run Id="blk_mem_gen_1_synth_1" Type="Ft3:Synth" SrcSet="blk_mem_gen_1" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_1" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/blk_mem_gen_1_synth_1" IncludeInArchive="true">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-    </Run>
     <Run Id="coef_mem_synth_1" Type="Ft3:Synth" SrcSet="coef_mem" Part="xc7k160tffg676-2" ConstrsSet="coef_mem" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/coef_mem_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
@@ -350,6 +373,20 @@
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
     </Run>
     <Run Id="clk_wiz_0_synth_1" Type="Ft3:Synth" SrcSet="clk_wiz_0" Part="xc7k160tffg676-2" ConstrsSet="clk_wiz_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/clk_wiz_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+    </Run>
+    <Run Id="ctrl0_mem_synth_1" Type="Ft3:Synth" SrcSet="ctrl0_mem" Part="xc7k160tffg676-2" ConstrsSet="ctrl0_mem" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/ctrl0_mem_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+    </Run>
+    <Run Id="ctrl1_mem_synth_1" Type="Ft3:Synth" SrcSet="ctrl1_mem" Part="xc7k160tffg676-2" ConstrsSet="ctrl1_mem" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/ctrl1_mem_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
@@ -371,20 +408,6 @@
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
     </Run>
-    <Run Id="blk_mem_gen_1_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_1" Description="Default settings for Implementation." SynthRun="blk_mem_gen_1_synth_1" IncludeInArchive="false">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-    </Run>
     <Run Id="coef_mem_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="coef_mem" Description="Default settings for Implementation." SynthRun="coef_mem_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
@@ -400,6 +423,34 @@
       </Strategy>
     </Run>
     <Run Id="clk_wiz_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="clk_wiz_0" Description="Default settings for Implementation." SynthRun="clk_wiz_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+    </Run>
+    <Run Id="ctrl0_mem_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="ctrl0_mem" Description="Default settings for Implementation." SynthRun="ctrl0_mem_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+    </Run>
+    <Run Id="ctrl1_mem_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="ctrl1_mem" Description="Default settings for Implementation." SynthRun="ctrl1_mem_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>

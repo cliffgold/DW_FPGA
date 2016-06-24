@@ -69,7 +69,7 @@ module sum
 	 sum_pick.run      <= 'b0;
       end else begin
 	 sum_pick.full_sum <= sum_q[0][CMEM_SEL_W];
-	 sum_pick.run      <= (NRUNS+run - SUM_RUN)% NRUNS;	 
+	 sum_pick.run      <= (run + SUM_PICK_RUN) % NRUNS;	 
       end
    end
    

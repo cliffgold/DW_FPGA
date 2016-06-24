@@ -30,15 +30,16 @@ module pick
    reg signed [SUM_W:0]   old_sum [0:NRUNS-1];
    reg signed [SUM_W:0]   old_sum_q;
    reg signed [SUM_W+2:0] old_sum_j;
-
+   reg signed [SUM_W:0]   cutoff;
+   
+   reg signed [SUM_W:0]   full_sum;
    reg signed [SUM_W:0]   full_sum_q;
-   reg signed [SUM_W:0]   full_sum_q2;
 
+   reg [RUN_W:0] 	  run;
    reg [RUN_W:0] 	  run_q;
-   reg [RUN_W:0] 	  run_q2;
 
+   reg 			  enable;
    reg 			  enable_q;
-   reg 			  enable_q2;
    
    integer 		  i;
    
@@ -55,7 +56,7 @@ module pick
       .RST(sys.reset),
       .CLK(sys.clk),
       .DATA_IN({SUM_W+1{1'b0}}),
-      .EN(ctrl_pick.en[sum_pick.run]),
+      .EN(ctrl_pick.en),
       .SEED_WRITE_EN(ctrl_pick.init),
       .SEED(63'h1BADF00DDEADBEEF),
       .DATA_OUT(rnd_bits)
@@ -63,32 +64,40 @@ module pick
 
    always@(posedge sys.clk) begin //Multiplier wants synchronous reset
       if (sys.reset | ctrl_pick.init) begin
-	 old_sum_j   <= {1'b0,{SUM_W{1'b1}}};
          old_sum_q   <= 'b0;
+	 old_sum_j   <= {1'b0,{SUM_W{1'b1}}};
          temperature <= 'b0;
+	 cutoff      <= {1'b1,{SUM_W{1'b0}}};
       end else begin
 	 old_sum_j   <= $signed(old_sum_q) + 
 		        $signed(rnd_bits & ({SUM_W{1'b1}} >> (SUM_W - temperature)));
 	 old_sum_q   <= old_sum[sum_pick.run];
-	 temperature <= ctrl_pick.temperature[sum_pick.run];
+	 temperature <= ctrl_pick.temperature;
+	 cutoff      <= ctrl_pick.cutoff;
       end // else: !if(sys.reset | ctrl_pick.init)
    end // always@ (posedge sys.clk)
    
    always@(posedge sys.clk) begin
       if (sys.reset) begin
-	 run_q         <= 'b0;
-	 full_sum_q    <= 'b0;
-	 enable_q      <= 'b0;
-	 run_q2        <= 'b0;
-	 full_sum_q2   <= 'b0;
-	 enable_q2     <= 'b0;
+	 run        <= 'b0;
+	 full_sum   <= 'b0;
+	 enable     <= 'b0;
+	 
+	 run_q      <= 'b0;
+	 enable_q   <= 'b0;
+	 full_sum_q <= 'b0;
       end else begin
-	 run_q         <= sum_pick.run;
-	 full_sum_q    <= sum_pick.full_sum;
-	 enable_q      <= ctrl_pick.en[sum_pick.run];
-	 run_q2        <= run_q;
-	 full_sum_q2   <= full_sum_q;
-	 enable_q2     <= enable_q;
+	 run        <= sum_pick.run;
+	 full_sum   <= sum_pick.full_sum;
+	 enable     <= ctrl_pick.en;
+	 
+	 run_q      <= run;
+	 enable_q   <= enable;
+	 if (full_sum > cutoff) begin
+	    full_sum_q <= full_sum;
+	 end else begin
+	    full_sum_q <= cutoff;
+	 end
       end // else: !if(sys.reset | ctrl_pick.init)
    end // always@ (posedge sys.clk)
 	 
@@ -100,13 +109,13 @@ module pick
 	    old_sum[i] <= {1'b0,{SUM_W{1'b1}}};
 	 end
       end else begin
-	 pick_rnd.run <= (NRUNS+run_q2 - PICK_RUN)% NRUNS;
+	 pick_rnd.run <= (run + PICK_RND_RUN)% NRUNS;
 	 if (ctrl_pick.init) begin
-	    old_sum[run_q2] <= {1'b0,{SUM_W{1'b1}}};
+	    old_sum[run_q]  <= {1'b0,{SUM_W{1'b1}}};
 	    pick_rnd.pick   <= 1'b0;
 	 end
-	 else if ((full_sum_q2 < old_sum_j) & enable_q2) begin
-	    old_sum[run_q2] <= full_sum_q2;
+	 else if ((full_sum_q < old_sum_j) & enable_q) begin
+	    old_sum[run_q]  <= full_sum_q;
 	    pick_rnd.pick   <= 1'b1;
 	 end else begin
 	    pick_rnd.pick   <= 1'b0;

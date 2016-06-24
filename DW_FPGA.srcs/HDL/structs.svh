@@ -124,7 +124,7 @@ typedef struct packed
 		  }
 		 rnd_pcie_rd_s;
 
-parameter RND_PCIE_RD_S_W = SUM_W+1 + 1 + 63+1 -1;
+parameter RND_PCIE_RD_S_W = 63+1 + 1 + RD_TAG_W+1 -1;
 
 typedef struct packed
 	       {
@@ -140,6 +140,7 @@ parameter PCIE_RND_REQ_S_W = RD_TAG_W+1 +1 +RUN_W+1 -1;
 typedef struct packed
 	       {
 		  logic 		    is_cmd;
+		  logic                     is_ctrl0;
 		  logic [RUN_W:0] 	    run;
 		  logic [CTRL_MEM_ADDR_W:0] addr;
 		  }
@@ -151,13 +152,30 @@ typedef struct packed
 	       {
 		  logic next;
 
-		  logic [FLIP_W:0]   flips;
-		  logic [TEMP_W:0]   temperature;
-		  logic [31:0] 	     count;
+		  logic [FLIP_W:0] flips;
+		  logic [TEMP_W:0] temperature;
+		  logic [SUM_W:0]  cutoff;
+		  }
+		 ctrl_word0_s;
+
+parameter CTRL_WORD0_S_W = 1 + SUM_W+1 + FLIP_W+1 + TEMP_W+1 -1;
+
+typedef struct packed
+	       {
+		  logic [31:0] 	   count;
+		  }
+		 ctrl_word1_s;
+
+parameter CTRL_WORD1_S_W = 31+1 -1;
+
+typedef struct packed
+	       {
+		  ctrl_word0_s 	word0;
+		  ctrl_word1_s  word1;
 		  }
 		 ctrl_word_s;
 
-parameter CTRL_WORD_S_W = 1 + FLIP_W+1 + TEMP_W+1 + 31+1 -1;
+parameter CTRL_WORD_S_W = CTRL_WORD0_S_W+1 + CTRL_WORD1_S_W+1 -1;
 
 typedef struct packed
 	       {
@@ -169,40 +187,45 @@ typedef struct packed
 
 parameter CTRL_CMD_S_W = NRUNS + NRUNS + 1 -1;
 
-parameter BIG_CTRL_DATA_W = (CTRL_WORD_S_W > CTRL_CMD_S_W) ?
-			    CTRL_WORD_S_W : CTRL_CMD_S_W;
+parameter BIGGER_CTRL_W = (CTRL_WORD0_S_W > CTRL_WORD1_S_W) ?
+			 CTRL_WORD0_S_W : CTRL_WORD1_S_W;
+
+parameter BIGGEST_CTRL_W = (BIGGER_CTRL_W > CTRL_CMD_S_W) ?
+			    BIGGER_CTRL_W : CTRL_CMD_S_W;
+
 typedef struct packed
 	       {
-		  logic [BIG_CTRL_DATA_W:0] data;
-		  logic                     vld;
-		  ctrl_addr_s	            addr;
+		  logic [BIGGEST_CTRL_W:0] data;
+		  logic                    vld;
+		  ctrl_addr_s	           addr;
 		  }
 	       pcie_ctrl_wr_s;
 
-parameter PCIE_CTRL_WR_S_W = BIG_CTRL_DATA_W+1 +1 +CTRL_ADDR_S_W+1 -1;
+parameter PCIE_CTRL_WR_S_W = BIGGEST_CTRL_W+1 +1 +CTRL_ADDR_S_W+1 -1;
 
 typedef struct packed
 	       {
-		  logic 	   init;
-		  logic 	   en;
-		  logic [RUN_W:0]  run;
+		  logic 	    init;
+		  logic 	    en;
+		  logic [RUN_W:0]   run;
 		  
-		  logic [FLIP_W:0] flips;
+		  logic [FLIP_W:0]  flips;
 		  }
 		 ctrl_rnd_s;
 
-parameter CTRL_RND_S_W = 1+1 + (FLIP_W+1) +
-                           RUN_W+1 -1;
+parameter CTRL_RND_S_W = 1 + 1 + RUN_W+1 + FLIP_W+1 -1;
 
 typedef struct packed
 	       {
-		  logic 		       init;
-		  logic [NRUNS-1:0] 	       en;
-		  logic [NRUNS-1:0] [TEMP_W:0] temperature;
+		  logic            init;
+		  logic 	   en;
+		  logic [TEMP_W:0] temperature;
+		  logic [SUM_W:0]  cutoff;
+		  logic [RUN_W:0]  run;
 		}
 		 ctrl_pick_s;
 
-parameter CTRL_PICK_S_W = 1 + NRUNS-1+1 + TEMP_W+1 -1;
+parameter CTRL_PICK_S_W = 1 + 1 + TEMP_W+1 + SUM_W+1 -1;
 
 typedef struct packed
 	       {
@@ -234,8 +257,8 @@ parameter PICK_RND_S_W = 1 + RUN_W + 1 - 1;
 
 typedef struct packed
 	       {
-		  logic signed [23:0] full_sum;
-		  logic [RUN_W:0]     run;
+		  logic signed [SUM_W:0] full_sum;
+		  logic        [RUN_W:0] run;
 		  }
 		 sum_pick_s;
 

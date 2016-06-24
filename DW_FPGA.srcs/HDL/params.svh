@@ -63,12 +63,16 @@ parameter TEMP_W          = 15;
 parameter NFLIPS          = 16;
 parameter FLIP_W          = $clog2(NFLIPS) -1;
 
-//CTRL sequence
-parameter CTRL_RND_RUN    = 1;
-parameter CTRL_PICK_RUN   = 18;
-parameter CTRL_PICK_E_RUN = 16;
+//Run Pipeline.  Note there is -2 included in each step for input/output sync
+parameter CTRL_RND_RUN    = NRUNS - 1;
+parameter RND_COEF_RUN    = NRUNS - 1;
+parameter COEF_SUM_RUN    = NRUNS - 3;
+parameter SUM_PICK_RUN    = NRUNS - 8;
+parameter PICK_RND_RUN    = NRUNS - 1;
 
-parameter COEF_RUN        = 3;
-parameter SUM_RUN         = 8;
-parameter PICK_RUN        = 0;
+parameter CTRL_PICK_RUN   = (  CTRL_RND_RUN
+			     + RND_COEF_RUN-2 
+			     + COEF_SUM_RUN-2 
+			     + SUM_PICK_RUN-2) % NRUNS;
+
 

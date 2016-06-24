@@ -246,7 +246,7 @@ module coef
             coef_sum.subtotal[ii] <= 'b0;
 	 end
       end else begin
-	 coef_sum.run <= (NRUNS+run -COEF_RUN)%(NRUNS);
+	 coef_sum.run <= (run + COEF_SUM_RUN) % NRUNS;
 	 for (ii=0;ii<NCMEMS;ii=ii+1) begin
 	    coef_sum.subtotal[ii] <= subtotal[ii];
          end

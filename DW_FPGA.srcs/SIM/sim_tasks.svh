@@ -88,6 +88,40 @@ task automatic mem_pattern_0 (output [NCMEMS-1:0] mem [3:0]);
    end // block: mem_patt_0
 endtask // mem_pattern_0
 
+task automatic pcie_ctrl_write
+  (
+   input reg [31:0]  block_offset,
+   input ctrl_addr_s addr,
+   input ctrl_word_s data,
+   ref   reg         clk_in,
+   
+   ref pcie_wr_s     bus_pcie_wr
+   );
+   
+   begin : bus_pcie_write
+      addr.is_ctrl0 = 1;
+      
+      @(negedge clk_in);
+      bus_pcie_wr.data = data.word0;
+      bus_pcie_wr.addr = block_offset + addr;
+      bus_pcie_wr.vld  = 1'b1;
+      
+      @(negedge clk_in);
+      bus_pcie_wr.vld  = 1'b0;
+
+      @(negedge clk_in);
+      addr.is_ctrl0 = 0;
+      
+      @(negedge clk_in);
+      bus_pcie_wr.data = data.word1;
+      bus_pcie_wr.addr = block_offset + addr;
+      bus_pcie_wr.vld  = 1'b1;
+      
+      @(negedge clk_in);
+      bus_pcie_wr.vld  = 1'b0;
+   end
+endtask // while
+
 
 
 

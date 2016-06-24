@@ -1,10 +1,11 @@
-//Program controller, start running
+//Normal Run
 mem_pattern_0(rnd_mem);
 
-ctrl_word.next 	       = 'b1;
-ctrl_word.flips        = 'h1;
-ctrl_word.temperature  = 'h0;
-ctrl_word.count        = 32;
+ctrl_word.word0.next 	     = 'b1;
+ctrl_word.word0.flips        = 'h1;
+ctrl_word.word0.temperature  = 'h0;
+ctrl_word.word0.cutoff       = {1'b1,{SUM_W{1'b0}}};
+ctrl_word.word1.count        = 32;
 
 rnd_run[0] 	       = 0;
 rnd_run[1] 	       = (NRUNS-1)/2;
@@ -16,18 +17,19 @@ ctrl_addr 	       = 0;
 for (i=0;i<4;i++) begin
    ctrl_addr.run      = rnd_run[i];
    
-      pcie_write(CTRL_BAR_START,
-	     ctrl_addr,
-	     ctrl_word,
-	     clk_input,
-	     bus_pcie_wr);
+   pcie_ctrl_write(CTRL_BAR_START,
+		   ctrl_addr,
+		   ctrl_word,
+		   clk_input,
+		   bus_pcie_wr);
    
 end
 
-ctrl_word.next 	       = 'b1;
-ctrl_word.flips        = 'h3;
-ctrl_word.temperature  = 0;
-ctrl_word.count        = 128;
+ctrl_word.word0.next 	     = 'b1;
+ctrl_word.word0.flips        = 'h3;
+ctrl_word.word0.temperature  = 'h0;
+ctrl_word.word0.cutoff       = {1'b1,{SUM_W{1'b0}}};
+ctrl_word.word1.count        = 128;
 
 ctrl_addr 	       = 0;
 ctrl_addr.addr 	       = 1;
@@ -35,32 +37,33 @@ ctrl_addr.addr 	       = 1;
 for (i=0;i<4;i++) begin
    ctrl_addr.run      = rnd_run[i];
    
-      pcie_write(CTRL_BAR_START,
-		 ctrl_addr,
-		 ctrl_word,
-		 clk_input,
-		 bus_pcie_wr);
+   pcie_ctrl_write(CTRL_BAR_START,
+		   ctrl_addr,
+		   ctrl_word,
+		   clk_input,
+		   bus_pcie_wr);
    
 end // for (i=0;i<3;i++)
 
 repeat (NRUNS) @(negedge clk_input);
 
-ctrl_word.next 	       = 'b0;
-ctrl_word.flips        = 'h5;
-ctrl_word.temperature  = 0;
-ctrl_word.count        = 128;
+ctrl_word.word0.next 	     = 'b0;
+ctrl_word.word0.flips        = 'h5;
+ctrl_word.word0.temperature  = 'h0;
+ctrl_word.word0.cutoff       = {1'b1,{SUM_W{1'b0}}};
+ctrl_word.word1.count        = 128;
 
 ctrl_addr 	       = 0;
 ctrl_addr.addr 	       = 2;
 
 for (i=0;i<4;i++) begin
    ctrl_addr.run      = rnd_run[i];
-
-   pcie_write(CTRL_BAR_START,
-	      ctrl_addr,
-	      ctrl_word,
-	      clk_input,
-	      bus_pcie_wr);
+   
+   pcie_ctrl_write(CTRL_BAR_START,
+		   ctrl_addr,
+		   ctrl_word,
+		   clk_input,
+		   bus_pcie_wr);
    
 end // for (i=0;i<3;i++)
 
