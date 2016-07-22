@@ -41,7 +41,7 @@ $(implTargets): $(synTargets) $(tclDir)/impl_top.tcl $(xdcFiles)
 	$(vivado) impl_top.tcl nofile 
 
 $(synTargets): $(HDLFiles) $(ipTargets) $(tclDir)/synth_top.tcl
-	$(vivado) synth_top.tcl
+	$(vivado) synth_top.tcl nofile
 
 $(ipTargets): %.dcp : %.xci $(tclDir)/ip.tcl
 	$(vivado) ip.tcl $(basename $(notdir $<)) 
