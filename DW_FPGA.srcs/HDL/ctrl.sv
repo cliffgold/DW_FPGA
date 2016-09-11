@@ -3,7 +3,7 @@
 
 module ctrl
   (sys,	  
-   pcie_ctrl_wr,
+   pcie_ctrl,
    ctrl_rnd,
    ctrl_pick
    );
@@ -12,7 +12,7 @@ module ctrl
 `include "structs.svh"
       
    input  sys_s          sys;
-   input  pcie_ctrl_wr_s pcie_ctrl_wr;
+   input  pcie_block_s   pcie_ctrl;
    
    output ctrl_rnd_s     ctrl_rnd;
    output ctrl_pick_s    ctrl_pick;
@@ -23,8 +23,7 @@ module ctrl
    reg [RUN_W:0]         rnd_run;
    reg [RUN_W:0]         pick_run;
 
-   reg [NRUNS-1:0]         ram_we0;
-   reg [NRUNS-1:0]         ram_we1;
+   reg                     ram_we;
    ctrl_word_s             ram_data;
    reg [CTRL_MEM_ADDR_W:0] ram_addr;
    
@@ -34,40 +33,37 @@ module ctrl
    ctrl_cmd_s              ctrl_cmd;
    ctrl_cmd_s              ctrl_cmd_q;
 
-   
+   ctrl_addr_s             ctrl_addr;
+      
    integer i;
    genvar  gi;
+
+   assign ctrl_addr = pcie_ctrl.addr;
    
    always@(posedge sys.clk) begin
       if (sys.reset) begin
-	 ram_we0  <= 'b0;
-	 ram_we1  <= 'b0;
+	 ram_we   <= 'b0;
 	 ram_addr <= 'b0;
 	 ram_data <= 'b0;
 	 ctrl_cmd <= 'b0;
-	 
       end else begin
-	 if (pcie_ctrl_wr.vld) begin  
-	    if (pcie_ctrl_wr.addr.is_cmd == 1'b1) begin
-	       ram_we0     <= 'b0;
-	       ram_we1     <= 'b0;
-	       ctrl_cmd    <= pcie_ctrl_wr.data[CTRL_CMD_S_W:0];
-	    end
-	    else if (pcie_ctrl_wr.addr.is_ctrl0 == 1'b1) begin
-	       ram_data.word0 <= pcie_ctrl_wr.data[CTRL_WORD0_S_W:0];
-	       ram_addr       <= pcie_ctrl_wr.addr.addr;
-	       ram_we0 	      <= {{(NRUNS-1){1'b0}},1'b1} << pcie_ctrl_wr.addr.run;
-	       ram_we1        <= 'b0;
+	 if (pcie_ctrl.vld) begin  
+	    if (ctrl_addr.is_cmd == 1'b1) begin
+	       ram_we     <= 'b0;
+	       if (ctrl_addr.w1) begin
+		  ctrl_cmd[CTRL_CMD_S_W:32] <= pcie_ctrl.data[CTRL_CMD_S_W-32:0];
+	       end else begin
+		  ctrl_cmd[31:0]            <= pcie_ctrl.data[31:0];
+	       end
 	    end else begin
-	       ram_data.word1 <= pcie_ctrl_wr.data[CTRL_WORD1_S_W:0];
-	       ram_addr       <= pcie_ctrl_wr.addr.addr;
-	       ram_we1 	      <= {{(NRUNS-1){1'b0}},1'b1} << pcie_ctrl_wr.addr.run;
-	       ram_we0        <= 'b0;
-	    end // else: !if(pcie_ctrl_wr.addr.is_ctrl0 == 1'b1)
-	    
-	 end else begin // if (pcie_ctrl_wr.vld)
-	    ram_we0 	   <= 'b0;
-	    ram_we1 	   <= 'b0;
+	       ram_data       <= pcie_ctrl.data;
+	       ram_addr       <= ctrl_addr;
+	       ram_we         <= 'b1;
+	       ctrl_cmd.start <= ctrl_cmd.start & ~ctrl_busy;
+	       ctrl_cmd.stop  <= 'b0;
+	    end // else: !if(ctrl_addr.is_cmd == 1'b1)
+	 end else begin // if (pcie_ctrl.vld)
+	    ram_we 	   <= 'b0;
 	    ctrl_cmd.start <= ctrl_cmd.start & ~ctrl_busy;
 	    ctrl_cmd.stop  <= 'b0;
 	 end // else: !if(pcie_ctrl_wr.vld)
@@ -97,8 +93,8 @@ generate
       ctrl_onerun ctrl_onerun_0
 	  (
 	   .sys(sys),
-	   .ram_we0(ram_we0[gi]),
-	   .ram_we1(ram_we1[gi]),
+	   .ram_whoami(gi),
+	   .ram_we(ram_we),
 	   .ram_addr(ram_addr),
 	   .ram_data(ram_data),
 	   .start(ctrl_cmd_q.start[gi]),
@@ -122,12 +118,12 @@ endgenerate
 	 ctrl_rnd.init   <= ctrl_cmd.init;
 	 ctrl_rnd.en     <= ctrl_busy[rnd_run]; 
 	 ctrl_rnd.run    <= rnd_run;
-	 ctrl_rnd.flips  <= ctrl_word[rnd_run].word0.flips;
+	 ctrl_rnd.flips  <= ctrl_word[rnd_run].flips;
 
 	 ctrl_pick.init        <= ctrl_cmd.init;
 	 ctrl_pick.en          <= ctrl_busy[pick_run];
-	 ctrl_pick.temperature <= ctrl_word[pick_run].word0.temperature;
-	 ctrl_pick.cutoff      <= ctrl_word[pick_run].word0.cutoff;
+	 ctrl_pick.temperature <= ctrl_word[pick_run].temperature;
+	 ctrl_pick.cutoff      <= ctrl_word[pick_run].cutoff;
 	 ctrl_pick.run         <= pick_run;
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)

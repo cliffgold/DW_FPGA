@@ -6,9 +6,9 @@ module pick
   (sys,	  
    sum_pick,
    ctrl_pick,
-   pcie_pick_req,
+   pcie_pick,
 
-   pick_pcie_rd,
+   pick_pcie,
    pick_rnd
    );
 
@@ -18,9 +18,9 @@ module pick
    input sys_s            sys;
    input 		  sum_pick_s      sum_pick;
    input 		  ctrl_pick_s     ctrl_pick;
-   input 		  pcie_pick_req_s pcie_pick_req;
+   input 		  pcie_block_s    pcie_pick;
 
-   output 		  pick_pcie_rd_s pick_pcie_rd;
+   output 		  block_pcie_s   pick_pcie;
    output 		  pick_rnd_s     pick_rnd;
 
    reg signed [SUM_W:0]   rnd_bits;
@@ -40,6 +40,9 @@ module pick
 
    reg 			  enable;
    reg 			  enable_q;
+
+   reg [9:0] 		  length;
+   reg [RUN_W:0] 	  address;
    
    integer 		  i;
    
@@ -125,14 +128,26 @@ module pick
    
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
-	 pick_pcie_rd <= 'b0;
+	 pick_pcie <= 'b0;
+	 length    <= 'b0;
+	 address   <= 'b0;
       end else begin
-	 if (pcie_pick_req.vld) begin
-	    pick_pcie_rd.data <= old_sum[pcie_pick_req.addr];
-	    pick_pcie_rd.vld  <= 1'b1;
-	    pick_pcie_rd.tag  <= pcie_pick_req.tag;
+	 if ((pcie_pick.vld == 1'b1) &&
+	     (pcie_pick.wr  == 1'b0)) begin
+	    address <= pcie_pick.addr;
+	    if (pcie_pick.len == 'b0) begin
+	       length  <= 11'b100_0000_0000;
+	    end else begin
+	       length  <= pcie_pick.len;
+	    end
+	 end
+	 else if (length > 'b0) begin	    
+	    pick_pcie.data <= old_sum[address];
+	    pick_pcie.vld  <= 1'b1;
+	    length         <= length - 'b1;
+	    address        <= address + 'd4;
 	 end else begin
-	    pick_pcie_rd.vld  <= 1'b0;
+	    pick_pcie      <= 'b0;
 	 end
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk )

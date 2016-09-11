@@ -2,61 +2,40 @@
 `include "timescale.svh"
 
 module top
-  (clk_input,
-   rst_in,
-   bus_pcie_wr_data,
-   bus_pcie_wr_vld, 
-   bus_pcie_wr_addr,
-                    
-   bus_pcie_req_tag,
-   bus_pcie_req_vld,
-   bus_pcie_req_addr,
-                    
-   pcie_bus_rd_data,
-   pcie_bus_rd_vld, 
-   pcie_bus_rd_tag, 
+  (pclk_p,
+   pclk_n,
+   prst_n,
    
-   clk_output
+   tx_p,
+   tx_n,
+
+   rx_p,
+   rx_n
    );
    
 `include "params.svh"
 `include "structs.svh"
 
-   input               clk_input;
-   input               rst_in;
+   input               pclk_p;  //pcie reference clock
+   input               pclk_n;
+
+   input               prst_n;    //major reset
    
-   input [63:0]          bus_pcie_wr_data;
-   input                 bus_pcie_wr_vld;
-   input [31:0]          bus_pcie_wr_addr;
-
-   input [RD_TAG_W:0]  bus_pcie_req_tag;
-   input 		 bus_pcie_req_vld;
-   input [31:0] 	 bus_pcie_req_addr;
-
-   output [63:0]         pcie_bus_rd_data;
-   output                pcie_bus_rd_vld;
-   output [RD_TAG_W:0] pcie_bus_rd_tag; 
-
-   output              clk_output;
-   
+   input [LANE_W:0]    rx_p;
+   input [LANE_W:0]    rx_n;
+ 
+   output [LANE_W:0]   tx_p;
+   output [LANE_W:0]   tx_n;
+ 
    sum_pick_s  sum_pick;
    
-   pcie_wr_s    bus_pcie_wr;
-   pcie_req_s   bus_pcie_req;
-   pcie_rd_s    pcie_bus_rd;
+   block_pcie_s  coef_pcie;
+   block_pcie_s  pick_pcie;
+   block_pcie_s  rnd_pcie; 
+                        
+   pcie_block_s  pcie_coef;
+   pcie_block_s  pcie_ctrl;
 
-   pcie_coef_wr_s   pcie_coef_wr;
-   pcie_coef_req_s  pcie_coef_req;
-   coef_pcie_rd_s   coef_pcie_rd;
-
-   pcie_ctrl_wr_s   pcie_ctrl_wr;
-
-   pcie_rnd_req_s   pcie_rnd_req;    
-   rnd_pcie_rd_s    rnd_pcie_rd;    
-
-   pcie_pick_req_s  pcie_pick_req;
-   pick_pcie_rd_s   pick_pcie_rd;
-   
    ctrl_rnd_s  ctrl_rnd;
    ctrl_pick_s ctrl_pick;
    
@@ -66,59 +45,48 @@ module top
    pick_rnd_s  pick_rnd;
    
    sys_s       sys;
-   sys_s       sys_in;
 
-//top level can have no structs :(
 
-   assign bus_pcie_wr.data =  bus_pcie_wr_data; 
-   assign bus_pcie_wr.vld  =  bus_pcie_wr_vld;  
-   assign bus_pcie_wr.addr =  bus_pcie_wr_addr; 
-
-   assign bus_pcie_req.tag  = bus_pcie_req_tag; 
-   assign bus_pcie_req.vld  = bus_pcie_req_vld; 
-   assign bus_pcie_req.addr = bus_pcie_req_addr;
-
-   assign pcie_bus_rd_data =  pcie_bus_rd.data; 
-   assign pcie_bus_rd_vld  =  pcie_bus_rd.vld;  
-   assign pcie_bus_rd_tag  =  pcie_bus_rd.tag; 
-   
-   clk_gen clk_gen_0
+   IBUFDS_GTE2 pclk_ibuf 
      (
-      .clk_input(clk_input),
-      .rst_in(rst_in),
-      
-      .sys_in(sys_in),
-      .sys(sys)
+      .I      (pclk_p     ),
+      .IB     (pclk_n     ),
+      .O      (pcie_ref_clk   ),
+      .ODIV2  (               )
+      );
+   
+   IBUF prst_n_ibuf 
+     (
+      .I      (prst_n     ),
+      .O      (pcie_rst_n )
       );
 
-   assign clk_output = sys.clk;
-   
    pcie pcie_0
      (
       .sys(sys),
-      .sys_in(sys_in),
 
-      .bus_pcie_wr(bus_pcie_wr),
-      .bus_pcie_req(bus_pcie_req),
-      .pcie_bus_rd(pcie_bus_rd),
+      .tx_p(tx_p),
+      .tx_n(tx_n),
 
-      .pcie_coef_wr(pcie_coef_wr),
-      .pcie_coef_req(pcie_coef_req),
-      .coef_pcie_rd(coef_pcie_rd),
-                                
-      .pcie_ctrl_wr(pcie_ctrl_wr),
-      
-      .pcie_rnd_req(pcie_rnd_req),
-      .rnd_pcie_rd(rnd_pcie_rd),
+      .rx_p(rx_p),
+      .rx_n(rx_n),
 
-      .pcie_pick_req(pcie_pick_req),
-      .pick_pcie_rd(pick_pcie_rd)
+
+      .pcie_ref_clk(pcie_ref_clk),
+      .pcie_rst_n(pcie_rst_n),
+
+      .coef_pcie(coef_pcie), 
+      .pick_pcie(pick_pcie),
+      .rnd_pcie(rnd_pcie),
+          
+      .pcie_coef(pcie_coef),
+      .pcie_ctrl(pcie_ctrl)
       );   
    
    ctrl ctrl_0
      (
       .sys(sys),
-      .pcie_ctrl_wr(pcie_ctrl_wr),
+      .pcie_ctrl(pcie_ctrl),
 
       .ctrl_rnd(ctrl_rnd),
       .ctrl_pick(ctrl_pick)
@@ -127,8 +95,8 @@ module top
    rnd rnd_0
      (
       .sys(sys),      
-      .pcie_rnd_req(pcie_rnd_req),
-      .rnd_pcie_rd(rnd_pcie_rd),
+      .pcie_rnd(pcie_rnd),
+      .rnd_pcie(rnd_pcie),
       .ctrl_rnd(ctrl_rnd),
       .pick_rnd(pick_rnd),
 
@@ -141,10 +109,9 @@ module top
     ( 
      .sys(sys),
      .rnd_coef(rnd_coef),
-     .pcie_coef_wr(pcie_coef_wr),
-     .pcie_coef_req(pcie_coef_req),
+     .pcie_coef(pcie_coef),
 
-     .coef_pcie_rd(coef_pcie_rd),
+     .coef_pcie(coef_pcie),
      .coef_sum(coef_sum)
      );
 
@@ -161,13 +128,14 @@ module top
       .sys(sys),
       .ctrl_pick(ctrl_pick),
       .sum_pick(sum_pick),
-      .pcie_pick_req(pcie_pick_req),
+      .pcie_pick(pcie_pick),
 
       .pick_rnd(pick_rnd),
-      .pick_pcie_rd(pick_pcie_rd)
+      .pick_pcie(pick_pcie)
       );
    
 
-endmodule // coef
+endmodule // top
+
 
  

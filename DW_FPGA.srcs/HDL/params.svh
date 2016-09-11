@@ -36,19 +36,14 @@ parameter NXROWS       = NROWS * 4;
 parameter NXCOLS       = NCOLS * 4;
 
 
-//TBD - This is not how BARs really work
+//BARs
 
-parameter COEF_BAR_START = 32'h0000_0000;
-parameter COEF_BAR_END   = 32'h1FFF_FFFF;
-parameter CTRL_BAR_START = 32'h2000_0000;
-parameter CTRL_BAR_END   = 32'h3FFF_FFFF;
-parameter RND_BAR_START  = 32'h4000_0000;
-parameter RND_BAR_END    = 32'h5FFF_FFFF;
-parameter PICK_BAR_START = 32'h6000_0000;
-parameter PICK_BAR_END   = 32'h7FFF_FFFF;
+parameter COFFEE_BAR      = 8'b00000001;  //coef
+parameter NOSE_BAR        = 8'b00000010;  //pick
+parameter RANDY_BAR       = 8'b00000100;  //rnd
+parameter FREAK_BAR       = 8'b00001000;  //ctrl
 
 //Bit Widths
-parameter RD_TAG_W          = 7;
 parameter PCIE_COEF_DATA_W  = CMEM_DATA_W;
 parameter PCIE_COEF_ADDR_W  = CMEM_ADDR_W + CMEM_SEL_W + 1;
 parameter PCIE_RND_DATA_W   = 31;
@@ -76,3 +71,15 @@ parameter CTRL_PICK_RUN   = (  CTRL_RND_RUN
 			     + SUM_PICK_RUN-2) % NRUNS;
 
 
+//PCIE
+parameter LANE_W          = 4;
+parameter AXI_W           = 64;
+parameter AXI_BE_W        = AXI_W/8;
+parameter TYPE_MEM        = 5'b0;
+parameter TYPE_CPL        = 5'b01010;
+
+parameter OK              = 3'b000;
+parameter UNSUPP          = 3'b001;
+parameter CABORT          = 3'b100;
+
+			    

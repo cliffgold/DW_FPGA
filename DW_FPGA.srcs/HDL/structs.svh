@@ -9,38 +9,182 @@ typedef struct packed
 
 parameter SYS_S_W = 2 -1;
 
-// BUS pci structures
+// PCIe Structures
 typedef struct packed
 	       {
-		  logic [63:0] data;
-		  logic        vld;
+		  logic [15:0] reqid;
+		  logic [7:0]  tag;
+		  logic [3:0]  last_be;
+		  logic [3:0]  first_be;
+		  }
+		 pcie_mem_dw1_s;
+
+parameter PCIE_MEM_DW1_S_W = 32 -1;
+
+typedef struct packed
+	       {
+		  logic       nc_prefix;
+		  logic       wdat;
+		  logic       dw4;
+		  logic [4:0] typ;
+		  logic       nc3;
+		  logic [2:0] nc_tc;
+		  logic       nc2;
+		  logic       nc_attr2;
+		  logic       nc1;
+		  logic       nc_th;
+		  logic       nc_td;
+		  logic       nc_ep;
+		  logic [1:0] nc_attr10;
+		  logic [1:0] nc_at;
+		  logic [9:0] len;
+		  }
+		 pcie_std_dw0_s;
+
+parameter PCIE_STD_DW0_S_W = 32 -1;
+
+typedef struct packed
+	       {
+		  pcie_mem_dw1_s  w1;
+		  pcie_std_dw0_s  w0;
+		  }
+		 pcie_hdr_s;
+
+parameter PCIE_HDR_S_W = 32 -1;
+
+typedef struct packed
+	       {
+		  logic [31:0] data;
 		  logic [31:0] addr;
 		  }
-		 pcie_wr_s;
+		 pcie_qw1_s;
 
-parameter PCIE_WR_S_W = 64 + 1 + 32 -1;
-
-typedef struct packed
-	       {
-		  logic [63:0]        data;
-		  logic               vld;
-		  logic [RD_TAG_W:0]  tag;
-		  }
-		 pcie_rd_s;
-
-parameter PCIE_RD_S_W = 64 + 1 + RD_TAG_W+1 -1;
+parameter PCIE_QW1_S_W = 64 -1;
 
 typedef struct packed
 	       {
-		  logic [RD_TAG_W:0]    tag;
-		  logic 		vld;
-		  logic [31:0] 		addr;
+		  logic [7:0] bn;
+		  logic [4:0] dn;
+		  logic [2:0] fn;
 		  }
-		 pcie_req_s;
+		 pcie_cpl_id_s;
 
-parameter PCIE_REQ_S_W = RD_TAG_W+1 + 1 + 32 -1;
+parameter PCIE_CPL_ID_S_W = 8 + 5 + 3 -1;
 
-//COEF PCIE structures
+typedef struct packed
+	       {
+		  pcie_cpl_id_s id;
+		  logic [2:0]   stat;
+		  logic 	nc0;
+ 		  logic [11:0] 	bcnt;
+		  }
+		 pcie_cpl_dw1_s;
+
+parameter PCIE_CPL_DW1_S_W = 32 -1;
+
+typedef struct packed
+	       {
+		  pcie_cpl_dw1_s  w1;
+		  pcie_std_dw0_s  w0;
+		  }
+		 pcie_cpl_qw0_s;
+
+parameter PCIE_CPL_QW0_S_W = 64 -1;
+
+typedef struct packed
+	       {
+		  logic [15:0] reqid;
+		  logic [7:0]  tag;
+		  logic        nc0;
+		  logic [6:0]  low_addr;
+		  }
+		 pcie_cpl_dw2_s;
+
+
+parameter PCIE_CPL_DW2_S = 32 -1;
+
+
+//AXI interface structures
+typedef struct packed
+	       {
+		  logic [5:0]   buf_av;
+		  logic         tready;
+		  }
+		 axi_tx_out_s;
+
+parameter AXI_TX_OUT_S_W = 2 -1;
+
+typedef struct packed
+	       {
+		  logic [AXI_W:0]    tdata;
+		  logic [AXI_BE_W:0] tkeep;
+		  logic [3:0]        tuser;
+		  logic 	     tlast;
+		  logic 	     tvalid;	     
+		  }
+		 axi_tx_in_s;
+
+parameter AXI_TX_IN_S_W = AXI_W+1 + AXI_BE_W+1 + 4 + 2  -1;
+
+
+typedef struct packed
+	       {
+		  logic         rx_np_req;
+		  logic         rx_np_ok;
+		  logic         tready;
+		  }
+		 axi_rx_in_s;
+
+parameter AXI_RX_IN_S_W = 2 -1;
+
+typedef struct packed
+	       {
+		  logic [11:0]       unused;
+		  logic [7:0]        bar;
+		  logic              err_poison;
+		  logic              err_crc;
+		  }
+		 axi_rx_tuser;
+
+parameter AXI_RX_TUSER_S_W = 12 + 8 + 2 -1;
+
+
+typedef struct packed
+	       {
+		  logic [AXI_W:0]    tdata;
+		  logic [AXI_BE_W:0] tkeep;
+		  axi_rx_tuser       tuser;
+		  logic 	     tlast;
+		  logic 	     tvalid;	     
+		  }
+		 axi_rx_out_s;
+
+parameter AXI_RX_OUT_S_W = AXI_W+1 + AXI_BE_W+1 + 4 + 2  -1;
+
+//Generic PCIE <-> any BLOCK structure
+typedef struct packed
+	       {
+		  logic        vld;
+		  logic        wr;
+		  logic [31:0] data;
+		  logic [31:0] addr;
+		  logic [9:0]  len;
+		  }
+	       pcie_block_s;
+
+parameter PCIE_BLOCKS_S_W = 1 + 1 + 32 + 32 + 10 -1;
+
+
+typedef struct packed
+	       {
+		  logic 	     vld;
+		  logic [31:0]	     data;
+		  }
+	       block_pcie_s;
+
+parameter BLOCK_PCIE_S_W = 1 + 32 -1;
+
+// PCIE -> COEF structures
 typedef struct packed
 	       {
 		  logic [CMEM_SEL_W:0]  sel;
@@ -50,97 +194,23 @@ typedef struct packed
 
 parameter COEF_ADDR_S_W = CMEM_ADDR_W + CMEM_SEL_W + 1;
 
-typedef struct packed
-	       {
-		  logic [CMEM_DATA_W:0] data;
-		  logic                 vld;
-		  logic [RD_TAG_W:0]    tag;
-		  }
-		 coef_pcie_rd_s;
-
-parameter COEF_PCIE_RD_S_W = CMEM_DATA_W+1 + 1 + RD_TAG_W+1 -1;
-
-typedef struct packed
-	       {
-		  logic [RD_TAG_W:0] tag;
-		  logic 	     vld;
-		  coef_addr_s	     addr;
-		  }
-	       pcie_coef_req_s;
-
-parameter PCIE_COEF_REQ_S_W = RD_TAG_W+1 +1 +COEF_ADDR_S_W+1 -1;
-
-
-typedef struct packed
-	       {
-		  logic [CMEM_DATA_W:0] data;
-		  logic                 vld;
-		  coef_addr_s	        addr;
-		  }
-	       pcie_coef_wr_s;
-
-parameter PCIE_COEF_WR_S_W = CMEM_DATA_W+1 +1 +COEF_ADDR_S_W+1 -1;
-
-
-// Pick PCIE structures
-
-typedef struct packed
-	       {
-		  logic [SUM_W:0]    data;
-		  logic 	     vld;
-		  logic [RD_TAG_W:0] tag;
-		  }
-		 pick_pcie_rd_s;
-
-parameter PICK_PCIE_RD_S_W = SUM_W+1 + 1 + RD_TAG_W+1 -1;
-
-typedef struct packed
-	       {
-		  logic [RD_TAG_W:0]    tag;
-		  logic 		vld;
-		  logic [RUN_W:0]	addr;
-		  }
-	       pcie_pick_req_s;
-
-parameter PCIE_PICK_REQ_S_W = RD_TAG_W+1 +1 +RUN_W+1 -1;
-
 // Rnd PCIE structures
 
 typedef struct packed
 	       {
-		  logic [RUN_W:0]  run;
+		  logic [RUN_W:0]   run;
 		  logic [QWORD_W:0] addr; //-6 because 64 bits per word
 		  }
-	       pcie_rnd_addr_s;
+	       rnd_addr_s;
 
 parameter RND_ADDR_S_W = RUN_W+1 + QWORD_W+1 -1;
 
-
-typedef struct packed
-	       {
-		  logic [63:0]       data;
-		  logic 	     vld;
-		  logic [RD_TAG_W:0] tag;
-		  }
-		 rnd_pcie_rd_s;
-
-parameter RND_PCIE_RD_S_W = 63+1 + 1 + RD_TAG_W+1 -1;
-
-typedef struct packed
-	       {
-		  logic [RD_TAG_W:0]    tag;
-		  logic 		vld;
-		  pcie_rnd_addr_s	addr;
-		  }
-	       pcie_rnd_req_s;
-
-parameter PCIE_RND_REQ_S_W = RD_TAG_W+1 +1 +RUN_W+1 -1;
 
 // Ctrl PCIE structures 
 typedef struct packed
 	       {
 		  logic 		    is_cmd;
-		  logic                     is_ctrl0;
+		  logic                     w1;
 		  logic [RUN_W:0] 	    run;
 		  logic [CTRL_MEM_ADDR_W:0] addr;
 		  }
@@ -150,59 +220,27 @@ parameter CTRL_ADDR_S_W = 1 + RUN_W+1 + 1 + CTRL_MEM_ADDR_W+1 -1;
 
 typedef struct packed
 	       {
-		  logic next;
-
 		  logic [FLIP_W:0] flips;
 		  logic [TEMP_W:0] temperature;
 		  logic [SUM_W:0]  cutoff;
-		  }
-		 ctrl_word0_s;
-
-parameter CTRL_WORD0_S_W = 1 + SUM_W+1 + FLIP_W+1 + TEMP_W+1 -1;
-
-typedef struct packed
-	       {
+		  logic            next;
 		  logic [31:0] 	   count;
-		  }
-		 ctrl_word1_s;
-
-parameter CTRL_WORD1_S_W = 31+1 -1;
-
-typedef struct packed
-	       {
-		  ctrl_word0_s 	word0;
-		  ctrl_word1_s  word1;
 		  }
 		 ctrl_word_s;
 
-parameter CTRL_WORD_S_W = CTRL_WORD0_S_W+1 + CTRL_WORD1_S_W+1 -1;
+parameter CTRL_WORD_S_W = FLIP_W+1 + TEMP_W+1 + 1 + 32 -1;
 
 typedef struct packed
 	       {
-		  logic [NRUNS-1:0] stop;
 		  logic [NRUNS-1:0] start;
+		  logic [NRUNS-1:0] stop;
 		  logic             init;
 		  }
 		 ctrl_cmd_s;
 
 parameter CTRL_CMD_S_W = NRUNS + NRUNS + 1 -1;
 
-parameter BIGGER_CTRL_W = (CTRL_WORD0_S_W > CTRL_WORD1_S_W) ?
-			 CTRL_WORD0_S_W : CTRL_WORD1_S_W;
-
-parameter BIGGEST_CTRL_W = (BIGGER_CTRL_W > CTRL_CMD_S_W) ?
-			    BIGGER_CTRL_W : CTRL_CMD_S_W;
-
-typedef struct packed
-	       {
-		  logic [BIGGEST_CTRL_W:0] data;
-		  logic                    vld;
-		  ctrl_addr_s	           addr;
-		  }
-	       pcie_ctrl_wr_s;
-
-parameter PCIE_CTRL_WR_S_W = BIGGEST_CTRL_W+1 +1 +CTRL_ADDR_S_W+1 -1;
-
+//block-block interfaces
 typedef struct packed
 	       {
 		  logic 	    init;

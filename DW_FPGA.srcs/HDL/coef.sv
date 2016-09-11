@@ -8,9 +8,8 @@
 module coef
   (sys,  
    rnd_coef,     
-   pcie_coef_wr,
-   pcie_coef_req,
-   coef_pcie_rd,
+   pcie_coef,
+   coef_pcie,
    coef_sum
    );
    
@@ -20,11 +19,10 @@ module coef
    
    input  sys_s            sys;
    input  rnd_coef_s       rnd_coef;
-   input  pcie_coef_wr_s   pcie_coef_wr;
-   input  pcie_coef_req_s  pcie_coef_req;
+   input  pcie_block_s     pcie_coef;
       
    output coef_sum_s       coef_sum;
-   output coef_pcie_rd_s   coef_pcie_rd;
+   output block_pcie_s     coef_pcie;
 
    wire [CMEM_DATA_W:0]    subtotal [0:NCMEMS-1]; // unflopped outputs
 
@@ -38,8 +36,6 @@ module coef
    reg [X_W:0] 		   x;
    reg [Y_W:0] 		   y;
 
-   
-   reg [RD_TAG_W:0] 	    req_tag_hold;
    reg [CMEM_SEL_W:0]  	    req_sel_hold;
    reg [NCOEF_REQ_PIPE-1:0] req_pipe;
 
@@ -55,19 +51,10 @@ module coef
    integer 		   hmem;
    integer 		   ii;
    
-   pcie_coef_wr_s          pcie_coef_wr_q;
-   pcie_coef_req_s         pcie_coef_req_q;
+   coef_addr_s             coef_addr;
 
-   always @ (posedge sys.clk) begin
-      if (sys.reset) begin
-         pcie_coef_wr_q  <= 'b0;
-         pcie_coef_req_q <= 'b0;
-      end else begin
-         pcie_coef_wr_q  <=  pcie_coef_wr;
-         pcie_coef_req_q <=  pcie_coef_req;
-      end
-   end
-
+   assign coef_addr = pcie_coef.addr;
+      
    always @ (posedge sys.clk) begin
       if (sys.reset) begin
          x   <= 'b0;
@@ -192,12 +179,12 @@ module coef
       if (sys.reset) begin
          wdata_q     <= 'b0;
       end else begin
-         if (pcie_coef_wr_q.vld) begin
-            wdata_q <= pcie_coef_wr_q.data[CMEM_DATA_W:0];
+         if (pcie_coef.vld) begin
+            wdata_q <= pcie_coef.data[CMEM_DATA_W:0];
 	 end
       end
    end
-   
+
    generate
       for (mem=0; mem<NCMEMS; mem=mem+1) begin : cmem       //All mems
          
@@ -206,24 +193,16 @@ module coef
                addr_q[mem]      <= 'b0;
                write_en_q[mem]  <= 'b0;
             end else begin
-               if (pcie_coef_wr_q.vld) begin
-                  addr_q[mem]  <= pcie_coef_wr_q.addr.addr;
-		  if (mem == pcie_coef_wr_q.addr.sel) begin
-                     write_en_q[mem] <= 1'b1;
-		  end else begin
-                     write_en_q[mem] <= 1'b0;
+	       write_en_q[mem] <= 1'b0;  //Default case
+	       if (pcie_coef.vld) begin
+		  addr_q[mem]  <= coef_addr.addr;
+		  if (pcie_coef.wr &&
+		      mem == coef_addr.sel) begin
+		     write_en_q[mem] <= 1'b1;
 		  end
-	       end
-	       
-               else if (pcie_coef_req_q.vld) begin
-                  addr_q[mem]     <= pcie_coef_req_q.addr.addr;
-                  write_en_q[mem] <= 1'b0;
-               end 
-
-	       else begin
+	       end else begin
                   addr_q[mem]     <= addr[mem];
-                  write_en_q[mem] <= 'b0;
-               end // else: !if((pcie_req_sel == mem) && pcie_coef_req.vld)
+	       end
 	    end // else: !if(sys.reset)
 	 end // always @ (posedge sys.clk)
 
@@ -273,21 +252,18 @@ module coef
    always @ (posedge sys.clk) begin
       if (sys.reset) begin
 	 req_pipe       <= 'b0;
-	 coef_pcie_rd   <= 'b0;
-	 req_tag_hold   <= 'b0;
+	 coef_pcie      <= 'b0;
 	 req_sel_hold   <= 'b0;
       end else begin
-	 req_pipe <= {req_pipe[NCOEF_REQ_PIPE-2:0],pcie_coef_req_q.vld};
-	 if (pcie_coef_req_q.vld) begin
-	    req_tag_hold <= pcie_coef_req_q.tag;
-	    req_sel_hold <= pcie_coef_req_q.addr.sel;
+	 req_pipe <= {req_pipe[NCOEF_REQ_PIPE-2:0],pcie_coef.vld};
+	 if (pcie_coef.vld) begin
+	    req_sel_hold <= coef_addr.sel;
 	 end
 	 if (pipe_out) begin
-	    coef_pcie_rd.data <= rd_data;
-	    coef_pcie_rd.vld  <= 1'b1;
-	    coef_pcie_rd.tag  <= req_tag_hold;
+	    coef_pcie.data <= rd_data;
+	    coef_pcie.vld  <= 1'b1;
 	 end else begin
-	    coef_pcie_rd <= 'b0;
+	    coef_pcie      <= 'b0;
 	 end
       end // else: !if(sys.reset)
    end // always @ (posedge sys.clk)
