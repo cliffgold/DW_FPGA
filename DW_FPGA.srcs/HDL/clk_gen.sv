@@ -1,97 +1,83 @@
+//Handle pcie reset same as example design
+
 `include "timescale.svh"
 
 module clk_gen
   (
-   clk_input,
-   rst_in,
+   pclk_p,     
+   pclk_n,
+   pcie_ref_clk,
+   
+   prst_n,     
+   pcie_rst_n, 
 
-   sys,
-   sys_in
+   user_reset_out,
+   user_lnk_up,
+   user_clk_out,
+   sys            
    );
-   		
+
 `include "params.svh"
 `include "structs.svh"
 
-   input  clk_input;
-   input  rst_in;
+   input  pclk_p;
+   input  pclk_n;
+   output pcie_ref_clk;
+   
+   input  prst_n;
+   output pcie_rst_n;
+    
+   input user_reset_out;
+   input user_lnk_up;
+   input user_clk_out;
+      
+   output  sys_s      sys;
 
-   output sys_s sys;
-   output sys_s sys_in;
-   
-   wire   locked;
-   wire   clkin_out;
-   wire   clkfb_out;
-   wire   clkfb_buf;
-   
-   reg    reset;
-   reg    reset_q;
-   reg    reset_in;
-   reg    reset_in_q;
-   reg    sys_reset;
-   
-   
-   always@(posedge sys.clk) begin
-      if (reset_in_q) begin
-	 reset     <= 1'b1;
-	 reset_q   <= 1'b1;
-	 sys_reset <= 1'b1;
-      end else begin
-	 reset     <= 1'b0;
-	 reset_q   <= reset;
-	 sys_reset <= reset_q;
-      end
-   end // always@ (posedge clk)
-   
-   BUFG sys_reset_bufg_0
+   reg 	   user_reset_q;
+   reg 	   user_lnk_up_q;
+   reg 	   reset;
+   reg 	   reset_n;
+      
+    IBUFDS_GTE2 pclk_ibuf 
      (
-      .I(sys_reset),
+      .I      (pclk_p     ),
+      .IB     (pclk_n     ),
+      .CEB    (1'b0       ),
+      .O      (pcie_ref_clk   ),
+      .ODIV2  (               )
+      );
+   
+   IBUF prst_n_ibuf 
+     (
+      .I      (prst_n     ),
+      .O      (pcie_rst_n )
+      );
+
+   assign sys.clk = user_clk_out;
+
+   always@(posedge sys.clk) begin
+      user_reset_q  <= user_reset_out;
+      user_lnk_up_q <= user_lnk_up;
+   end
+
+   always @(posedge sys.clk) begin
+      if (user_reset_q) begin
+         reset   <= 1'b1;
+         reset_n <= 1'b0;
+      end else begin
+	 reset   <= ~user_lnk_up_q;
+	 reset_n <= user_lnk_up_q;
+      end
+   end
+
+   BUFG reset_bufg
+     (.I(reset),
       .O(sys.reset)
       );
    
-   clk_wiz_0 clk_wiz_0_0
-     (
-      // Clock in ports
-      .clk_in1(clk_input),      // input clk_in1
-      .clkfb_in(clkfb_buf),
-      // Clock out ports
-      .clk_out1(clk_output),   // output clk_out1
-      .clk_out2(clkin_out),
-      .clkfb_out(clkfb_out),
-      // Status and control signals
-      .reset(rst_in),        // input reset
-      .locked(locked)    // output locked
-      );    
-
-   BUFG clkfb_bufg_0
-     (
-      .I(clkfb_out),
-      .O(clkfb_buf)
+   BUFG reset_n_bufg
+     (.I(reset_n),
+      .O(sys.reset_n)
       );
    
-   BUFG sysclk_bufg_0
-     (
-      .I(clk_output),
-      .O(sys.clk)
-      );
-
-   BUFG clkin_out_bufg_0
-     (
-      .I(clkin_out),
-      .O(sys_in.clk)
-      );
-
-   always@(posedge sys_in.clk) begin
-      if (rst_in | ~locked) begin
-	 reset_in     <= 1'b1;
-	 reset_in_q   <= 1'b1;
-	 sys_in.reset <= 1'b1;
-      end else begin
-	 reset_in     <= 1'b0;
-	 reset_in_q   <= reset_in;
-	 sys_in.reset <= reset_in_q;
-      end
-   end // always@ (posedge clk)
-   
-   
-endmodule
-   
+endmodule // pcie_reset

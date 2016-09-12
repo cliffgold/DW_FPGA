@@ -15,7 +15,7 @@ parameter NCMEMS        = NROWS*NCOLS*2      ;  //Number of coef mems
 parameter CMEM_DATA_W   = NBITSPERQBIT + 4 - 1  ;  //Number of bits in subtotals
 parameter CMEM_SEL_W    = $clog2(NCMEMS) -1;   //Number of bits in selector
 
-parameter CTRL_MEM_ADDR_W  = 9;  // 10 address bits on each of the 16 ctrl mems
+parameter CTRL_MEM_ADDR_W  = 9 -1;  // 9 address bits on each of the 16 ctrl mems
 
                                  //2 xbits + 4 shared ybits + 4 ybits
  
@@ -72,9 +72,9 @@ parameter CTRL_PICK_RUN   = (  CTRL_RND_RUN
 
 
 //PCIE
-parameter LANE_W          = 4;
-parameter AXI_W           = 64;
-parameter AXI_BE_W        = AXI_W/8;
+parameter LANE_W          = 4-1;
+parameter AXI_W           = 64-1;
+parameter AXI_BE_W        = ((AXI_W+1)/8)-1;
 parameter TYPE_MEM        = 5'b0;
 parameter TYPE_CPL        = 5'b01010;
 

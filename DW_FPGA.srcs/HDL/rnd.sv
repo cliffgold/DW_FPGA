@@ -179,7 +179,7 @@ generate
 	(
 	 .D(new_xy_in[XY_INDEX +:256]),     // input wire [255 : 0] D
 	 .CLK(sys.clk),                     // input wire CLK
-	 .SCLR(sys.reset),                  // input wire SCLR
+	 .SCLR(sys.reset),                  // input wire SCLR 
 	 .Q(new_xy_out[XY_INDEX +:256])  // output wire [255 : 0] Q
 	 );
       

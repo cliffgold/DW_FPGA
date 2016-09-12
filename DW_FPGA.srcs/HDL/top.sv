@@ -34,6 +34,8 @@ module top
    block_pcie_s  rnd_pcie; 
                         
    pcie_block_s  pcie_coef;
+   pcie_block_s  pcie_pick;
+   pcie_block_s  pcie_rnd;
    pcie_block_s  pcie_ctrl;
 
    ctrl_rnd_s  ctrl_rnd;
@@ -47,20 +49,21 @@ module top
    sys_s       sys;
 
 
-   IBUFDS_GTE2 pclk_ibuf 
+   clk_gen clk_gen_0
      (
-      .I      (pclk_p     ),
-      .IB     (pclk_n     ),
-      .O      (pcie_ref_clk   ),
-      .ODIV2  (               )
+      .pclk_p       (pclk_p),
+      .pclk_n       (pclk_n),
+      .pcie_ref_clk (pcie_ref_clk),
+      
+      .prst_n     (prst_n),
+      .pcie_rst_n (pcie_rst_n),
+      
+      .user_reset_out(user_reset_out),
+      .user_lnk_up   (user_lnk_up),
+      .user_clk_out  (user_clk_out),
+      .sys           (sys)
       );
-   
-   IBUF prst_n_ibuf 
-     (
-      .I      (prst_n     ),
-      .O      (pcie_rst_n )
-      );
-
+         
    pcie pcie_0
      (
       .sys(sys),
@@ -71,6 +74,9 @@ module top
       .rx_p(rx_p),
       .rx_n(rx_n),
 
+      .user_reset_out(user_reset_out),
+      .user_lnk_up   (user_lnk_up),
+      .user_clk_out  (user_clk_out),
 
       .pcie_ref_clk(pcie_ref_clk),
       .pcie_rst_n(pcie_rst_n),
@@ -80,6 +86,8 @@ module top
       .rnd_pcie(rnd_pcie),
           
       .pcie_coef(pcie_coef),
+      .pcie_pick(pcie_pick),
+      .pcie_rnd (pcie_rnd ),
       .pcie_ctrl(pcie_ctrl)
       );   
    

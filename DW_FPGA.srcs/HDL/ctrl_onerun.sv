@@ -36,12 +36,13 @@ module ctrl_onerun
    output ctrl_word_s ctrl_word;
    output reg         ctrl_busy;
 
-   reg [9:0] 	      ctrl_addr;
-   reg [9:0] 	      addr;
+   reg [CTRL_MEM_ADDR_W:0] ctrl_addr;
+   reg [CTRL_MEM_ADDR_W:0] addr;
    
-   ctrl_word_s        ram_data_out;
+   reg [96:0]         ram_data_out;
    reg                ram_we0;
    reg 		      ram_we1;
+   reg 		      ram_we2;
    
    reg [1:0] 	      state;
          
@@ -68,7 +69,7 @@ module ctrl_onerun
 	      end // case: state...
 	      LOADING: begin
 		 ctrl_busy  <= 1'b1;
-		 ctrl_word  <= ram_data_out;
+		 ctrl_word  <= ram_data_out[CTRL_WORD_S_W:0];
 		 ctrl_addr  <= ctrl_addr+1;
 		 state      <= RUNNING;
 	      end // case: LOADING
@@ -98,18 +99,40 @@ module ctrl_onerun
    always@(*) begin
       if ((ram_we == 1) && (ram_whoami == ram_addr.run)) begin
 	 addr = ram_addr.addr;
-	 ram_we0 = ~ram_addr.w1;
-	 ram_we1 = ram_addr.w1;
+	 
+	 case (ram_addr.part)
+	   0: begin
+	      ram_we0 = 1'b1;
+	      ram_we1 = 1'b0;
+	      ram_we2 = 1'b0;
+	   end
+	   1: begin
+	      ram_we0 = 1'b0;
+	      ram_we1 = 1'b1;
+	      ram_we2 = 1'b0;
+	   end
+	   2: begin
+	      ram_we0 = 1'b0;
+	      ram_we1 = 1'b0;
+	      ram_we2 = 1'b1;
+	   end
+	   default: begin
+	      ram_we0 = 1'b0;
+	      ram_we1 = 1'b0;
+	      ram_we2 = 1'b0;
+	   end
+	 endcase // case (ram_addr.part)
       end else begin
 	 addr = ctrl_addr;
 	 ram_we0 = 1'b0;
 	 ram_we1 = 1'b0;
+	 ram_we2 = 1'b0;
       end
    end // always@ (*)
-   
+
    ctrl0_mem ctrl0_mem_0
      (
-      .ena(~sys.reset),
+      .ena(sys.reset_n),
       .addra(addr),
       .dina(ram_data[31:0]),
       .douta(ram_data_out[31:0]),
@@ -117,13 +140,23 @@ module ctrl_onerun
       .clka(sys.clk)
       );
 
-   ctrl1_mem ctrl1_mem_0
+   ctrl0_mem ctrl0_mem_1
      (
-      .ena(~sys.reset),
+      .ena(sys.reset_n),
       .addra(addr),
-      .dina(ram_data[CTRL_WORD_S_W-32:0]),
-      .douta(ram_data_out[CTRL_WORD_S_W:32]),
+      .dina(ram_data[31:0]),
+      .douta(ram_data_out[63:32]),
       .wea(ram_we1),
+      .clka(sys.clk)
+      );
+
+   ctrl0_mem ctrl0_mem_2
+     (
+      .ena(sys.reset_n),
+      .addra(addr),
+      .dina(ram_data[31:0]),
+      .douta(ram_data_out[95:64]),
+      .wea(ram_we2),
       .clka(sys.clk)
       );
 

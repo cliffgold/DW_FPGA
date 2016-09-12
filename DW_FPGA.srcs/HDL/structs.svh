@@ -2,7 +2,8 @@
 
 typedef struct packed
 	       {
-		  logic reset; //async reset
+		  logic reset;
+		  logic reset_n;
 		  logic clk;
 		  }
 	       sys_s;
@@ -210,9 +211,9 @@ parameter RND_ADDR_S_W = RUN_W+1 + QWORD_W+1 -1;
 typedef struct packed
 	       {
 		  logic 		    is_cmd;
-		  logic                     w1;
 		  logic [RUN_W:0] 	    run;
 		  logic [CTRL_MEM_ADDR_W:0] addr;
+		  logic [1:0]               part;
 		  }
 		 ctrl_addr_s;
 

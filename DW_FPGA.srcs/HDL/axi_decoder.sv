@@ -15,6 +15,8 @@ module axi_decoder
    rnd_pcie,
 
    pcie_coef,
+   pcie_pick,
+   pcie_rnd,
    pcie_ctrl
    );
 
@@ -34,10 +36,9 @@ module axi_decoder
    localparam RD_CPL0_ST       = 4'ha;
    localparam RD0_ST	       = 4'hb;
    localparam RD1_ST	       = 4'hc;
-   localparam DEFAULT_ST       = 4'hd;
    
    
-   output  sys_s            sys;
+   input   sys_s            sys;
    input   pcie_cpl_id_s    cpl_id;
    
    output  axi_rx_in_s      axi_rx_in;
@@ -50,6 +51,8 @@ module axi_decoder
    input   block_pcie_s  rnd_pcie;
 
    output   pcie_block_s  pcie_coef;
+   output   pcie_block_s  pcie_pick;
+   output   pcie_block_s  pcie_rnd;
    output   pcie_block_s  pcie_ctrl;
        
    pcie_hdr_s pcie_hdr;
@@ -75,18 +78,22 @@ module axi_decoder
       if (sys.reset) begin
          pcie_hdr   <= 'b0;
          length     <= 'b0;
+	 address    <= 'b0;
 	 bar        <= 'b0;
+	 length     <= 'b0;
+	 upper_data <= 'b0;
 	 state      <= IDLE_ST;
 	 pcie_block <= 'b0;
 	 axi_rx_in  <= 'b0;
 	 axi_tx_in  <= 'b0;
-	 	 	 
+	 pcie_cpl_qw0 <= 'b0;
+	 pcie_cpl_dw2 <= 'b0;
+	 	 	 	 
       end else begin // if (sys.reset)
 	 case (state)
 	   IDLE_ST: begin
 	      axi_rx_in.tready   <= 1'b1;
 	      axi_tx_in.tvalid   <= 1'b0;
-
 	      pcie_block.vld     <= 1'b0;
 	      
 	      if (axi_rx_out.tvalid && axi_rx_in.tready) begin
@@ -105,7 +112,7 @@ module axi_decoder
 		    if ((axi_rx_out.tuser.bar == COFFEE_BAR) ||         //Coef
 			(axi_rx_out.tuser.bar == NOSE_BAR)   ||         //Pick
 			(axi_rx_out.tuser.bar == RANDY_BAR)    ) begin  //Rnd
-		       state <= RD_SU_ST;
+		       state         <= RD_SU_ST;
 		       pcie_block.wr <= 1'b0;
 		    end else begin
 		       state <= CPL_US_SU_ST;
@@ -291,6 +298,12 @@ module axi_decoder
 		 end
 	      end // if (block_pcie.vld == 1'b1)
 	   end // case: RD1_ST
+	   default: begin
+	      axi_rx_in.tready   <= 1'b0;
+	      axi_tx_in.tvalid   <= 1'b0;
+	      pcie_block.vld     <= 1'b0;
+	      state              <= IDLE_ST;
+	   end
 	 endcase // case (state)
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)
@@ -330,6 +343,18 @@ module axi_decoder
 	    pcie_ctrl  <= pcie_block;
 	 end else begin
 	    pcie_ctrl.vld  <= 1'b0;
+	 end
+	 
+	 if (bar == NOSE_BAR)  begin
+	    pcie_pick  <= pcie_block;
+	 end else begin
+	    pcie_pick.vld  <= 1'b0;
+	 end
+	 
+	 if (bar == RANDY_BAR)  begin
+	    pcie_rnd  <= pcie_block;
+	 end else begin
+	    pcie_rnd.vld  <= 1'b0;
 	 end
       end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)

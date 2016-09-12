@@ -50,10 +50,10 @@ module ctrl
 	 if (pcie_ctrl.vld) begin  
 	    if (ctrl_addr.is_cmd == 1'b1) begin
 	       ram_we     <= 'b0;
-	       if (ctrl_addr.w1) begin
-		  ctrl_cmd[CTRL_CMD_S_W:32] <= pcie_ctrl.data[CTRL_CMD_S_W-32:0];
-	       end else begin
+	       if (ctrl_addr.part[0] == 1'b0) begin
 		  ctrl_cmd[31:0]            <= pcie_ctrl.data[31:0];
+	       end else begin
+		  ctrl_cmd[CTRL_CMD_S_W:32] <= pcie_ctrl.data[CTRL_CMD_S_W-32:0];
 	       end
 	    end else begin
 	       ram_data       <= pcie_ctrl.data;
@@ -87,25 +87,25 @@ module ctrl
       end
    end // always@ (posedge sys.clk)
 
-generate
-   for (gi=0;gi<NRUNS;gi=gi+1) begin : CTRL_RAM
-
-      ctrl_onerun ctrl_onerun_0
-	  (
-	   .sys(sys),
-	   .ram_whoami(gi),
-	   .ram_we(ram_we),
-	   .ram_addr(ram_addr),
-	   .ram_data(ram_data),
-	   .start(ctrl_cmd_q.start[gi]),
-	   .stop(ctrl_cmd_q.stop[gi]),
-	   .step(step[gi]),
-	   
-	   .ctrl_word(ctrl_word[gi]),
-	   .ctrl_busy(ctrl_busy[gi])
-	   );
-   end
-endgenerate
+   generate
+      for (gi=0;gi<NRUNS;gi=gi+1) begin : CTRL_RAM
+	 
+	 ctrl_onerun ctrl_onerun_0
+	      (
+	       .sys(sys),
+	       .ram_whoami(gi),
+	       .ram_we(ram_we),
+	       .ram_addr(ram_addr),
+	       .ram_data(ram_data),
+	       .start(ctrl_cmd_q.start[gi]),
+	       .stop(ctrl_cmd_q.stop[gi]),
+	       .step(step[gi]),
+	       
+	       .ctrl_word(ctrl_word[gi]),
+	       .ctrl_busy(ctrl_busy[gi])
+	       );
+      end
+   endgenerate
 
    assign rnd_run  = (run + CTRL_RND_RUN)  % NRUNS;
    assign pick_run = (run + CTRL_PICK_RUN) % NRUNS;
