@@ -48,6 +48,12 @@ module top
    
    sys_s       sys;
 
+   wire        pcie_ref_clk;
+   wire        pcie_rst_n;
+   wire        user_reset_out;
+   wire        user_lnk_up;
+   wire        user_clk_out;
+   
 
    clk_gen clk_gen_0
      (

@@ -23,9 +23,9 @@ module ctrl
    reg [RUN_W:0]         rnd_run;
    reg [RUN_W:0]         pick_run;
 
-   reg                     ram_we;
-   ctrl_word_s             ram_data;
-   reg [CTRL_MEM_ADDR_W:0] ram_addr;
+   reg 			 ram_we;
+   reg [31:0] 		 ram_data;
+   ctrl_addr_s           ram_addr;
    
    wire [NRUNS-1:0] 	   ctrl_busy;
 
@@ -93,7 +93,7 @@ module ctrl
 	 ctrl_onerun ctrl_onerun_0
 	      (
 	       .sys(sys),
-	       .ram_whoami(gi),
+	       .ram_whoami(gi[RUN_W:0]),
 	       .ram_we(ram_we),
 	       .ram_addr(ram_addr),
 	       .ram_data(ram_data),

@@ -1,4 +1,5 @@
 //Break out the axi bus to the individual blocks
+`include "timescale.svh"
 
 module axi_decoder
   (sys,

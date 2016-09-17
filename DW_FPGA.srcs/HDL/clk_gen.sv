@@ -35,8 +35,6 @@ module clk_gen
 
    reg 	   user_reset_q;
    reg 	   user_lnk_up_q;
-   reg 	   reset;
-   reg 	   reset_n;
       
     IBUFDS_GTE2 pclk_ibuf 
      (
@@ -54,30 +52,19 @@ module clk_gen
       );
 
    assign sys.clk = user_clk_out;
-
-   always@(posedge sys.clk) begin
+   
+   always@(posedge user_clk_out) begin
       user_reset_q  <= user_reset_out;
       user_lnk_up_q <= user_lnk_up;
    end
 
-   always @(posedge sys.clk) begin
+   always @(posedge user_clk_out) begin
       if (user_reset_q) begin
-         reset   <= 1'b1;
-         reset_n <= 1'b0;
+         sys.reset   <= 1'b1;
       end else begin
-	 reset   <= ~user_lnk_up_q;
-	 reset_n <= user_lnk_up_q;
+	 sys.reset   <= ~user_lnk_up_q;
       end
    end
+   
+endmodule // clk_gen
 
-   BUFG reset_bufg
-     (.I(reset),
-      .O(sys.reset)
-      );
-   
-   BUFG reset_n_bufg
-     (.I(reset_n),
-      .O(sys.reset_n)
-      );
-   
-endmodule // pcie_reset

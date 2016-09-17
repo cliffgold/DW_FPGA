@@ -3,7 +3,6 @@
 typedef struct packed
 	       {
 		  logic reset;
-		  logic reset_n;
 		  logic clk;
 		  }
 	       sys_s;
@@ -200,7 +199,7 @@ parameter COEF_ADDR_S_W = CMEM_ADDR_W + CMEM_SEL_W + 1;
 typedef struct packed
 	       {
 		  logic [RUN_W:0]   run;
-		  logic [QWORD_W:0] addr; //-6 because 64 bits per word
+		  logic [QWORD_W:0] addr;
 		  }
 	       rnd_addr_s;
 
@@ -214,6 +213,7 @@ typedef struct packed
 		  logic [RUN_W:0] 	    run;
 		  logic [CTRL_MEM_ADDR_W:0] addr;
 		  logic [1:0]               part;
+		  logic [1:0] 		    byte_addr;
 		  }
 		 ctrl_addr_s;
 
@@ -229,7 +229,7 @@ typedef struct packed
 		  }
 		 ctrl_word_s;
 
-parameter CTRL_WORD_S_W = FLIP_W+1 + TEMP_W+1 + 1 + 32 -1;
+parameter CTRL_WORD_S_W = FLIP_W+1 + TEMP_W+1 + SUM_W+1 + 1 + 32 -1;
 
 typedef struct packed
 	       {

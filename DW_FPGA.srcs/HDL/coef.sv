@@ -38,7 +38,8 @@ module coef
 
    reg [CMEM_SEL_W:0]  	    req_sel_hold;
    reg [NCOEF_REQ_PIPE-1:0] req_pipe;
-
+   wire 		    pipe_out;
+   
    reg 			   active_q;
    reg [RUN_W:0] 	   run;
    

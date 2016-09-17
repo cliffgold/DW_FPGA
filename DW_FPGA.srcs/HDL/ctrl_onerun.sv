@@ -39,7 +39,10 @@ module ctrl_onerun
    reg [CTRL_MEM_ADDR_W:0] ctrl_addr;
    reg [CTRL_MEM_ADDR_W:0] addr;
    
-   reg [96:0]         ram_data_out;
+   ctrl_word_s              ram_data_out;
+   reg [95:CTRL_WORD_S_W+1] ram_extra;
+   reg 			    borrow;
+      
    reg                ram_we0;
    reg 		      ram_we1;
    reg 		      ram_we2;
@@ -70,11 +73,24 @@ module ctrl_onerun
 	      LOADING: begin
 		 ctrl_busy  <= 1'b1;
 		 ctrl_word  <= ram_data_out[CTRL_WORD_S_W:0];
+		 if (ram_data_out.count[15:0] == 16'b0) begin
+		    borrow <= 1;
+		 end else begin
+		    borrow <= 0;
+		 end
 		 ctrl_addr  <= ctrl_addr+1;
 		 state      <= RUNNING;
 	      end // case: LOADING
 	      RUNNING: begin
-		 ctrl_word.count <= ctrl_word.count - 'b1;
+//Timing speedup - registered look-ahead borrow
+		 ctrl_word.count[15:0]   <= ctrl_word.count[15:0] - 'b1;
+		 ctrl_word.count[31:16]  <= ctrl_word.count[31:16] - borrow;
+		 if (ctrl_word.count[15:0] == 16'b0) begin
+		    borrow <= 1;
+		 end else begin
+		    borrow <= 0;
+		 end
+		 
 		 if (ctrl_word.count == 'b1) begin
 		    if (ctrl_word.next) begin
 		       state     <= LOADING;
@@ -132,7 +148,7 @@ module ctrl_onerun
 
    ctrl0_mem ctrl0_mem_0
      (
-      .ena(sys.reset_n),
+      .ena(~sys.reset),
       .addra(addr),
       .dina(ram_data[31:0]),
       .douta(ram_data_out[31:0]),
@@ -142,7 +158,7 @@ module ctrl_onerun
 
    ctrl0_mem ctrl0_mem_1
      (
-      .ena(sys.reset_n),
+      .ena(~sys.reset),
       .addra(addr),
       .dina(ram_data[31:0]),
       .douta(ram_data_out[63:32]),
@@ -152,10 +168,10 @@ module ctrl_onerun
 
    ctrl0_mem ctrl0_mem_2
      (
-      .ena(sys.reset_n),
+      .ena(~sys.reset),
       .addra(addr),
       .dina(ram_data[31:0]),
-      .douta(ram_data_out[95:64]),
+      .douta({ram_extra,ram_data_out[CTRL_WORD_S_W:64]}),
       .wea(ram_we2),
       .clka(sys.clk)
       );
