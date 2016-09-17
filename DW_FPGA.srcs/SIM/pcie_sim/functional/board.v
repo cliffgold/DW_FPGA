@@ -93,24 +93,20 @@ wire  [3:0]  rp_pci_exp_txp;
 // PCI-Express Endpoint Instance
 //
 
-xilinx_pcie_2_1_ep_7x 
-  
-
-EP (
-
-
+top top_0
+  (
   // SYS Inteface
-  .sys_clk_n(ep_sys_clk_n),
-  .sys_clk_p(ep_sys_clk_p),
-  .sys_rst_n(sys_rst_n),
+  .pclk_n(ep_sys_clk_n),
+  .pclk_p(ep_sys_clk_p),
+  .prst_n(sys_rst_n),
 
 
 
   // PCI-Express Interface
-  .pci_exp_txn(ep_pci_exp_txn),
-  .pci_exp_txp(ep_pci_exp_txp),
-  .pci_exp_rxn(rp_pci_exp_txn),
-  .pci_exp_rxp(rp_pci_exp_txp)
+  .tx_n(ep_pci_exp_txn),
+  .tx_p(ep_pci_exp_txp),
+  .rx_n(rp_pci_exp_txn),
+  .rx_p(rp_pci_exp_txp)
 );
 
 //

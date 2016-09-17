@@ -8,15 +8,26 @@ module sim_top();
 `include "structs.svh"
 `include "sim_tasks.svh"
 
-   reg clk_input;
-   reg rst_in;
    reg ready;
    reg sys_clk;
-   
-   pcie_wr_s    bus_pcie_wr;
-   pcie_req_s   bus_pcie_req;
+   reg sys_rst;
 
-   pcie_rd_s   pcie_bus_rd;
+   reg pclk_n;
+   reg pclk_p;
+   reg prst_n;
+   
+   reg [3:0] tx_n;
+   reg [3:0] tx_p;
+   reg [3:0] rx_n;
+   reg [3:0] rx_p;
+   
+   reg [31:0] axi_data[0:1023];
+
+   axi_tx_in_s  axi_tx_in;
+   axi_rx_in_s  axi_rx_in;
+   axi_tx_out_s axi_tx_out;
+   axi_rx_out_s axi_rx_out;
+   
 
    coef_addr_s coef_addr;
    
@@ -24,7 +35,7 @@ module sim_top();
    ctrl_cmd_s  ctrl_cmd;
    ctrl_word_s ctrl_word;
 
-   pcie_rnd_addr_s            rnd_addr;
+   rnd_addr_s                 rnd_addr;
    reg [RUN_W:0] 	      rnd_run [0:NRUNS-1];
    reg [X_W:0] 		      test_x [0:NRUNS-1];
    reg [Y_W:0] 		      test_y [0:NRUNS-1];
@@ -48,6 +59,9 @@ module sim_top();
 
    reg [CMEM_DATA_W:0] 	      coef_mem [0:NCMEMS-1] [0:NCMEM_ADDRS-1];
 
+   reg [7:0] 		      tag;
+   reg [15:0] 		      reqid;
+
    integer 		      i;
    integer 		      j;
    integer 		      k;
@@ -59,56 +73,60 @@ module sim_top();
      #(.IS_SIM(1))
      top_0
      (
-      .clk_input(clk_input),
-      .rst_in(rst_in),
-      .bus_pcie_wr_data(bus_pcie_wr.data),
-      .bus_pcie_wr_vld(bus_pcie_wr.vld), 
-      .bus_pcie_wr_addr(bus_pcie_wr.addr),
-                       
-      .bus_pcie_req_tag(bus_pcie_req.tag),
-      .bus_pcie_req_vld(bus_pcie_req.vld),
-      .bus_pcie_req_addr(bus_pcie_req.addr),
+      .pclk_n(pclk_n),
+      .pclk_p(pclk_p),
+      .prst_n(prst_n),
 
-      .pcie_bus_rd_data(pcie_bus_rd.data),
-      .pcie_bus_rd_vld(pcie_bus_rd.vld),
-      .pcie_bus_rd_tag(pcie_bus_rd.tag) 
+      .tx_n(tx_n),
+      .tx_p(tx_p),
+      .rx_n(rx_n),
+      .rx_p(rx_p)
       );
    
 
+   assign pclk_n      = ~pclk_p;
+   assign sys_clk     = top_0.sys.clk;
+   assign sys_rst     = top_0.sys.reset;
+
+   assign axi_tx_in = top_0.pcie_0.axi_tx_in;
+   assign axi_rx_in = top_0.pcie_0.axi_rx_in;
+   
    initial begin
-      rst_in       = 1'b1;
-      clk_input    = 1'b0;
-      bus_pcie_wr  = 'b0;
-      bus_pcie_req = 'b0;
-      ready        = 1'b0;
-      
       #CLK_IN_PERIOD;
-      
-      repeat(50) begin
-	 #(CLK_IN_PERIOD/2)
-	   clk_input = ~clk_input;
-      end
-
-      rst_in = 0;
-
-      assign sys_clk = top_0.clk_gen_0.sys.clk;
-      
-      while (top_0.clk_gen_0.locked == 1'b0) begin
-	 #(CLK_IN_PERIOD/2)
-	   clk_input = ~clk_input;
-      end
-      
-      repeat(50) begin
-	 #(CLK_IN_PERIOD/2)
-	   clk_input = ~clk_input;
-      end
-
-      ready = 1;
-      
       forever begin
 	 #(CLK_IN_PERIOD/2)
-	   clk_input = ~clk_input;
+	   pclk_p = ~pclk_p;
       end
+   end
+   
+   initial begin
+
+      tag         = 'b0;
+      reqid       = 'hc1ff;
+      
+      prst_n      = 1'b0;
+      pclk_p      = 1'b0;
+      ready       = 1'b0;
+      
+      force top_0.pcie_0.axi_tx_out = axi_tx_out;
+      force top_0.pcie_0.axi_rx_out = axi_rx_out;
+   
+      repeat(10) @(posedge pclk_p);
+      axi_tx_out = 'b0;
+      axi_rx_out = 'b0;
+      
+      repeat(10) @(posedge pclk_p);
+      prst_n = 1;
+      
+      repeat(10) @(posedge sys_clk);
+      force top_0.user_reset_out = 0;
+      
+      repeat(10) @(posedge sys_clk);
+      force top_0.user_lnk_up = 1;
+
+      repeat(10) @(posedge sys_clk);
+      ready = 1;
+      
    end // initial begin
    
    initial begin
