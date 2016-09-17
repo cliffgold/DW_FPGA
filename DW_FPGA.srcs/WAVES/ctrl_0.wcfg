@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="sim_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="sim_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="2544635259fs"></ZoomEndTime>
+      <Cursor1Time time="1567284000fs"></Cursor1Time>
+   </zoom_setting>
+   <WVObjectSize size="9" />
+   <wvobject fp_name="/sim_top/ready" type="logic">
+      <obj_property name="ElementShortName">ready</obj_property>
+      <obj_property name="ObjectShortName">ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/top_0/clk_gen_0/sys" type="array">
+      <obj_property name="ElementShortName">sys</obj_property>
+      <obj_property name="ObjectShortName">sys</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/bad_fail" type="array">
+      <obj_property name="ElementShortName">bad_fail[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bad_fail[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/top_0/pcie_0/axi_decoder_0/axi_rx_in" type="array">
+      <obj_property name="ElementShortName">axi_rx_in</obj_property>
+      <obj_property name="ObjectShortName">axi_rx_in</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/top_0/pcie_0/axi_decoder_0/axi_rx_out" type="array">
+      <obj_property name="ElementShortName">axi_rx_out</obj_property>
+      <obj_property name="ObjectShortName">axi_rx_out</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/top_0/pcie_0/axi_decoder_0/state" type="array">
+      <obj_property name="ElementShortName">state[3:0]</obj_property>
+      <obj_property name="ObjectShortName">state[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/top_0/ctrl_0/ctrl_addr" type="array">
+      <obj_property name="ElementShortName">ctrl_addr</obj_property>
+      <obj_property name="ObjectShortName">ctrl_addr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/top_0/ctrl_0/ctrl_cmd" type="array">
+      <obj_property name="ElementShortName">ctrl_cmd</obj_property>
+      <obj_property name="ObjectShortName">ctrl_cmd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_top/top_0/ctrl_0/\CTRL_RAM[0].ctrl_onerun_0 /ctrl_busy" type="logic">
+      <obj_property name="ElementShortName">ctrl_busy</obj_property>
+      <obj_property name="ObjectShortName">ctrl_busy</obj_property>
+   </wvobject>
+</wave_config>
