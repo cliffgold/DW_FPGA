@@ -256,7 +256,8 @@ module coef
 	 coef_pcie      <= 'b0;
 	 req_sel_hold   <= 'b0;
       end else begin
-	 req_pipe <= {req_pipe[NCOEF_REQ_PIPE-2:0],pcie_coef.vld};
+	 req_pipe <= {req_pipe[NCOEF_REQ_PIPE-2:0],
+		      (pcie_coef.vld & ~pcie_coef.wr)};
 	 if (pcie_coef.vld) begin
 	    req_sel_hold <= coef_addr.sel;
 	 end

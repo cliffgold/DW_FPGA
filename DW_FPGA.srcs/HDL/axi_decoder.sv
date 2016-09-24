@@ -68,7 +68,7 @@ module axi_decoder
    
    reg [9:0]  length;
    reg [3:0]  state;
-   reg [31:0] address;
+   reg [31:2] address;
    reg [31:0] upper_data;
    reg [7:0]  bar;
       
@@ -147,8 +147,8 @@ module axi_decoder
 	   WR_W0_ST: begin
 	      if (axi_rx_out.tvalid && axi_rx_in.tready) begin
 		 pcie_block.vld    <= 1'b1;
-		 pcie_block.addr   <= address + 4;
-		 address           <= address + 4;
+		 pcie_block.addr   <= address + 1;
+		 address           <= address + 1;
 		 pcie_block.data   <= axi_rx_out.tdata[31:0];
 		 upper_data        <= axi_rx_out.tdata[63:32];
 		 length            <= length - 1;
@@ -164,8 +164,8 @@ module axi_decoder
 
 	   WR_W1_ST: begin
 	      pcie_block.vld    <= 1'b1;
-	      pcie_block.addr   <= address + 4;
-	      address           <= address + 4;
+	      pcie_block.addr   <= address + 1;
+	      address           <= address + 1;
 	      pcie_block.data   <= upper_data;
 	      length            <= length - 1;
 	      axi_rx_in.tready  <= 1'b1;
@@ -180,7 +180,7 @@ module axi_decoder
 	   CPL_US_SU_ST: begin
 	      pcie_cpl_qw0.w1.id   <= cpl_id;
 	      pcie_cpl_qw0.w1.stat <= UNSUPP;
-	      pcie_cpl_qw0.w1.bcnt <= 'h4;
+	      pcie_cpl_qw0.w1.cnt  <= 'b1;
 
 	      pcie_cpl_qw0.w0.wdat <= 1'b0;
 	      pcie_cpl_qw0.w0.dw4  <= 1'b0;
@@ -232,7 +232,7 @@ module axi_decoder
 
 		 pcie_cpl_qw0.w1.id   <= cpl_id;
 		 pcie_cpl_qw0.w1.stat <= OK;
-		 pcie_cpl_qw0.w1.bcnt <= 'h0;
+		 pcie_cpl_qw0.w1.cnt  <= length;
 		 
 		 pcie_cpl_qw0.w0.wdat <= 1'b1;
 		 pcie_cpl_qw0.w0.dw4  <= 1'b0;
@@ -241,7 +241,7 @@ module axi_decoder
 		 
 		 pcie_cpl_dw2.reqid    <= pcie_hdr.w1.reqid;
 		 pcie_cpl_dw2.tag      <= pcie_hdr.w1.tag;
-		 pcie_cpl_dw2.low_addr <= axi_rx_out_w1.addr[5:0];
+		 pcie_cpl_dw2.low_addr <= axi_rx_out_w1.addr[6:2];
 
 		 state                 <= RD_CPL_START_ST;
 		 
@@ -286,6 +286,7 @@ module axi_decoder
 	   end // case: RD0_ST
 	   	   
 	   RD1_ST: begin
+	      pcie_block.vld     <= 1'b0;
 	      if (block_pcie.vld == 1'b1) begin
 		 axi_tx_in.tdata[63:32] <= block_pcie.data;
 		 axi_tx_in.tvalid       <= 1'b1;
@@ -333,6 +334,8 @@ module axi_decoder
       if (sys.reset) begin
          pcie_coef     <= 'b0;
 	 pcie_ctrl     <= 'b0;
+	 pcie_pick     <= 'b0;
+	 pcie_rnd      <= 'b0;
       end else begin
 	 if (bar == COFFEE_BAR)  begin
 	    pcie_coef  <= pcie_block;

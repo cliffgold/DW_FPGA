@@ -105,7 +105,7 @@ module pick
    end // always@ (posedge sys.clk)
 	 
    always@(posedge sys.clk ) begin
-      if (sys.reset) begin
+      if (sys.reset | ctrl_pick.init) begin
 	 pick_rnd.pick <= 'b0;
 	 pick_rnd.run  <= 'b0;
 	 for (i=0;i<NRUNS;i=i+1) begin
@@ -145,7 +145,7 @@ module pick
 	    pick_pcie.data <= old_sum[address];
 	    pick_pcie.vld  <= 1'b1;
 	    length         <= length - 'b1;
-	    address        <= address + 'd4;
+	    address        <= address + 'd1;
 	 end else begin
 	    pick_pcie      <= 'b0;
 	 end

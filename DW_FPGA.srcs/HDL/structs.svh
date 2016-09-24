@@ -55,7 +55,8 @@ parameter PCIE_HDR_S_W = 32 -1;
 typedef struct packed
 	       {
 		  logic [31:0] data;
-		  logic [31:0] addr;
+		  logic [31:2] addr;  //Note this is a DW address
+		  logic [1:0]  nc_byte;
 		  }
 		 pcie_qw1_s;
 
@@ -76,7 +77,8 @@ typedef struct packed
 		  pcie_cpl_id_s id;
 		  logic [2:0]   stat;
 		  logic 	nc0;
- 		  logic [11:0] 	bcnt;
+ 		  logic [11:2] 	cnt;
+		  logic [1:0] 	nc_byte;
 		  }
 		 pcie_cpl_dw1_s;
 
@@ -96,7 +98,8 @@ typedef struct packed
 		  logic [15:0] reqid;
 		  logic [7:0]  tag;
 		  logic        nc0;
-		  logic [6:0]  low_addr;
+		  logic [6:2]  low_addr;
+		  logic [1:0]  nc_byte;
 		  }
 		 pcie_cpl_dw2_s;
 
@@ -167,7 +170,7 @@ typedef struct packed
 		  logic        vld;
 		  logic        wr;
 		  logic [31:0] data;
-		  logic [31:0] addr;
+		  logic [31:2] addr;
 		  logic [9:0]  len;
 		  }
 	       pcie_block_s;
@@ -213,7 +216,6 @@ typedef struct packed
 		  logic [RUN_W:0] 	    run;
 		  logic [CTRL_MEM_ADDR_W:0] addr;
 		  logic [1:0]               part;
-		  logic [1:0] 		    byte_addr;
 		  }
 		 ctrl_addr_s;
 

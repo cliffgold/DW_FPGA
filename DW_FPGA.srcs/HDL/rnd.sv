@@ -53,8 +53,8 @@ module rnd
    reg 		     pcie_req_q;
    reg 		     pcie_gotrun;
    wire 	     pipe_out;
-   reg [63:0] 	     old_xy_run [0:(NQBITS/64)-1];
-   wire [63:0] 	     rd_data;
+   reg [31:0] 	     old_xy_run [0:(NQBITS/32)-1];
+   wire [31:0] 	     rd_data;
    
    reg 		     was_init;
    reg 		     init;
@@ -215,6 +215,7 @@ endgenerate
 	 if ((pcie_rnd.vld == 1'b1) &&
 	     (pcie_rnd.wr  == 1'b0)) begin
             addr_q     <= pcie_rnd.addr;
+	    pcie_req_q <= 1'b1;
 	    if (pcie_rnd.len == 'b0) begin
 	       len_q   <= 11'b100_0000_0000;
 	    end else begin
@@ -222,10 +223,9 @@ endgenerate
 	    end
 	 end
 	 else if(pcie_gotrun) begin
-	    if (len_q > 'b0) begin
-	       pcie_req_q <= 1'b1;
-	       len_q      <= len_q  - 'b1;
-	       addr_q     <= addr_q + 'd4;
+	    if (len_q > 'b1) begin
+	       len_q       <= len_q  - 'b1;
+	       addr_q.addr <= addr_q.addr + 'd1;
 	    end else begin
 	       pcie_req_q 	<= 1'b0;
 	    end
@@ -237,7 +237,7 @@ endgenerate
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
 	 pcie_gotrun <= 'b0;
- 	 for (i=0;i<NQBITS/64;i=i+1) begin
+ 	 for (i=0;i<NQBITS/32;i=i+1) begin
  	    old_xy_run[i] <= 'b0;
  	 end
       end else begin
@@ -245,8 +245,8 @@ endgenerate
 	     (pcie_req_q  == 1'b1) &&
 	     (pcie_gotrun == 1'b0)) begin
 	    pcie_gotrun <= 1'b1;
- 	    for (i=0;i<NQWORDS;i=i+1) begin
- 	       old_xy_run[i]  <= old_xy_out[(i*64)+:64];
+ 	    for (i=0;i<NQBITS/32;i=i+1) begin
+ 	       old_xy_run[i]  <= old_xy_out[(i*32)+:32];
  	    end
 	 end else begin
 	    pcie_gotrun <= 1'b0;
@@ -255,8 +255,8 @@ endgenerate
    end // always@ (posedge sys.clk )
           
    bigmux
-     #(.NBITS(64),
-       .NMUXIN(NQBITS/64),
+     #(.NBITS(32),
+       .NMUXIN(NQBITS/32),
        .NFLOPS(2)
        )
    rnd_read_mux

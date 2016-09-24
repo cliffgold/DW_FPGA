@@ -25,8 +25,7 @@ parameter RUN_W         = $clog2(NRUNS) - 1;
 
 parameter NQBITS        = NROWS * NCOLS * 8;
 parameter QBIT_W        = $clog2(NQBITS) - 1;
-parameter QWORD_W       = QBIT_W - 6; //64 bit words
-parameter NQWORDS       = NQBITS/64;
+parameter QWORD_W       = QBIT_W - 5; //32 bit words
 
 parameter X_W           = 2*NCMEMS -1    ;  //Number of bits in the x plane -1
 parameter Y_W           = X_W           ;  //Number of bits in the y plane -1
