@@ -107,8 +107,15 @@ module ctrl
       end
    endgenerate
 
-   assign rnd_run  = (run + CTRL_RND_RUN)  % NRUNS;
-   assign pick_run = (run + CTRL_PICK_RUN) % NRUNS;
+   always@(posedge sys.clk) begin
+      if (sys.reset) begin
+	 rnd_run  = 'b0;
+	 pick_run = 'b0;
+      end else begin
+	 rnd_run  = (run + CTRL_RND_RUN -1)  % NRUNS;
+	 pick_run = (run + CTRL_PICK_RUN -1) % NRUNS;
+      end
+   end
    
    always@(posedge sys.clk) begin
       if (sys.reset) begin
