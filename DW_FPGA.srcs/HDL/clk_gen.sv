@@ -35,10 +35,13 @@ module clk_gen
 
    reg 	   user_reset_q;
    reg 	   user_lnk_up_q;
-   reg     locked_q;
-   wire    locked;
+
+   reg     sys_reset_0;
+   reg     sys_reset_1;
+   reg     sys_reset_2;
+   
       
-   IBUFDS_GTE2 pclk_ibuf 
+    IBUFDS_GTE2 pclk_ibuf 
      (
       .I      (pclk_p     ),
       .IB     (pclk_n     ),
@@ -53,36 +56,36 @@ module clk_gen
       .O      (pcie_rst_n )
       );
 
-   assign sys.clk = user_clk_out;
+   assign sys.clk = user_clk_out;  //already BUFG'd
    
    always@(posedge user_clk_out) begin
       user_reset_q  <= user_reset_out;
       user_lnk_up_q <= user_lnk_up;
-      locked_q      <= locked;
    end
 
    always @(posedge user_clk_out) begin
-      if (user_reset_q & user_lnk_up_q & locked_q) begin
-         sys_reset   <= 1'b0;
+      if (~user_reset_q & user_lnk_up_q) begin
+         sys_reset_0   <= 1'b0;
       end else begin
-	 sys_reset   <= 1'b1;
+	 sys_reset_0   <= 1'b1;
       end
    end
+
+   //Extra flops to improve reset path to bufg
+   always @(posedge user_clk_out) begin
+      sys_reset_1   <= sys_reset_0;
+   end
    
-  clk_wiz_0 sys_clk_pll
-   (
-   // Clock in ports
-    .clk_in1(user_clk_out),      // input clk_in1
-    // Clock out ports
-    .clk_out1(sys.clk),     // output clk_out1 is already buffered
-    // Status and control signals
-    .reset(user_reset_q), // input reset
-    .locked(locked));      // output locked
+   always @(posedge user_clk_out) begin
+      sys_reset_2   <= sys_reset_1;
+   end
 
-   BUFG sys_reset
-     (.O(sys.reset),
-      .I(sys_reset)
-      )
-
+   BUFG sys_reset_buf
+     (
+      .I(sys_reset_2),
+      .O(sys.reset)
+      );
+   
+     
 endmodule // clk_gen
 
