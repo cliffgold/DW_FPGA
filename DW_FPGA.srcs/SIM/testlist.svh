@@ -7,4 +7,5 @@
    
 //`include "tests/test_ctrl_2.svh"
 //`include "tests/test_ctrl_temperature.svh"
-`include "tests/test_ctrl_cutoff.svh"
+//`include "tests/test_ctrl_cutoff.svh"
+`include "tests/test_ctrl_flips.svh"

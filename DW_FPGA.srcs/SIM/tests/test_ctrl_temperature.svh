@@ -36,8 +36,6 @@ for (i=0;i<NRUNS;i++) begin
 
 end // for (i=0`;i<3;i++)
 
-repeat (NRUNS) @(negedge sys_clk);
-
 kick_off(
 	 .start({NRUNS{1'b1}}),
 	 

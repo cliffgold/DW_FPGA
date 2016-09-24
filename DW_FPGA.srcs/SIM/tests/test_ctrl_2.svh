@@ -36,8 +36,6 @@ axi_write(.bar(FREAK_BAR),
 	  .axi_rx_out(axi_rx_out)
 	  );
 
-repeat (NRUNS) @(negedge sys_clk);
-
 //run[1]=9 - flips low (lots of flips), temperature high
 ctrl_word.next 	       = 'b0;
 ctrl_word.flips        = 'h0;
@@ -67,8 +65,6 @@ ctrl_addr.run = rnd_run[1];
 	     .axi_rx_in(axi_rx_in),
 	     .axi_rx_out(axi_rx_out)
 	     );
-
-repeat (NRUNS) @(negedge sys_clk);
 
 //run[2]=19 - flips high (few flips), temperature low
 ctrl_word.next 	     = 'b0;
@@ -100,8 +96,6 @@ axi_write(.bar(FREAK_BAR),
 	  .axi_rx_out(axi_rx_out)
 	  );
 
-repeat (NRUNS) @(negedge sys_clk);
-
 //run[3]=6 - flips high (few flips), temperature high
 ctrl_word.next 	       = 'b0;
 ctrl_word.flips        = 'h3;
@@ -131,8 +125,6 @@ axi_write(.bar(FREAK_BAR),
 	  .axi_rx_in(axi_rx_in),
 	  .axi_rx_out(axi_rx_out)
 	  );
-
-repeat (NRUNS) @(negedge sys_clk);
 
 kick_off(
 	 .start('b1 | 

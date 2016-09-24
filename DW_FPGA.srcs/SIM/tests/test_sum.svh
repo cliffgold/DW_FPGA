@@ -32,7 +32,6 @@ for (i=0;i<NRUNS;i++) begin
 	     .axi_rx_out(axi_rx_out)
 	     );
 
-   repeat (NRUNS) @(negedge sys_clk);
 end // for (i=0;i<NRUNS;i++)
 
 for (k=0;k<4;k++) begin

@@ -27,8 +27,6 @@ axi_write(.bar(FREAK_BAR),
 	  .axi_rx_out(axi_rx_out)
 	  );
 
-repeat (NRUNS) @(negedge sys_clk);
-
 kick_off(
 	 .start('b1),	 
 	  

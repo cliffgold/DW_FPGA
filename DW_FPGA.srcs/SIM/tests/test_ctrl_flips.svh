@@ -36,8 +36,6 @@ for (i=0;i<NFLIPS;i++) begin
 
 end // for (i=0;i<3;i++)
 
-repeat (NRUNS) @(negedge clk_input);
-
 kick_off(
 	 .start({NFLIPS{1'b1}}),
 	 

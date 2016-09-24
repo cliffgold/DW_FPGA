@@ -35,8 +35,10 @@ module clk_gen
 
    reg 	   user_reset_q;
    reg 	   user_lnk_up_q;
+   reg     locked_q;
+   wire    locked;
       
-    IBUFDS_GTE2 pclk_ibuf 
+   IBUFDS_GTE2 pclk_ibuf 
      (
       .I      (pclk_p     ),
       .IB     (pclk_n     ),
@@ -56,15 +58,31 @@ module clk_gen
    always@(posedge user_clk_out) begin
       user_reset_q  <= user_reset_out;
       user_lnk_up_q <= user_lnk_up;
+      locked_q      <= locked;
    end
 
    always @(posedge user_clk_out) begin
-      if (user_reset_q) begin
-         sys.reset   <= 1'b1;
+      if (user_reset_q & user_lnk_up_q & locked_q) begin
+         sys_reset   <= 1'b0;
       end else begin
-	 sys.reset   <= ~user_lnk_up_q;
+	 sys_reset   <= 1'b1;
       end
    end
    
+  clk_wiz_0 sys_clk_pll
+   (
+   // Clock in ports
+    .clk_in1(user_clk_out),      // input clk_in1
+    // Clock out ports
+    .clk_out1(sys.clk),     // output clk_out1 is already buffered
+    // Status and control signals
+    .reset(user_reset_q), // input reset
+    .locked(locked));      // output locked
+
+   BUFG sys_reset
+     (.O(sys.reset),
+      .I(sys_reset)
+      )
+
 endmodule // clk_gen
 
