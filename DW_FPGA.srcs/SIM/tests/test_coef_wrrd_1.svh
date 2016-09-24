@@ -1,4 +1,5 @@
 //Test of some random wr/rds at specific pre-loaded spots
+$display("Start test_coef_wrrd_1");
 
 //Set addresses used, and the resepective data
 
@@ -33,33 +34,50 @@ for (i=0;i<4;i=i+1) begin
 
 end
 
-for (i=0;i<100;i=i+1) begin
+for (i=0;i<256;i=i+1) begin
    randnum 	   = $random();
    coef_addr.sel   = test_coef_sel[randnum[1:0]];
    coef_addr.addr  = test_coef_addr[randnum[3:2]];
-   test_data_wr    = randnum[CMEM_DATA_W+5:5];
+
+   axi_data[0]     = randnum[CMEM_DATA_W+5:5];
    test_data_ex    = test_coef_data[randnum[1:0]][randnum[3:2]];
 
    if (randnum[4]) begin
-      pcie_write(COEF_BAR_START,
-		 coef_addr,
-		 test_data_wr,
-		 clk_input,
-		 bus_pcie_wr);
+      axi_write(.bar(COFFEE_BAR),
+		.addr(coef_addr),
+		.data(axi_data),
+		.len(1),
+		.wdat(1),
+		
+		.reqid(reqid),
+		.tag(tag),
+		.sys_clk(sys_clk),
+		.axi_rx_in(axi_rx_in),
+		.axi_rx_out(axi_rx_out)
+		);
       
-      test_coef_data[randnum[1:0]][randnum[3:2]] = test_data_wr;
+      
+      test_coef_data[randnum[1:0]][randnum[3:2]] = axi_data[0];
    end else begin
       
-      pcie_read (COEF_BAR_START,
-		 coef_addr,
-		 test_data_rd,
-		 clk_input,
-		 bus_pcie_req,
-		 pcie_bus_rd);
+      axi_read(.bar(COFFEE_BAR),
+	       .addr(coef_addr),
+	       .len(1),
+	       .data(axi_data),
+	       
+	       .reqid(reqid),
+	       .tag(tag),
+	       .cpl_id(cpl_id_ex),
+	       .sys_clk(sys_clk),
+	       .axi_rx_in(axi_rx_in),
+	       .axi_rx_out(axi_rx_out),
+	       .axi_tx_in(axi_tx_in),
+	       .axi_tx_out(axi_tx_out)
+	       );
 
-      if (test_data_rd !== test_data_ex) begin
+      if (axi_data[0] !== test_data_ex) begin
 	 $error("***** :( TEST FAILED :( *****\n Read does not match write for mem %0x at addr %0x\n expect %0x got %0x",
-		coef_addr.sel,coef_addr.addr,test_data_ex,test_data_rd);
+		coef_addr.sel,coef_addr.addr,test_data_ex,axi_data[0]);
 	 bad_fail = bad_fail + 1;
       end
    end // else: !if(randnum[4])

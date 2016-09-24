@@ -18,6 +18,7 @@ axi_write(.bar(FREAK_BAR),
 	  .addr(ctrl_addr),
 	  .data(axi_data),
 	  .len(3),
+	  .wdat(1),
 
 	  .reqid(reqid),
 	  .tag(tag),
@@ -28,49 +29,16 @@ axi_write(.bar(FREAK_BAR),
 
 repeat (NRUNS) @(negedge sys_clk);
 
-ctrl_cmd      = 'b0;
-ctrl_cmd.init = 'b1;
+kick_off(
+	 .start('b1),	 
+	  
+	 .reqid(reqid),
+	 .tag(tag),
+	 .sys_clk(sys_clk),
+	 .axi_rx_in(axi_rx_in),
+	 .axi_rx_out(axi_rx_out)
+	 );
 
-ctrl_addr        = 'b0;
-ctrl_addr.is_cmd = 'b1;
-
-axi_data[0]      = ctrl_cmd[31:0];
-axi_data[1]      = ctrl_cmd[CTRL_CMD_S_W:32];
-
-axi_write(.bar(FREAK_BAR),
-	  .addr(ctrl_addr),
-	  .data(axi_data),
-	  .len(2),
-
-	  .reqid(reqid),
-	  .tag(tag),
-	  .sys_clk(sys_clk),
-	  .axi_rx_in(axi_rx_in),
-	  .axi_rx_out(axi_rx_out)
-	  );
-
-repeat (NRUNS) @(negedge sys_clk);
-
-ctrl_cmd       = 'b0;
-ctrl_cmd.start = 'b1;
-
-ctrl_addr        = 'b0;
-ctrl_addr.is_cmd = 'b1;
-
-axi_data[0]      = ctrl_cmd[31:0];
-axi_data[1]      = ctrl_cmd[CTRL_CMD_S_W:32];
-
-axi_write(.bar(FREAK_BAR),
-	  .addr(ctrl_addr),
-	  .data(axi_data),
-	  .len(2),
-
-	  .reqid(reqid),
-	  .tag(tag),
-	  .sys_clk(sys_clk),
-	  .axi_rx_in(axi_rx_in),
-	  .axi_rx_out(axi_rx_out)
-	  );
 
 repeat ((5+5) * NRUNS) @(negedge sys_clk);
 

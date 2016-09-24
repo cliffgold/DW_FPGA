@@ -1,11 +1,20 @@
 //Normal Run
+$display("Starting test test_ctrl_1");
+
 mem_pattern_0(rnd_mem);
 
-ctrl_word.word0.next 	     = 'b1;
-ctrl_word.word0.flips        = 'h1;
-ctrl_word.word0.temperature  = 'h0;
-ctrl_word.word0.cutoff       = {1'b1,{SUM_W{1'b0}}};
-ctrl_word.word1.count        = 32;
+total_count            = 0;
+
+ctrl_word.next 	       = 'b1;
+ctrl_word.flips        = 'h1;
+ctrl_word.temperature  = 'h0;
+ctrl_word.cutoff       = {1'b1,{SUM_W{1'b0}}};
+ctrl_word.count        = 64;
+total_count            = total_count + ctrl_word.count;
+
+axi_data[0]            = ctrl_word[31:0];
+axi_data[1]            = ctrl_word[63:32];
+axi_data[2]            = ctrl_word[CTRL_WORD_S_W:64];
 
 rnd_run[0] 	       = 0;
 rnd_run[1] 	       = (NRUNS-1)/2;
@@ -17,91 +26,142 @@ ctrl_addr 	       = 0;
 for (i=0;i<4;i++) begin
    ctrl_addr.run      = rnd_run[i];
    
-   pcie_ctrl_write(CTRL_BAR_START,
-		   ctrl_addr,
-		   ctrl_word,
-		   clk_input,
-		   bus_pcie_wr);
-   
+   axi_write(.bar(FREAK_BAR),
+	     .addr(ctrl_addr),
+	     .data(axi_data),
+	     .len(3),
+	     .wdat(1),
+	     
+	     .reqid(reqid),
+	     .tag(tag),
+	     .sys_clk(sys_clk),
+	     .axi_rx_in(axi_rx_in),
+	     .axi_rx_out(axi_rx_out)
+	     );
 end
 
-ctrl_word.word0.next 	     = 'b1;
-ctrl_word.word0.flips        = 'h3;
-ctrl_word.word0.temperature  = 'h0;
-ctrl_word.word0.cutoff       = {1'b1,{SUM_W{1'b0}}};
-ctrl_word.word1.count        = 128;
+repeat (NRUNS) @(negedge sys_clk);
+
+ctrl_word.next 	       = 'b1;
+ctrl_word.flips        = 'h3;
+ctrl_word.temperature  = 'h0;
+ctrl_word.cutoff       = {1'b1,{SUM_W{1'b0}}};
+ctrl_word.count        = 128;
+total_count            = total_count + ctrl_word.count;
+
+axi_data[0]            = ctrl_word[31:0];
+axi_data[1]            = ctrl_word[63:32];
+axi_data[2]            = ctrl_word[CTRL_WORD_S_W:64];
+
+rnd_run[0] 	       = 0;
+rnd_run[1] 	       = (NRUNS-1)/2;
+rnd_run[2] 	       = NRUNS-1;
+rnd_run[3] 	       = (NRUNS-1)/3;
 
 ctrl_addr 	       = 0;
-ctrl_addr.addr 	       = 1;
+ctrl_addr.addr         = 1;
 
 for (i=0;i<4;i++) begin
    ctrl_addr.run      = rnd_run[i];
    
-   pcie_ctrl_write(CTRL_BAR_START,
-		   ctrl_addr,
-		   ctrl_word,
-		   clk_input,
-		   bus_pcie_wr);
-   
-end // for (i=0;i<3;i++)
+   axi_write(.bar(FREAK_BAR),
+	     .addr(ctrl_addr),
+	     .data(axi_data),
+	     .len(3),
+	     .wdat(1),
+	     
+	     .reqid(reqid),
+	     .tag(tag),
+	     .sys_clk(sys_clk),
+	     .axi_rx_in(axi_rx_in),
+	     .axi_rx_out(axi_rx_out)
+	     );
+end
 
-repeat (NRUNS) @(negedge clk_input);
+repeat (NRUNS) @(negedge sys_clk);
 
-ctrl_word.word0.next 	     = 'b0;
-ctrl_word.word0.flips        = 'h5;
-ctrl_word.word0.temperature  = 'h0;
-ctrl_word.word0.cutoff       = {1'b1,{SUM_W{1'b0}}};
-ctrl_word.word1.count        = 128;
+ctrl_word.next 	       = 'b0;
+ctrl_word.flips        = 'h5;
+ctrl_word.temperature  = 'h0;
+ctrl_word.cutoff       = {1'b1,{SUM_W{1'b0}}};
+ctrl_word.count        = 512;
+total_count            = total_count + ctrl_word.count;
+
+axi_data[0]            = ctrl_word[31:0];
+axi_data[1]            = ctrl_word[63:32];
+axi_data[2]            = ctrl_word[CTRL_WORD_S_W:64];
+
+rnd_run[0] 	       = 0;
+rnd_run[1] 	       = (NRUNS-1)/2;
+rnd_run[2] 	       = NRUNS-1;
+rnd_run[3] 	       = (NRUNS-1)/3;
 
 ctrl_addr 	       = 0;
-ctrl_addr.addr 	       = 2;
+ctrl_addr.addr         = 2;
 
 for (i=0;i<4;i++) begin
    ctrl_addr.run      = rnd_run[i];
    
-   pcie_ctrl_write(CTRL_BAR_START,
-		   ctrl_addr,
-		   ctrl_word,
-		   clk_input,
-		   bus_pcie_wr);
-   
-end // for (i=0;i<3;i++)
+   axi_write(.bar(FREAK_BAR),
+	     .addr(ctrl_addr),
+	     .data(axi_data),
+	     .len(3),
+	     .wdat(1),
+	     
+	     .reqid(reqid),
+	     .tag(tag),
+	     .sys_clk(sys_clk),
+	     .axi_rx_in(axi_rx_in),
+	     .axi_rx_out(axi_rx_out)
+	     );
 
-repeat (NRUNS) @(negedge clk_input);
+end
+
+repeat (NRUNS) @(negedge sys_clk);
 
 ctrl_cmd      = 'b0;
 ctrl_cmd.init = 'b1;
 
+axi_data[0]      = ctrl_cmd[31:0];
+axi_data[1]      = ctrl_cmd[CTRL_CMD_S_W:32];
+
 ctrl_addr        = 'b0;
 ctrl_addr.is_cmd = 'b1;
 
-pcie_write(CTRL_BAR_START,
-	   ctrl_addr,
-	   ctrl_cmd,
-	   clk_input,
-	   bus_pcie_wr);
+axi_write(.bar(FREAK_BAR),
+	  .addr(ctrl_addr),
+	  .data(axi_data),
+	  .len(2),
+	  .wdat(1),
+	  
+	  .reqid(reqid),
+	  .tag(tag),
+	  .sys_clk(sys_clk),
+	  .axi_rx_in(axi_rx_in),
+	  .axi_rx_out(axi_rx_out)
+	  );
 
-repeat (NRUNS) @(negedge clk_input);
+repeat (NRUNS) @(negedge sys_clk);
 
-ctrl_cmd       = 'b0;
-ctrl_cmd.start =  'b1 | 
+kick_off(
+	 .start('b1 | 
 		 ('b1 << ((NRUNS-1)/3)) | 
 		 ('b1 << ((NRUNS-1)/2)) | 
-		 ('b1 << (NRUNS-1));
+		 ('b1 << (NRUNS-1))),
+	 
+	  
+	 .reqid(reqid),
+	 .tag(tag),
+	 .sys_clk(sys_clk),
+	 .axi_rx_in(axi_rx_in),
+	 .axi_rx_out(axi_rx_out)
+	 );
 
-ctrl_addr        = 'b0;
-ctrl_addr.is_cmd = 'b1;
 
-pcie_write(CTRL_BAR_START,
-	   ctrl_addr,
-	   ctrl_cmd,
-	   clk_input,
-	   bus_pcie_wr);
-
-repeat (100 + ((32+128+128)*NRUNS/2)) @(negedge clk_input);
+repeat (100 + ((total_count)*NRUNS)) @(negedge sys_clk);
 
 // Check that values are within expected range
-maxerr = 48;
+maxerr = 24;
 
 for (i=0;i<4;i++) begin
    if ($isunknown({old_mem_add_0[rnd_run[i]],
@@ -149,31 +209,51 @@ end // for (i=0;i<4;i++)
 
 for (i=0;i<8;i++) begin
    randnum = $random();
+   
    j = randnum[QWORD_W+2:QWORD_W+1]; //used for run number
-   if (randnum[QWORD_W] == 1'b0) begin
-      test_data_ex = old_x[rnd_run[j]] [randnum[QWORD_W-1:0]*64 +:64];
-   end else begin
-      test_data_ex = old_y[rnd_run[j]] [randnum[QWORD_W-1:0]*64 +:64];
-   end
-
+   
    rnd_addr.run = rnd_run[j];
    rnd_addr.addr = randnum[QWORD_W:0];
-      
-   pcie_read(RND_BAR_START,
-	     rnd_addr,
-	     test_data_rd,
-	     clk_input,
-	     bus_pcie_req,
-	     pcie_bus_rd);
 
-      if (test_data_rd !== test_data_ex) begin
-	 $error("***** :( TEST FAILED :( *****\n Read xy does not match expected for %0x:%0x run %0d expected %0x got %0x",
-		rnd_addr.addr*64+63,
-		rnd_addr.addr*64,
-		rnd_addr.run,
-		test_data_ex,test_data_rd);
-	 bad_fail = bad_fail + 1;
-      end
+   axi_read(.bar(RANDY_BAR),
+	    .addr(rnd_addr),
+	    .len(2),
+	    .data(axi_data),
+	    
+	    .reqid(reqid),
+	    .tag(tag),
+	    .cpl_id(cpl_id_ex),
+	    .sys_clk(sys_clk),
+	    .axi_rx_in(axi_rx_in),
+	    .axi_rx_out(axi_rx_out),
+	    .axi_tx_in(axi_tx_in),
+	    .axi_tx_out(axi_tx_out)
+	    );
+   
+   test_data_rd = {axi_data[1],axi_data[0]};
+
+   if (randnum[QWORD_W:0] == {(QWORD_W){1'b1}}) begin
+      test_data_ex[31:0]  = old_x[rnd_run[j]] [randnum[QWORD_W-1:0]*32 +:32];
+      test_data_ex[63:32] = old_y[rnd_run[j]] [31:0];
+   end
+   else if (randnum[QWORD_W:0] == {(QWORD_W+1){1'b1}}) begin
+      test_data_ex[31:0]  = old_y[rnd_run[j]] [randnum[QWORD_W-1:0]*32 +:32];
+      test_data_ex[63:32] = old_x[rnd_run[j]] [31:0];
+   end
+   else if (randnum[QWORD_W] == 1'b0) begin
+      test_data_ex = old_x[rnd_run[j]] [randnum[QWORD_W-1:0]*32 +:64];
+   end else begin
+      test_data_ex = old_y[rnd_run[j]] [randnum[QWORD_W-1:0]*32 +:64];
+   end
+   
+   if (test_data_rd !== test_data_ex) begin
+      $error("***** :( TEST FAILED :( *****\n Read xy does not match expected for %0x:%0x run %0d expected %0x got %0x",
+	     rnd_addr.addr*32+63,
+	     rnd_addr.addr*32,
+	     rnd_addr.run,
+	     test_data_ex,test_data_rd);
+      bad_fail = bad_fail + 1;
+   end
 end // for (i=0;i<3;i++)
 
 if (bad_fail == 'b0) begin

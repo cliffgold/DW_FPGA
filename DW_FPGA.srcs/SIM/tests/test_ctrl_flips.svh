@@ -1,60 +1,59 @@
 //Vary flips only
+$display("Starting test_ctrl_flips");
+
 mem_pattern_0(rnd_mem);
 
-ctrl_word.word0.next 	     = 'b0;
-ctrl_word.word0.flips        = 'h0;
-ctrl_word.word0.temperature  = 'h0;
-ctrl_word.word0.cutoff       = {1'b1,{SUM_W{1'b0}}};
-ctrl_word.word1.count        = 256;
+ctrl_word.next 	     = 'b0;
+ctrl_word.flips        = 'h0;
+ctrl_word.temperature  = 'h0;
+ctrl_word.cutoff       = {1'b1,{SUM_W{1'b0}}};
+ctrl_word.count        = 256;
+total_count            = ctrl_word.count;
 
 ctrl_addr 	       = 0;
 ctrl_addr.addr 	       = 0;
 
 for (i=0;i<NFLIPS;i++) begin
    ctrl_addr.run          = i;
-   ctrl_word.word0.flips  = i;
+   ctrl_word.flips  = i;
    
-   pcie_ctrl_write(CTRL_BAR_START,
-		   ctrl_addr,
-		   ctrl_word,
-		   clk_input,
-		   bus_pcie_wr);
-   
+   axi_data[0]            = ctrl_word[31:0];
+   axi_data[1]            = ctrl_word[63:32];
+   axi_data[2]            = ctrl_word[CTRL_WORD_S_W:64];
+
+   axi_write(.bar(FREAK_BAR),
+	     .addr(ctrl_addr),
+	     .data(axi_data),
+	     .len(3),
+	     .wdat(1),
+	     
+	     .reqid(reqid),
+	     .tag(tag),
+	     .sys_clk(sys_clk),
+	     .axi_rx_in(axi_rx_in),
+	     .axi_rx_out(axi_rx_out)
+	     );
+
 end // for (i=0;i<3;i++)
 
 repeat (NRUNS) @(negedge clk_input);
 
-ctrl_cmd      = 'b0;
-ctrl_cmd.init = 'b1;
+kick_off(
+	 .start({NFLIPS{1'b1}}),
+	 
+	 .reqid(reqid),
+	 .tag(tag),
+	 .sys_clk(sys_clk),
+	 .axi_rx_in(axi_rx_in),
+	 .axi_rx_out(axi_rx_out)
+	 );
+   
 
-ctrl_addr        = 'b0;
-ctrl_addr.is_cmd = 'b1;
-
-pcie_write(CTRL_BAR_START,
-	   ctrl_addr,
-	   ctrl_cmd,
-	   clk_input,
-	   bus_pcie_wr);
-
-repeat (NRUNS) @(negedge clk_input);
-
-ctrl_cmd       = 'b0;
-ctrl_cmd.start =  {NFLIPS{1'b1}};
-
-ctrl_addr        = 'b0;
-ctrl_addr.is_cmd = 'b1;
-
-pcie_write(CTRL_BAR_START,
-	   ctrl_addr,
-	   ctrl_cmd,
-	   clk_input,
-	   bus_pcie_wr);
-
-repeat (100 + (256*NRUNS/2)) @(negedge clk_input);
-
+repeat (100 + ((total_count)*NRUNS)) @(negedge sys_clk);
+   
 // Check that values are within expected range
 
-for (i=0;i<NRUNS;i++) begin
+for (i=0;i<NFLIPS;i++) begin
    maxerr = 24 + 12*i;
    
    if ($isunknown({old_mem_add_0[i],
@@ -98,7 +97,7 @@ for (i=0;i<NRUNS;i++) begin
 end // for (i=0;i<NRUNS;i++)
 
 if (bad_fail == 'b0) begin
-   $display("*****  :) test_ctrl_temperature PASSED :) *****");
+   $display("*****  :) test_ctrl_flips PASSED :) *****");
 end
 
 
