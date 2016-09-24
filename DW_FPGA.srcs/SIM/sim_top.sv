@@ -28,6 +28,7 @@ module sim_top();
    axi_tx_out_s axi_tx_out;
    axi_rx_out_s axi_rx_out;
    
+   pcie_cpl_id_s cpl_id_ex;
 
    coef_addr_s coef_addr;
    
@@ -46,6 +47,7 @@ module sim_top();
    reg [63:0] 		      test_data_wr;
    reg [63:0] 		      test_data_ex;
    reg [31:0] 		      test_addr;
+   reg [48:0] 		      total_count;
    
    reg [31:0] 		      bad_fail;
         
@@ -90,6 +92,8 @@ module sim_top();
 
    assign axi_tx_in = top_0.pcie_0.axi_tx_in;
    assign axi_rx_in = top_0.pcie_0.axi_rx_in;
+
+   assign cpl_id_ex = top_0.pcie_0.cpl_id;
    
    initial begin
       #CLK_IN_PERIOD;
