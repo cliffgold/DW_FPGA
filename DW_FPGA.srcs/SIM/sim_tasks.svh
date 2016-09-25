@@ -304,25 +304,25 @@ task automatic mem_pattern_0 (output [NCMEMS-1:0] mem [3:0]);
 	 // $write(" %5d, ",i);
 	 val = -2048 + (i*4);
 	 // $write(" %4x, ",val);
-	 sim_top.top_0.coef_0.\cmem[0].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i]   = val;
+	 sim_top.top_0.coef_0.\cmem[0].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_3_inst .memory[i]   = val;
 	 val = 2047 - (i*4);
 	 // $write(" %4x, ",val);
-	 sim_top.top_0.coef_0.\cmem[255].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	 sim_top.top_0.coef_0.\cmem[255].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_3_inst .memory[i] = val;
 	 
 	 if (i < 512) begin
 	    val = -2048 + (i*8);
 	    // $write(" %4x, ",val);
-	    sim_top.top_0.coef_0.\cmem[256].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	    sim_top.top_0.coef_0.\cmem[256].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_3_inst .memory[i] = val;
 	    val = 2047 - (i*8);
 	    // $display(" %4x, ",val);
-	    sim_top.top_0.coef_0.\cmem[511].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	    sim_top.top_0.coef_0.\cmem[511].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_3_inst .memory[i] = val;
 	 end else begin
 	    val = 4096  + 2047 - (i*8);
 	    // $write(" %4x, ",val);
-	    sim_top.top_0.coef_0.\cmem[256].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	    sim_top.top_0.coef_0.\cmem[256].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_3_inst .memory[i] = val;
 	    val = -4096 - 2048 + (i*8);
 	    // $display(" %4x, ",val);
-	    sim_top.top_0.coef_0.\cmem[511].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_2_inst .memory[i] = val;
+	    sim_top.top_0.coef_0.\cmem[511].coef_mem_0 .inst.\native_mem_module.blk_mem_gen_v8_3_3_inst .memory[i] = val;
 	 end
       end // for (i=0;i<1024;i=i+1)
    end // block: mem_patt_0

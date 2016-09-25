@@ -14,7 +14,7 @@ puts $f1 "   input reg \[CMEM_DATA_W:0\] coef_mem \[0:NCMEMS-1\] \[0:NCMEM_ADDRS
 
 puts $f1 "   for (i=0;i<NCMEM_ADDRS;i++) begin : poke_cmem"
 for {set i 0} {$i<512} {set i [expr $i+1]} {
-    puts $f1 "      sim_top.top_0.coef_0.\\cmem\[$i\].coef_mem_0 .inst.\\native_mem_module.blk_mem_gen_v8_3_2_inst .memory\[i\]"
+    puts $f1 "      sim_top.top_0.coef_0.\\cmem\[$i\].coef_mem_0 .inst.\\native_mem_module.blk_mem_gen_v8_3_3_inst .memory\[i\]"
     puts $f1 "              = coef_mem\[$i\] \[i\];"
 }
 
