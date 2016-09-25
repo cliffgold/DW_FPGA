@@ -119,7 +119,7 @@ module sim_top();
       axi_tx_out = 'b0;
       axi_rx_out = 'b0;
       
-      repeat(10) @(posedge pclk_p);
+      repeat(20) @(posedge pclk_p);
       prst_n = 1;
       
       repeat(10) @(posedge sys_clk);
