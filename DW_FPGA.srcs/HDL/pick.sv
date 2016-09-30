@@ -65,7 +65,7 @@ module pick
       .DATA_OUT(rnd_bits)
       );
 
-   always@(posedge sys.clk) begin //Multiplier wants synchronous reset
+   always@(posedge sys.clk) begin
       if (sys.reset | ctrl_pick.init) begin
          old_sum_q   <= 'b0;
 	 old_sum_j   <= {1'b0,{SUM_W{1'b1}}};
@@ -101,11 +101,11 @@ module pick
 	 end else begin
 	    full_sum_q <= cutoff;
 	 end
-      end // else: !if(sys.reset | ctrl_pick.init)
+      end // else: !if(sys.reset)
    end // always@ (posedge sys.clk)
 	 
    always@(posedge sys.clk ) begin
-      if (sys.reset | ctrl_pick.init) begin
+      if (sys.reset) begin
 	 pick_rnd.pick <= 'b0;
 	 pick_rnd.run  <= 'b0;
 	 for (i=0;i<NRUNS;i=i+1) begin

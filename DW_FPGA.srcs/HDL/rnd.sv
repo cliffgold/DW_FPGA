@@ -56,9 +56,6 @@ module rnd
    reg [31:0] 	     old_xy_run [0:(NQBITS/32)-1];
    wire [31:0] 	     rd_data;
    
-   reg 		     was_init;
-   reg 		     init;
-         
 generate
    for(gi=0;gi<NQBITS;gi=gi+512) begin : PRBS
 
@@ -129,31 +126,10 @@ endgenerate
    
    always@(posedge sys.clk ) begin
       if (sys.reset) begin
-	 was_init <= 1'b0;
-	 init     <= 1'b0;
-      end else begin
-	 if (run == 'b0) begin
-	    if (ctrl_rnd.init == 1'b0) begin
-	       was_init <= 1'b0;
-	       init     <= 1'b0;
-	    end else begin
-	       if (was_init == 1'b0) begin
-		  was_init <= 1'b1;
-		  init     <= 1'b1;
-	       end else begin
-		  init <= 1'b0;
-	       end
-	    end // else: !if(ctrl_rnd.init == 1'b0)
-	 end // if (run == 'b0)
-      end // else: !if(sys.reset)
-   end // always@ (posedge sys.clk )
-   
-   always@(posedge sys.clk ) begin
-      if (sys.reset) begin
 	 old_xy_in  <= 'b0;
 	 new_xy_in  <= 'b0;
       end else begin
-	 if (init) begin
+	 if (ctrl_rnd.init) begin
 	    old_xy_in <= rnd_bits;
 	 end
 	 else if (enable == 1'b1) begin
