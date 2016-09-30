@@ -50,6 +50,7 @@ module sim_top();
    reg [48:0] 		      total_count;
    
    reg [31:0] 		      bad_fail;
+   reg [31:0] 		      bad_fail_start;
         
    reg [CMEM_SEL_W:0] 	      test_coef_sel [0:3];
    reg [CMEM_ADDR_W:0] 	      test_coef_addr [0:3];
@@ -69,8 +70,9 @@ module sim_top();
    integer 		      k;
    integer 		      randnum;
    integer 		      maxerr;
+   integer                    sumerr;
+   integer                    file_csv;
    
-
    top 
      #(.IS_SIM(1))
      top_0
@@ -135,6 +137,8 @@ module sim_top();
    
    initial begin
       bad_fail = 0;
+      #1;
+      
       @(posedge ready);
       @(negedge sys_clk);
       @(negedge sys_clk);

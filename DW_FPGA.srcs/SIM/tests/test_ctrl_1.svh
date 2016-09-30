@@ -1,6 +1,8 @@
 //Normal Run
 $display("Starting test test_ctrl_1");
 
+bad_fail_start = bad_fail;
+
 mem_pattern_0(rnd_mem);
 
 total_count            = 0;
@@ -226,7 +228,7 @@ for (i=0;i<8;i++) begin
    end
 end // for (i=0;i<3;i++)
 
-if (bad_fail == 'b0) begin
+if (bad_fail == bad_fail_start) begin
    $display("*****  :) test_ctrl_1 PASSED :) *****");
 end
 

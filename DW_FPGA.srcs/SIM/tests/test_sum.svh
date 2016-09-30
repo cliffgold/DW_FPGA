@@ -3,6 +3,8 @@
 //Then, no matter what the XY's, sum should be the same
 $display("starting test_sum");
 
+bad_fail_start = bad_fail;
+
 ctrl_word.next 	       = 'b0;
 ctrl_word.flips        = 'h0;
 ctrl_word.temperature  = 'h0;
@@ -95,6 +97,6 @@ for (k=0;k<4;k++) begin
    end // for (i=0;i<NRUNS;i++)
 end // for (k=0;k<3;k++)
 
-if (bad_fail == 0) begin
+if (bad_fail == bad_fail_start) begin
    $display("*****  :) test_sum PASSED :) *****");
 end
